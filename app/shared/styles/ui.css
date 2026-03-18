@@ -1,0 +1,10 @@
+@utility button-primary {
+  @apply bg-gray-900 text-gray-50 py-3 px-6 text-sm font-medium rounded-full flex justify-center gap-1 items-center cursor-pointer;
+}
+
+@utility button-secondary {
+  @apply bg-gray-50 text-gray-900 py-3 px-6 text-sm font-medium rounded-full flex justify-center gap-1 items-center cursor-pointer;
+}
+@utility button-third {
+  @apply text-gray-800 text-sm font-medium rounded-full flex gap-1 items-center cursor-pointer;
+}
