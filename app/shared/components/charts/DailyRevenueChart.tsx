@@ -28,8 +28,8 @@ export function DailyRevenueChart({ data }: DailyRevenueChartProps) {
 
   return (
     <div className=" bg-white col-span-5 row-span-10 p-4 rounded-4xl">
-      <h2 className="text-xl text-gray-800">Últimos 30 días</h2>
-      <p className="text-gray-500">Datos de ingresos y actividad reciente</p>
+      <h2 className="text-xl text-mist-800">Últimos 30 días</h2>
+      <p className="text-mist-500">Datos de ingresos y actividad reciente</p>
 
       <ChartContainer config={chartConfig}>
         <AreaChart
@@ -80,7 +80,7 @@ export function DailyRevenueChart({ data }: DailyRevenueChartProps) {
           Actualizado recientemente
           <ArrowTrendingUpIcon className="size-6 text-green-600 bg-green-200 p-1 rounded-full" />
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-mist-500">
           Gráfico de rendimiento de negocio
         </div>
       </div>

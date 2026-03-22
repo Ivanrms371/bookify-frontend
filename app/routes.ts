@@ -21,7 +21,7 @@ export default [
   ]),
   route("dashboard/:businessId", "./routes/dashboard.layout.tsx", [
     index("./modules/dashboard/pages/DashboardPage.tsx"),
-    route("appointments", "./modules/appointments/pages/AppointmentsPage.tsx"),
+    route("calendar", "./modules/calendar/pages/CalendarPage.tsx"),
     route("services", "./modules/services/pages/ServicesPage.tsx"),
     route("staff", "./modules/staff/pages/StaffPage.tsx"),
     route("customers", "./modules/customers/pages/CustomersPage.tsx"),

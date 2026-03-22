@@ -29,7 +29,7 @@ export const SidebarSecondaryNav = () => {
         <li key={item.label}>
           <a
             href={item.href}
-            className="flex items-center gap-2 px-3 py-3 rounded-2xl text-gray-800 text-sm hover:bg-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-800 transition-colors duration-300"
+            className="flex items-center gap-2 px-3 py-3 rounded-2xl text-mist-800 text-sm hover:bg-mist-800 hover:text-mist-200 dark:text-mist-200 dark:hover:bg-mist-200 dark:hover:text-mist-800 transition-colors duration-300"
           >
             {item.icon}
             <span>{item.label}</span>

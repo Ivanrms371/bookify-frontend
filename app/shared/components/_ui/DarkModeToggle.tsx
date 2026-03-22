@@ -42,12 +42,12 @@ export const DarkModeToggle = () => {
     <button
       onClick={toggleDark}
       type="button"
-      className="h-12 w-20 rounded-full bg-gray-200 dark:bg-gray-900/50  transition flex justify-center items-center gap-7 relative cursor-pointer"
+      className="h-12 w-20 rounded-full bg-mist-200 dark:bg-mist-900/50  transition flex justify-center items-center gap-7 relative cursor-pointer"
     >
       <div
         className={twMerge(
           "absolute top-0 left-0 size-12 rounded-full transition-all duration-300 z-0 flex justify-center items-center",
-          isDark ? "translate-x-8 bg-gray-800/50" : "translate-x-0 bg-white",
+          isDark ? "translate-x-8 bg-mist-800/50" : "translate-x-0 bg-white",
         )}
       >
         {isDark ? (

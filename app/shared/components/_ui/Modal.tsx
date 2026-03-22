@@ -41,7 +41,7 @@ export const Modal = ({
       {/* Backdrop */}
       <div
         className={cn(
-          "absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300",
+          "absolute inset-0 bg-mist-900/40 backdrop-blur-sm transition-opacity duration-300",
           isVisible ? "opacity-100" : "opacity-0", // ← usa isVisible
         )}
         onClick={onClose}
@@ -51,7 +51,7 @@ export const Modal = ({
       {/* Modal Content */}
       <div
         className={cn(
-          "relative z-10 w-full max-w-2xl bg-white dark:bg-gray-950 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden",
+          "relative z-10 w-full max-w-2xl bg-white dark:bg-mist-950 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden",
           "transition-all duration-300 transform p-10",
           isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0", // ← usa isVisible
           className,
@@ -62,19 +62,19 @@ export const Modal = ({
         <div className="flex items-start justify-between">
           <div>
             {title && (
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-50">
+              <h2 className="text-2xl font-semibold text-mist-900 dark:text-mist-50">
                 {title}
               </h2>
             )}
             {description && (
-              <p className=" text-gray-500 mt-1 dark:text-gray-400">
+              <p className=" text-mist-500 mt-1 dark:text-mist-400">
                 {description}
               </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="cursor-pointer p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-full transition-colors focus:outline-none focus:ring-2 ring-gray-300 dark:ring-gray-800"
+            className="cursor-pointer p-2 text-mist-400 hover:text-mist-600 dark:hover:text-mist-300 hover:bg-mist-100 dark:hover:bg-mist-900 rounded-full transition-colors focus:outline-none focus:ring-2 ring-mist-300 dark:ring-mist-800"
           >
             <XMarkIcon className="size-6" />
           </button>

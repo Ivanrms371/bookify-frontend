@@ -33,7 +33,7 @@ export const LoginForm = () => {
           <Label htmlFor="password">Contraseña</Label>
           <Link
             to="/forgot-password"
-            className="text-sm text-gray-500 dark:text-gray-400 "
+            className="text-sm text-mist-500 dark:text-mist-400 "
           >
             ¿Olvidaste tu contraseña?
           </Link>

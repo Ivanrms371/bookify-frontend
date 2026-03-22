@@ -20,43 +20,43 @@ export const LoadingSpinner = ({ size = "xs", color = "white" }: Props) => {
       <div
         className={cn(
           "sk-chase-dot",
-          color === "white" && "before:bg-gray-100",
-          color === "black" && "before:bg-gray-700",
+          color === "white" && "before:bg-mist-100",
+          color === "black" && "before:bg-mist-700",
         )}
       ></div>
       <div
         className={cn(
           "sk-chase-dot",
-          color === "white" && "before:bg-gray-100",
-          color === "black" && "before:bg-gray-700",
+          color === "white" && "before:bg-mist-100",
+          color === "black" && "before:bg-mist-700",
         )}
       ></div>
       <div
         className={cn(
           "sk-chase-dot",
-          color === "white" && "before:bg-gray-100",
-          color === "black" && "before:bg-gray-700",
+          color === "white" && "before:bg-mist-100",
+          color === "black" && "before:bg-mist-700",
         )}
       ></div>
       <div
         className={cn(
           "sk-chase-dot",
-          color === "white" && "before:bg-gray-100",
-          color === "black" && "before:bg-gray-700",
+          color === "white" && "before:bg-mist-100",
+          color === "black" && "before:bg-mist-700",
         )}
       ></div>
       <div
         className={cn(
           "sk-chase-dot",
-          color === "white" && "before:bg-gray-100",
-          color === "black" && "before:bg-gray-700",
+          color === "white" && "before:bg-mist-100",
+          color === "black" && "before:bg-mist-700",
         )}
       ></div>
       <div
         className={cn(
           "sk-chase-dot",
-          color === "white" && "before:bg-gray-100",
-          color === "black" && "before:bg-gray-700",
+          color === "white" && "before:bg-mist-100",
+          color === "black" && "before:bg-mist-700",
         )}
       ></div>
     </div>

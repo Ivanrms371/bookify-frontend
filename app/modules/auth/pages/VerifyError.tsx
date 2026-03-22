@@ -42,7 +42,7 @@ export default function VerifyError() {
         <div className="mx-auto flex justify-center mt-4">
           <Link
             to="/login"
-            className="text-gray-900 font-bold cursor-pointer hover:underline underline-offset-2"
+            className="text-mist-900 font-bold cursor-pointer hover:underline underline-offset-2"
           >
             Iniciar sesión
           </Link>
@@ -52,7 +52,7 @@ export default function VerifyError() {
         <div className="mx-auto flex justify-center mt-4">
           <button
             type="button"
-            className="text-gray-900 font-bold cursor-pointer hover:underline underline-offset-2"
+            className="text-mist-900 font-bold cursor-pointer hover:underline underline-offset-2"
           >
             Reenviar enlace de verificación
           </button>

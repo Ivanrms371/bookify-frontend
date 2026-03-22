@@ -58,10 +58,10 @@ export const OnboardingActionModal = ({
   if (!action) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal onClose={onClose}>
       <ModalHeader title={content.title} description={content.description} />
 
-      <div className="py-4 text-gray-700 dark:text-gray-300">
+      <div className="py-4 text-mist-700 dark:text-mist-300">
         <p>Contenido para la acción: {action}</p>
         <p className="text-sm mt-2">Aquí irá el formulario correspondiente.</p>
       </div>
@@ -69,13 +69,13 @@ export const OnboardingActionModal = ({
       <ModalFooter>
         <button
           onClick={onClose}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="px-4 py-2 border border-mist-300 dark:border-mist-700 rounded-lg text-sm font-medium hover:bg-mist-100 dark:hover:bg-mist-800 transition-colors"
         >
           Cancelar
         </button>
         <button
           onClick={onClose}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
+          className="px-4 py-2 bg-mist-600 hover:bg-mist-700 text-white rounded-lg text-sm font-medium transition-colors"
         >
           Confirmar
         </button>

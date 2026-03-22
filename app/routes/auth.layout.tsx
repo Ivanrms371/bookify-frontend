@@ -8,9 +8,9 @@ export async function clientLoader() {
 
     if (user) {
       if (user.businesses.length) {
-        return redirect(`/dashboard/${user.businesses[0].id}`);
+        throw redirect(`/dashboard/${user.businesses[0].id}`);
       }
-      return redirect("/onboarding");
+      throw redirect("/onboarding");
     }
     return null;
   } catch (error) {

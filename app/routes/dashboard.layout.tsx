@@ -11,7 +11,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     useAuthStore.getState().setSession({ ...user, isAuthenticated: true });
 
     if (user.businesses.length === 0) {
-      return redirect("/onboarding");
+      throw redirect("/onboarding");
     }
 
     const businessId = params.businessId;
@@ -19,7 +19,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
     if (!business) {
       business = user.businesses[0];
-      return redirect(`/dashboard/${business.id}`);
+      throw redirect(`/dashboard/${business.id}`);
     }
 
     const { useBusinessStore } =
@@ -32,7 +32,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
       business,
     };
   } catch (error) {
-    return redirect("/login");
+    throw redirect("/login");
   }
 }
 

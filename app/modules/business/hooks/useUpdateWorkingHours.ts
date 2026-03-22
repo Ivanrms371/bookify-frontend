@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { businessApi, type WorkingHourData } from "../api/business.api";
+import { businessApi } from "../api/business.api";
+import type { WorkingHourData } from "../types/business.types";
 
 export const useUpdateWorkingHours = (businessId: string) => {
   const queryClient = useQueryClient();

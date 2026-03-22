@@ -20,12 +20,17 @@ export const Button = ({
       className={twMerge(
         "relative inline-flex items-center justify-center",
         className,
-        size === "sm" && "px-4 py-2 text-sm",
-        size === "md" && "px-6 py-3 text-sm",
-        size === "lg" && "px-8 py-4 text-sm",
+        size === "sm" && "px-3 py-1.5 text-sm",
+        size === "md" && "px-5 py-2.5 text-sm",
+        size === "lg" && "px-7 py-3.5 text-sm",
       )}
     >
-      <span className={isLoading ? "opacity-0" : "opacity-100"}>
+      <span
+        className={twMerge(
+          isLoading ? "opacity-0" : "opacity-100",
+          "font-medium flex gap-2 items-center",
+        )}
+      >
         {children}
       </span>
 

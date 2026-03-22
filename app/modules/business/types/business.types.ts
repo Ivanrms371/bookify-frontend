@@ -1,5 +1,12 @@
 export type BusinessType = string; // Define proper enum if available
 
+export interface WorkingHourData {
+  dayOfWeek: number;
+  isActive: boolean;
+  startMinutes: number;
+  endMinutes: number;
+}
+
 export interface Business {
   id: string;
   ownerId: string;

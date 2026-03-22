@@ -9,10 +9,19 @@ export const TurnifyLogo = ({ className, center = false, ...props }: Props) => {
   return (
     <Link
       to="/"
-      className={twMerge(className, center && "flex justify-center mx-auto")}
+      className={twMerge(
+        className,
+        center && "flex justify-center mx-auto ",
+        "bg-mist-800 dark:bg-mist-950  size-18 flex justify-center items-center rounded-full",
+      )}
       {...props}
     >
-      <img src="/turnify/4.svg" alt="Turnify Logo" />
+      {/* <img
+        src="/turnify/bookify-2.png"
+        alt="Turnify Logo"
+        className="rounded-full"
+      /> */}
+      <span className="font-bold font-mono text-mist-100">Bookify</span>
     </Link>
   );
 };

@@ -8,6 +8,13 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+api.interceptors.request.use((config) => {
+  if (config.data instanceof FormData && config.headers) {
+    delete config.headers["Content-Type"];
+  }
+  return config;
+});
+
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value?: any) => void;

@@ -16,11 +16,11 @@ export default function SignupPage() {
 
         <SignupForm />
 
-        <p className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium">
+        <p className="text-center text-mist-500 dark:text-mist-400 text-sm font-medium">
           ¿Ya tienes una cuenta?
           <Link
             to="/login"
-            className="ml-1 text-gray-900 dark:text-gray-200 font-bold cursor-pointer hover:underline underline-offset-2"
+            className="ml-1 text-mist-900 dark:text-mist-200 font-bold cursor-pointer hover:underline underline-offset-2"
           >
             Iniciar sesión
           </Link>

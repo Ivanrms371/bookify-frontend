@@ -8,7 +8,7 @@ export const TopBar = () => {
   const { session } = useAuth();
 
   return (
-    <header className="flex justify-between items-center w-full py-4 mb-4">
+    <header className="sticky top-0 z-40 bg-mist-100 dark:bg-mist-950 flex justify-between items-center w-full py-4">
       <Input type="text" placeholder="Buscar aquí..." className="w-80" />
 
       <div className="flex gap-4 items-center">

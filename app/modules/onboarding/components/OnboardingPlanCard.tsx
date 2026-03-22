@@ -18,28 +18,28 @@ export function OnboardingPlanCard({
   return (
     <div
       className={twMerge(
-        "relative flex flex-col rounded-3xl bg-white dark:bg-gray-950 p-8 transition shadow-sm max-w-lg w-full mx-auto dark:shadow-none dark:border dark:border-gray-900",
-        isPopular && "border-2 dark:border-gray-600 xl:scale-105 shadow-md",
+        "relative flex flex-col rounded-3xl bg-white dark:bg-mist-950 p-8 transition shadow-sm max-w-lg w-full mx-auto dark:shadow-none dark:border dark:border-mist-900",
+        isPopular && "border-2 dark:border-mist-600 xl:scale-105 shadow-md",
       )}
     >
       {isPopular && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 text-gray-50 dark:bg-gray-100 dark:text-gray-900 px-4 py-2 rounded-full text-xs font-bold tracking-wide uppercase">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-mist-900 text-mist-50 dark:bg-mist-100 dark:text-mist-900 px-4 py-2 rounded-full text-xs font-bold tracking-wide uppercase">
           Más Popular
         </div>
       )}
 
       <div className="mb-6">
-        <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+        <h3 className="text-3xl font-bold text-mist-900 dark:text-mist-100">
           {name}
         </h3>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">{description}</p>
+        <p className="text-mist-500 dark:text-mist-400 mt-2">{description}</p>
       </div>
 
       <div className={`mb-6 ${isPopular ? "flex items-end gap-1" : ""}`}>
-        <span className="text-5xl font-extrabold text-gray-800 dark:text-gray-100">
+        <span className="text-5xl font-extrabold text-mist-800 dark:text-mist-100">
           ${plan.price}
         </span>
-        <span className="text-gray-500 dark:text-gray-400 font-medium">
+        <span className="text-mist-500 dark:text-mist-400 font-medium">
           /mes
         </span>
       </div>
@@ -51,21 +51,21 @@ export function OnboardingPlanCard({
               className={twMerge(
                 "shrink-0 p-1 rounded-full",
                 isPopular
-                  ? "bg-gray-800 dark:bg-gray-100"
-                  : "bg-gray-100 dark:bg-gray-800",
+                  ? "bg-mist-800 dark:bg-mist-100"
+                  : "bg-mist-100 dark:bg-mist-800",
               )}
             >
               <CheckIcon
                 className={twMerge(
                   "size-4",
                   isPopular
-                    ? "text-gray-100 dark:text-gray-800"
-                    : "text-gray-800 dark:text-gray-100",
+                    ? "text-mist-100 dark:text-mist-800"
+                    : "text-mist-800 dark:text-mist-100",
                 )}
               />
             </div>
             <span
-              className={"text-sm font-medium text-gray-700 dark:text-gray-500"}
+              className={"text-sm font-medium text-mist-700 dark:text-mist-500"}
             >
               {feature.text}
             </span>

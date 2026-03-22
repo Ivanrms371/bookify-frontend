@@ -150,7 +150,7 @@ export const InviteTeamModal = () => {
         <button
           type="button"
           onClick={handleAddInvitation}
-          className="w-full mt-2 flex items-center gap-2 justify-center border py-2 rounded-xl border-gray-300 dark:border-gray-800 border-dashed text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-900/50 cursor-pointer"
+          className="w-full mt-2 flex items-center gap-2 justify-center border py-2 rounded-xl border-mist-300 dark:border-mist-800 border-dashed text-mist-600 dark:text-mist-200 hover:bg-mist-200 dark:hover:bg-mist-900/50 cursor-pointer"
         >
           <PlusIcon className="size-5" /> <span>Agregar miembro</span>
         </button>
@@ -160,7 +160,7 @@ export const InviteTeamModal = () => {
             {invitations.map(({ email }) => (
               <li
                 key={email}
-                className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 flex items-center gap-2 rounded-xl text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                className="bg-mist-100 dark:bg-mist-800 text-mist-800 dark:text-mist-200 px-3 py-1 flex items-center gap-2 rounded-xl text-sm font-medium hover:bg-mist-200 dark:hover:bg-mist-700 cursor-pointer transition-colors"
                 onClick={() => handleRemoveInvitation(email)}
               >
                 {email}

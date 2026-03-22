@@ -2,28 +2,25 @@ import { useModalStore } from "@/shared/store/useModalStore";
 import { Modal } from "@/shared/components/_ui/Modal";
 import { useCreateService } from "../hooks/useCreateService";
 import { useBusinessStore } from "@/modules/business/store/business.store";
-import type { CreateServiceData } from "../api/service.api";
-import { ServiceForm, type ServiceFormValues } from "./ServiceForm";
+import type { CreateServiceData } from "../types/service.types";
+import { ServiceForm, type ServiceFormSubmitData } from "./ServiceForm";
 
 export const ServiceCreateModal = () => {
-  const { isOpen, type, closeModal } = useModalStore();
-  const { currentBusiness } = useBusinessStore();
-  const { mutateAsync, isPending } = useCreateService(
-    currentBusiness?.id || "",
-  );
+  const { closeModal } = useModalStore();
+  const currentBusiness = useBusinessStore((s) => s.currentBusiness);
+  const { mutateAsync, isPending } = useCreateService(currentBusiness?.id ?? "");
 
-  // We are relying on the GlobalModalProvider to respect the rules, but we can keep standard safety checks.
-
-  const onSubmit = async (data: ServiceFormValues) => {
+  const onSubmit = async (data: ServiceFormSubmitData) => {
     try {
       const payload: CreateServiceData = {
         name: data.name,
         description: data.description,
         price: Number(data.price),
         initialActiveMinutes: data.initialActiveMinutes,
-        passiveTimeMinutes: data.passiveTimeMinutes || undefined,
-        finalActiveMinutes: data.finalActiveMinutes || undefined,
+        passiveTimeMinutes: data.passiveTimeMinutes ?? undefined,
+        finalActiveMinutes: data.finalActiveMinutes ?? undefined,
         isActive: data.isActive,
+        image: data.image,
       };
       await mutateAsync(payload);
       closeModal();

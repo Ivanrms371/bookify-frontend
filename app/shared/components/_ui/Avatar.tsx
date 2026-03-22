@@ -20,7 +20,7 @@ export const Avatar = ({ src, name, size = "md" }: AvatarProps) => {
   }
 
   return (
-    <div className="size-12 flex justify-center items-center bg-gray-200 text-gray-950 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 dark:text-gray-200 rounded-full font-medium">
+    <div className="size-12 flex justify-center items-center bg-mist-200 text-mist-950 dark:bg-mist-900 border border-mist-300 dark:border-mist-800 dark:text-mist-200 rounded-full font-medium">
       {initials}
     </div>
   );

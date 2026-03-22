@@ -53,11 +53,11 @@ export const SidebarMainNav = () => {
             to={item.href}
             relative="path"
             className={cn(
-              "flex items-center gap-2 px-3 py-3 rounded-2xl text-gray-800 hover:bg-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-800 transition-colors font-medium duration-300",
+              "flex items-center gap-2 px-3 py-3 rounded-2xl text-mist-800 hover:bg-mist-800 hover:text-mist-200 dark:text-mist-200 dark:hover:bg-mist-200 dark:hover:text-mist-800 transition-colors font-medium duration-300",
               location.pathname.endsWith(
                 item.href === "." ? "dashboard" : item.href,
               )
-                ? "bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800"
+                ? "bg-mist-800 text-mist-200 dark:bg-mist-200 dark:text-mist-800"
                 : "",
             )}
           >

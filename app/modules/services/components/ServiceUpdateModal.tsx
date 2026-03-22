@@ -2,7 +2,7 @@ import { useModalStore } from "@/shared/store/useModalStore";
 import { Modal } from "@/shared/components/_ui/Modal";
 import { useCreateService } from "../hooks/useCreateService";
 import { useBusinessStore } from "@/modules/business/store/business.store";
-import type { CreateServiceData } from "../api/service.api";
+import type { CreateServiceData } from "../types/service.types";
 import { ServiceForm, type ServiceFormValues } from "./ServiceForm";
 
 export const ServiceUpdateModal = () => {

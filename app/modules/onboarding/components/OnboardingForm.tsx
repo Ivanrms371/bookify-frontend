@@ -28,12 +28,12 @@ export const OnboardingForm = () => {
         <label
           htmlFor="businessSlug"
           className={cn(
-            "rounded-2xl bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 px-4 h-11.5 py-3 transition text-sm font-medium flex items-center gap-1 focus-within:border-gray-500 focus-within:ring-2 focus-within:ring-gray-200 dark:focus-within:ring-gray-800",
+            "rounded-2xl bg-white dark:bg-mist-950 border border-mist-200 dark:border-mist-800 px-4 h-11.5 py-3 transition text-sm font-medium flex items-center gap-1 focus-within:border-mist-500 focus-within:ring-2 focus-within:ring-mist-200 dark:focus-within:ring-mist-800",
             errors.slug &&
               "border-red-500 focus-within:border-red-500 focus-within:ring-red-200",
           )}
         >
-          <span className="text-gray-400">https://turnify.app/b/</span>
+          <span className="text-mist-400">https://turnify.app/b/</span>
 
           <input
             {...register("slug")}

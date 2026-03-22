@@ -23,7 +23,7 @@ export const TaskCard = ({
   return (
     <div
       className={cn(
-        "gap-2 flex items-center rounded-4xl ring-2 ring-gray-50 p-6",
+        "gap-2 flex items-center rounded-4xl ring-2 ring-mist-50 p-6",
         state === "pending" ? "bg-orange-200 cursor-pointer" : "",
         state === "completed" ? "bg-green-200 cursor-default" : "",
       )}
@@ -50,11 +50,11 @@ export const TaskCard = ({
         )}
       </div>
       <div className="flex-1">
-        <div className="text-gray-900 font-bold mb-1">
+        <div className="text-mist-900 font-bold mb-1">
           {state === "pending" ? title : titleOnComplete}
         </div>
         {state === "pending" && (
-          <div className="text-gray-700 text-sm hover:text-gray-900 transition-colors">
+          <div className="text-mist-700 text-sm hover:text-mist-900 transition-colors">
             {buttonText}
           </div>
         )}
