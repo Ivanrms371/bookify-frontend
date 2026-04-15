@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { authApi } from "../api/auth.api";
+import { usersApi } from "../api/users.api";
 
 export const useLogin = () => {
   const {
@@ -27,8 +28,26 @@ export const useLogin = () => {
       setFormError(res.error);
       return;
     }
-    setFormError(null);
-    navigate(`/dashboard/${res.data.businessId}`);
+    
+    // Explicitly grab the entire membership list before redirecting
+    let user;
+    try {
+      user = await usersApi.getMe();
+    } catch (e: any) {
+      if (e?.response?.status === 404 || e?.status === 404) {
+        navigate("/onboarding");
+        return;
+      }
+      setFormError("Could not verify user profile.");
+      return;
+    }
+    
+    if (!user || !user.tenants || user.tenants.length === 0) {
+      navigate("/onboarding");
+      return;
+    }
+    
+    navigate(`/dashboard/${user.tenants[0].id}`);
   });
 
   return {

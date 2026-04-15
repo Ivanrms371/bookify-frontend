@@ -1,12 +1,11 @@
-import { cn } from "@/shared/lib/utils";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/utils"
+import { twMerge } from "tailwind-merge"
 
-interface Props {
-  size?: "xs" | "sm" | "md" | "lg";
-  color?: "white" | "black";
+type Props = React.HTMLAttributes<HTMLDivElement> & {
+  size?: "xs" | "sm" | "md" | "lg"
 }
 
-export const LoadingSpinner = ({ size = "xs", color = "white" }: Props) => {
+export const LoadingSpinner = ({ size = "xs", className, ...rest }: Props) => {
   return (
     <div
       className={twMerge(
@@ -15,50 +14,28 @@ export const LoadingSpinner = ({ size = "xs", color = "white" }: Props) => {
         size === "sm" && "size-6",
         size === "md" && "size-8",
         size === "lg" && "size-10",
+        className,
       )}
+      {...rest}
     >
       <div
-        className={cn(
-          "sk-chase-dot",
-          color === "white" && "before:bg-mist-100",
-          color === "black" && "before:bg-mist-700",
-        )}
+        className={"sk-chase-dot dark:before:bg-mist-300 before:bg-mist-600"}
       ></div>
       <div
-        className={cn(
-          "sk-chase-dot",
-          color === "white" && "before:bg-mist-100",
-          color === "black" && "before:bg-mist-700",
-        )}
+        className={"sk-chase-dot dark:before:bg-mist-300 before:bg-mist-600"}
       ></div>
       <div
-        className={cn(
-          "sk-chase-dot",
-          color === "white" && "before:bg-mist-100",
-          color === "black" && "before:bg-mist-700",
-        )}
+        className={"sk-chase-dot dark:before:bg-mist-300 before:bg-mist-600"}
       ></div>
       <div
-        className={cn(
-          "sk-chase-dot",
-          color === "white" && "before:bg-mist-100",
-          color === "black" && "before:bg-mist-700",
-        )}
+        className={"sk-chase-dot dark:before:bg-mist-300 before:bg-mist-600"}
       ></div>
       <div
-        className={cn(
-          "sk-chase-dot",
-          color === "white" && "before:bg-mist-100",
-          color === "black" && "before:bg-mist-700",
-        )}
+        className={"sk-chase-dot dark:before:bg-mist-300 before:bg-mist-600"}
       ></div>
       <div
-        className={cn(
-          "sk-chase-dot",
-          color === "white" && "before:bg-mist-100",
-          color === "black" && "before:bg-mist-700",
-        )}
+        className={"sk-chase-dot dark:before:bg-mist-300 before:bg-mist-600"}
       ></div>
     </div>
-  );
-};
+  )
+}

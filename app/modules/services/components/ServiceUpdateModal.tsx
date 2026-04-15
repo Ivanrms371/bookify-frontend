@@ -1,32 +1,42 @@
+
 import { useModalStore } from "@/shared/store/useModalStore";
 import { Modal } from "@/shared/components/_ui/Modal";
-import { useCreateService } from "../hooks/useCreateService";
-import { useBusinessStore } from "@/modules/business/store/business.store";
-import type { CreateServiceData } from "../types/service.types";
-import { ServiceForm, type ServiceFormValues } from "./ServiceForm";
+import { useUpdateService } from "../hooks/useUpdateService";
+import { ServiceForm } from "./ServiceForm";
+import { LoadingSpinner } from "@/shared/components/_ui/LoadingSpinner";
+import type { UpdateServiceInput } from "../types/service-update.type";
+import { useService } from "../hooks/useService";
+import { useStaffs } from "@/modules/staff/hooks/useStaffs";
+import type { ServiceFormInput } from "../schemas/service-form.schema";
 
 export const ServiceUpdateModal = () => {
-  const { closeModal } = useModalStore();
-  const { currentBusiness } = useBusinessStore();
-  const { mutateAsync, isPending } = useCreateService(
-    currentBusiness?.id || "",
-  );
+  const { closeModal, props } = useModalStore();
+  const serviceId = props?.serviceId as string;
 
-  const onSubmit = async (data: ServiceFormValues) => {
+  const { data: staffs } = useStaffs();
+  const { data: service, isPending: isLoading } = useService(serviceId);
+  const { mutateAsync, isPending: isUpdating } = useUpdateService(serviceId);
+
+  const onSubmit = async (data: ServiceFormInput) => {
     try {
-      const payload: CreateServiceData = {
+      if (!serviceId) return;
+
+      console.log(data);
+
+      const payload: UpdateServiceInput  = {
         name: data.name,
         description: data.description,
-        price: Number(data.price),
+        price: data.price,
+        image: data.image,
         initialActiveMinutes: data.initialActiveMinutes,
-        passiveTimeMinutes: data.passiveTimeMinutes || undefined,
-        finalActiveMinutes: data.finalActiveMinutes || undefined,
         isActive: data.isActive,
+        staffIds: data.staffIds,
       };
+
       await mutateAsync(payload);
       closeModal();
     } catch (error) {
-      console.error("Failed to create service:", error);
+      console.error("Failed to update service:", error);
     }
   };
 
@@ -36,12 +46,27 @@ export const ServiceUpdateModal = () => {
       title="Editar Servicio"
       description="Edita un servicio existente."
     >
-      <ServiceForm
-        onSubmit={onSubmit}
-        isPending={isPending}
-        onCancel={closeModal}
-        submitLabel="Guardar Servicio"
-      />
+     
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <ServiceForm
+            defaultValues={{
+              name: service?.name,
+              description: service?.description ?? "",
+              price: service?.price.toString(),
+              initialActiveMinutes: service?.durationMinutes,
+              isActive: service?.isActive,
+              staffIds: service?.staffIds
+            }}
+            onSubmit={onSubmit}
+            staffs={staffs}
+            isPending={isLoading}
+            onCancel={closeModal}
+            isEdit={true}
+            imageUrl={service?.image}
+          />
+        )}
     </Modal>
   );
 };

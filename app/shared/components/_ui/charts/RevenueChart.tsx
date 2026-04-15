@@ -8,25 +8,25 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import type { DailyRevenue } from "@/modules/dashboard/api/dashboard.api";
-import { cn } from "@/shared/lib/utils";
+import type { DailyRevenue } from "@/modules/dashboard/types/dashboard.types";
+import { cn, formatRevenue } from "@/shared/lib/utils";
+import { Card } from "../Card";
+import { Paragraph } from "../../typography/Paragraph";
+import { ArrowTrendingDownIcon, ArrowTrendingUpIcon } from "@heroicons/react/24/outline";
 
 interface RevenueChartProps {
-  data: DailyRevenue[];
+  data: DailyRevenue[] | { date: string; revenue: number }[];
+  totalMonth: number | string;
+  totalPreviousMonth: number | string;
+  title?: string;
 }
 
-function formatShortDate(dateStr: string) {
-  const [, month, day] = dateStr.split("-");
-  return `${parseInt(day)}/${parseInt(month)}`;
-}
-
-function formatRevenue(value: number): string {
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`;
-  return `$${value}`;
-}
-
-export const RevenueChart = ({ data }: RevenueChartProps) => {
+export const RevenueChart = ({ 
+  data, 
+  totalMonth, 
+  totalPreviousMonth,
+  title = "Ganancias últimos 30 días"
+}: RevenueChartProps) => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -39,30 +39,58 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
     return () => observer.disconnect();
   }, []);
 
-  const totalRevenue = useMemo(
-    () => data.reduce((sum, d) => sum + d.revenue, 0),
-    [data],
-  );
+  const monthNum = typeof totalMonth === "string" ? parseFloat(totalMonth) : totalMonth;
+  const prevMonthNum = typeof totalPreviousMonth === "string" ? parseFloat(totalPreviousMonth) : totalPreviousMonth;
+  
+  const growth = prevMonthNum > 0 
+    ? ((monthNum - prevMonthNum) / prevMonthNum) * 100 
+    : 0;
 
-  const chartData = useMemo(
-    () => data.map((d) => ({ ...d, label: formatShortDate(d.date) })),
-    [data],
-  );
+  const chartData = useMemo(() => {
+    if (!data || data.length === 0) {
+      const flat = [];
+      const today = new Date();
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        flat.push({
+           date: d.toISOString().split('T')[0],
+           revenue: 0,
+           label: `${d.getDate()}/${d.getMonth() + 1}`
+        });
+      }
+      return flat;
+    }
+
+    return data.map((d) => {
+      const [, month, day] = d.date.split("-");
+      return { ...d, label: `${parseInt(day)}/${parseInt(month)}` };
+    });
+  }, [data]);
 
   return (
-    <div
-      className={cn(
-        "col-span-7 flex flex-col rounded-4xl bg-white dark:bg-transparent dark:border dark:border-mist-900/70 p-6",
-      )}
-    >
-      <div className="flex items-center justify-between mb-4">
+    <Card className="lg:col-span-7 pb-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <p className="text-sm font-medium text-mist-500 dark:text-mist-400">
-            Ganancias últimos 30 días
-          </p>
-          <p className="text-2xl font-mono font-semibold text-mist-800 dark:text-mist-100 mt-1">
-            {formatRevenue(totalRevenue)}
-          </p>
+          <Paragraph className="text-sm font-medium text-mist-500 dark:text-mist-400 pb-1">
+            {title}
+          </Paragraph>
+          <div className="flex items-center gap-3">
+            <p className="text-4xl font-mono font-bold text-mist-900 dark:text-white">
+              {formatRevenue(monthNum)}
+            </p>
+            {prevMonthNum > 0 && (
+              <span className={cn(
+                "text-sm font-bold flex items-center gap-1 px-2 py-0.5 rounded-lg",
+                growth >= 0
+                  ? "text-emerald-500" 
+                  : "text-rose-500"
+              )}>
+                {Math.abs(growth).toFixed(0)}%
+                {growth > 0 ?  <ArrowTrendingUpIcon className="size-5" /> :  <ArrowTrendingDownIcon className="size-5" />}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -149,6 +177,6 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </Card>
   );
 };

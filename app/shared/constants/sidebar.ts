@@ -9,48 +9,48 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 
-export const getSidebarItems = (businessId?: string) => [
+export const getSidebarItems = (tenantId?: string) => [
   {
     label: "Dashboard",
-    href: `/dashboard/${businessId}`,
+    href: `/dashboard/${tenantId}`,
     icon: Squares2X2Icon,
   },
   {
     label: "Agenda",
-    href: `/dashboard/${businessId}/calendar`,
+    href: `/dashboard/${tenantId}/calendar`,
     icon: CalendarDaysIcon,
   },
   {
     label: "Servicios",
-    href: `/dashboard/${businessId}/services`,
+    href: `/dashboard/${tenantId}/services`,
     icon: ClipboardDocumentListIcon,
   },
   {
     label: "Staff",
-    href: `/dashboard/${businessId}/staff`,
+    href: `/dashboard/${tenantId}/staff`,
     icon: UsersIcon,
   },
   {
     label: "Clientes",
-    href: `/dashboard/${businessId}/clients`,
+    href: `/dashboard/${tenantId}/clients`,
     icon: UserGroupIcon,
   },
   {
     label: "Reportes",
-    href: `/dashboard/${businessId}/reports`,
+    href: `/dashboard/${tenantId}/reports`,
     icon: ChartBarIcon,
   },
 ];
 
-export const getSecondarySidebarItems = (businessId?: string) => [
+export const getSecondarySidebarItems = (tenantId?: string) => [
   {
     label: "Ayuda",
-    href: `/dashboard/${businessId}/help`,
+    href: `/dashboard/${tenantId}/help`,
     icon: LifebuoyIcon,
   },
   {
     label: "Configuración",
-    href: `/dashboard/${businessId}/settings`,
+    href: `/dashboard/${tenantId}/settings`,
     icon: Cog6ToothIcon,
   },
 ];

@@ -1,19 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { onboardingApi } from "../api/onboarding.api";
 
-export const useCompleteOnboarding = (businessId: string | undefined) => {
+export const useCompleteOnboarding = (tenantId: string | undefined) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: () => {
-      if (!businessId) throw new Error("Business ID is required");
-      return onboardingApi.completeOnboarding(businessId);
+      if (!tenantId) throw new Error("Tenant ID is required");
+      return onboardingApi.completeOnboarding(tenantId);
     },
     onSuccess: () => {
-      if (businessId) {
-        queryClient.invalidateQueries({ queryKey: ["onboarding-checklist", businessId] });
-        queryClient.invalidateQueries({ queryKey: ["business", businessId] });
-        queryClient.invalidateQueries({ queryKey: ["business"] });
+      if (tenantId) {
+        queryClient.invalidateQueries({
+          queryKey: ["onboarding-checklist", tenantId],
+        });
+        queryClient.invalidateQueries({ queryKey: ["tenant", tenantId] });
+        queryClient.invalidateQueries({ queryKey: ["tenant"] });
       }
     },
   });

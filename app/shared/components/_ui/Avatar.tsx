@@ -1,27 +1,46 @@
+import { COLORS } from "@/shared/constants/colors"
+import { cn } from "@/shared/lib/utils"
+import { useDarkModeStore } from "@/shared/store/useDarkModeStore"
+import { getColor } from "@/shared/utils/colors"
+import { getInitials } from "@/shared/utils/string"
+
 interface AvatarProps {
-  src?: string;
-  name?: string;
-  size?: "sm" | "md" | "lg";
+  src?: string | null
+  name?: string
+  size?: "sm" | "md" | "lg"
+  className?: string
+  color?: string
 }
 
-const sizes = { sm: "size-10", md: "size-12", lg: "size-14" };
+export const Avatar = ({ src, name, size = "md", className, color }: AvatarProps) => {
+  const initials = getInitials(name)
 
-export const Avatar = ({ src, name, size = "md" }: AvatarProps) => {
-  const initials = name?.substring(0, 2).toUpperCase() ?? "??";
 
   if (src) {
     return (
       <img
         src={src}
         alt={name ?? "Profile"}
-        className={`${sizes[size]} rounded-full object-cover`}
+        className={cn("rounded-full object-cover border border-mist-300 dark:border-mist-800/50", 
+          size === 'lg' && 'size-14',
+          size === 'md' && 'size-12',
+          size === 'sm' && 'size-10 f',
+          className
+        )}
       />
-    );
+    )
   }
 
   return (
-    <div className="size-12 flex justify-center items-center bg-mist-200 text-mist-950 dark:bg-mist-900 border border-mist-300 dark:border-mist-800 dark:text-mist-200 rounded-full font-medium">
+    <div className={cn("flex justify-center items-center border border-mist-300 dark:border-mist-800/50 dark:text-mist-200 rounded-full font-bold font-mono bg-mist-200 text-mist-950 dark:bg-mist-900", 
+      size === 'lg' && 'size-14',
+      size === 'md' && 'size-12',
+      size === 'sm' && 'size-10 text-sm',
+      className
+    )}
+ 
+    >
       {initials}
     </div>
-  );
-};
+  )
+}

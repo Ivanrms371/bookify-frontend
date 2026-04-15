@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { onboardingApi } from "../api/onboarding.api";
 
 export const useOnboardingGuard = () => {
-  const { setBusinessId } = useOnboardingStore();
+  const { setTenantId } = useOnboardingStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export const useOnboardingGuard = () => {
     try {
       const status = await onboardingApi.getStatus();
 
-      setBusinessId(status.businessId);
+      setTenantId(status.tenantId);
 
       if (status.step === "setup") {
         navigate("/onboarding", { replace: true });
@@ -26,7 +26,7 @@ export const useOnboardingGuard = () => {
         return;
       }
       if (status.step === "complete") {
-        navigate(`/dashboard/${status.businessId}`, { replace: true });
+        navigate(`/dashboard/${status.tenantId}`, { replace: true });
         return;
       }
     } catch (error) {

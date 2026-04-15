@@ -10,16 +10,16 @@ export interface ChecklistResponse {
   steps: {
     address: boolean;
     availability: boolean;
-    businessImages: boolean;
+    tenantImages: boolean;
     serviceCreate: boolean;
     inviteTeam?: boolean;
-    publishBusiness: boolean;
+    publishTenant: boolean;
   };
   isCompleted: boolean;
   paymentProvider: string | null;
 }
 
-export interface AddBusinessAddressInput {
+export interface AddTenantAddressInput {
   addressLine1: string;
   addressLine2?: string;
   phone?: string;

@@ -6,16 +6,22 @@ export async function clientLoader() {
   try {
     const user = await usersApi.getMe();
 
+    console.log(user);
+
     if (user) {
-      if (user.businesses.length) {
-        throw redirect(`/dashboard/${user.businesses[0].id}`);
+      if (user.tenants.length) {
+        return redirect(`/dashboard/${user.tenants[0].id}`);
       }
-      throw redirect("/onboarding");
+      return redirect("/onboarding");
     }
-    return null;
-  } catch (error) {
-    return null;
+  } catch (error: any) {
+    if (error?.response?.status === 404 || error?.status === 404) {
+      return null; // Stay on login
+    }
+    // Re-throw unhandled errors or standard Redirect Responses
+    if (error instanceof Response) throw error;
   }
+  return null;
 }
 
 export default function AuthLayout() {

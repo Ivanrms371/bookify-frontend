@@ -1,4 +1,5 @@
 import { TurnifyLogo } from "../_ui/TurnifyLogo";
+import { Button } from "../form/Button";
 import { SidebarMainNav } from "./SidebarMainNav";
 import { SidebarSecondaryNav } from "./SidebarSecondaryNav";
 import { SubscriptionPromptCard } from "@/modules/dashboard/components/SubscriptionPromptCard";
@@ -10,6 +11,7 @@ export const Sidebar = () => {
       <SidebarMainNav />
       <div className="flex-1"></div>
       <SubscriptionPromptCard />
+   
       <SidebarSecondaryNav />
     </div>
   );

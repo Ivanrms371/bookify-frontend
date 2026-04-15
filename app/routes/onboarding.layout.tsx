@@ -15,6 +15,7 @@ import { useEffect } from "react";
 export async function clientLoader() {
   try {
     let session = useAuthStore.getState().session;
+
     if (!session) {
       const user = await usersApi.getMe();
       useAuthStore.getState().setSession({ ...user, isAuthenticated: true });
@@ -22,13 +23,13 @@ export async function clientLoader() {
     }
 
     const status = await onboardingApi.getStatus();
-    useOnboardingStore.getState().setBusinessId(status.businessId);
+    useOnboardingStore.getState().setTenantId(status.tenantId);
 
     if (status.step === "complete")
-      return redirect(`/dashboard/${status.businessId}`);
+      return redirect(`/dashboard/${status.tenantId}`);
 
     return { status };
-  } catch {
+  } catch (error) {
     return redirect("/login");
   }
 }

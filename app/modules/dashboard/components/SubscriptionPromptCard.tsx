@@ -1,4 +1,4 @@
-import { useBusinessStore } from "@/modules/business/store/business.store";
+import { useTenantStore } from "@/modules/tenant/store/tenant.store";
 import { useGetChecklist } from "@/modules/onboarding/hooks/useGetChecklist";
 import { UpgradePlanCard } from "@/modules/billing/components/UpgradePlanCard";
 import { ConnectMPCard } from "@/modules/mercadopago/components/ConnectMPCard";
@@ -6,8 +6,8 @@ import { ConnectMPCard } from "@/modules/mercadopago/components/ConnectMPCard";
 const PLAN_FREE = "FREE";
 
 export const SubscriptionPromptCard = () => {
-  const currentBusiness = useBusinessStore((s) => s.currentBusiness);
-  const { data: checklistData } = useGetChecklist(currentBusiness?.id);
+  const currentTenant = useTenantStore((s) => s.currentTenant);
+  const { data: checklistData } = useGetChecklist(currentTenant?.id);
 
   if (!checklistData) return null;
 
@@ -18,6 +18,7 @@ export const SubscriptionPromptCard = () => {
 
   if (isFreePlan) return <UpgradePlanCard />;
   if (needsPaymentProvider) return <ConnectMPCard />;
+  
 
-  return null;
+  return null
 };

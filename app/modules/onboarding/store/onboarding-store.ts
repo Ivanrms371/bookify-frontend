@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
 interface OnboardingStore {
-  businessId: string;
-  setBusinessId: (businessId: string) => void;
+  tenantId: string;
+  setTenantId: (tenantId: string) => void;
   clearOnboarding: () => void;
 }
 
 const useOnboardingStore = create<OnboardingStore>((set) => ({
-  businessId: "",
-  setBusinessId: (businessId) => set({ businessId }),
-  clearOnboarding: () => set({ businessId: "" }),
+  tenantId: "",
+  setTenantId: (tenantId) => set({ tenantId }),
+  clearOnboarding: () => set({ tenantId: "" }),
 }));
 
 export { useOnboardingStore };

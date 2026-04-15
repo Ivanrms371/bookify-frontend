@@ -1,15 +1,15 @@
-import { createPortal } from "react-dom";
-import { useEffect, useState } from "react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { cn } from "@/shared/lib/utils";
-import { useModalStore } from "@/shared/store/useModalStore";
+import { createPortal } from "react-dom"
+import { useEffect, useState } from "react"
+import { XMarkIcon } from "@heroicons/react/24/outline"
+import { cn } from "@/shared/lib/utils"
+import { useModalStore } from "@/shared/store/useModalStore"
 
 interface NativeModalProps {
-  onClose: () => void;
-  title?: string;
-  description?: string;
-  children: React.ReactNode;
-  className?: string;
+  onClose: () => void
+  title?: string
+  description?: string
+  children: React.ReactNode
+  className?: string
 }
 
 export const Modal = ({
@@ -19,22 +19,22 @@ export const Modal = ({
   children,
   className,
 }: NativeModalProps) => {
-  const { isVisible } = useModalStore();
+  const { isVisible } = useModalStore()
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+      if (e.key === "Escape") onClose()
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [onClose])
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden"
     return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
+      document.body.style.overflow = "unset"
+    }
+  }, [])
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -42,7 +42,7 @@ export const Modal = ({
       <div
         className={cn(
           "absolute inset-0 bg-mist-900/40 backdrop-blur-sm transition-opacity duration-300",
-          isVisible ? "opacity-100" : "opacity-0", // ← usa isVisible
+          isVisible ? "opacity-100" : "opacity-0",
         )}
         onClick={onClose}
         aria-hidden="true"
@@ -53,7 +53,7 @@ export const Modal = ({
         className={cn(
           "relative z-10 w-full max-w-2xl bg-white dark:bg-mist-950 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden",
           "transition-all duration-300 transform p-10",
-          isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0", // ← usa isVisible
+          isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0",
           className,
         )}
         role="dialog"
@@ -84,5 +84,5 @@ export const Modal = ({
       </div>
     </div>,
     document.body,
-  );
-};
+  )
+}

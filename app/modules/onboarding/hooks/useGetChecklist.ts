@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import { onboardingApi } from '../api/onboarding.api';
+import { useQuery } from "@tanstack/react-query";
+import { onboardingApi } from "../api/onboarding.api";
 
-export const useGetChecklist = (businessId: string | undefined) => {
+export const useGetChecklist = (tenantId: string | undefined) => {
   return useQuery({
-    queryKey: ['onboarding-checklist', businessId],
-    queryFn: () => onboardingApi.getChecklist(businessId!),
-    enabled: !!businessId,
+    queryKey: ["onboarding-checklist", tenantId],
+    queryFn: () => onboardingApi.getChecklist(tenantId!),
+    enabled: !!tenantId,
   });
 };

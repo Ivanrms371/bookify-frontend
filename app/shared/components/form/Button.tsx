@@ -1,10 +1,10 @@
-import { twMerge } from "tailwind-merge";
-import { LoadingSpinner } from "../_ui/LoadingSpinner";
+import { twMerge } from "tailwind-merge"
+import { LoadingSpinner } from "../_ui/LoadingSpinner"
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  isLoading?: boolean;
-  size?: "sm" | "md" | "lg";
-};
+  isLoading?: boolean
+  size?: "sm" | "md" | "lg"
+}
 
 export const Button = ({
   children,
@@ -18,7 +18,7 @@ export const Button = ({
       {...props}
       disabled={isLoading}
       className={twMerge(
-        "relative inline-flex items-center justify-center",
+        "relative inline-flex items-center justify-center cursor-pointer",
         className,
         size === "sm" && "px-3 py-1.5 text-sm",
         size === "md" && "px-5 py-2.5 text-sm",
@@ -40,5 +40,5 @@ export const Button = ({
         </span>
       )}
     </button>
-  );
-};
+  )
+}

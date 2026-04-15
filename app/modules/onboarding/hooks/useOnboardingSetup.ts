@@ -13,7 +13,7 @@ import { useOnboardingStore } from "../store/onboarding-store";
 export const useOnboardingSetup = () => {
   const navigate = useNavigate();
   const { revalidate } = useRevalidator();
-  const { setBusinessId } = useOnboardingStore();
+  const { setTenantId } = useOnboardingStore();
   const [formError, setFormError] = useState<string | null>(null);
 
   const {
@@ -30,26 +30,26 @@ export const useOnboardingSetup = () => {
     },
   });
 
-  const businessName = watch("name");
+  const tenantName = watch("name");
 
   useEffect(() => {
     if (!dirtyFields.slug) {
-      if (businessName) {
-        const generatedSlug = softSlugify(businessName);
+      if (tenantName) {
+        const generatedSlug = softSlugify(tenantName);
 
         setValue("slug", generatedSlug, { shouldValidate: !!errors.slug });
       } else {
         setValue("slug", "", { shouldValidate: !!errors.slug });
       }
     }
-  }, [businessName, dirtyFields.slug, setValue, errors.slug]);
+  }, [tenantName, dirtyFields.slug, setValue, errors.slug]);
 
   const onSubmit = async (formData: OnboardingInitInput) => {
     setFormError(null);
 
     try {
       const res = await onboardingApi.setup(formData);
-      setBusinessId(res.business.id);
+      setTenantId(res.tenant.id);
       revalidate();
     } catch (error) {
       console.log(error);

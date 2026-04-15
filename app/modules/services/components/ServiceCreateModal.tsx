@@ -1,26 +1,28 @@
 import { useModalStore } from "@/shared/store/useModalStore";
 import { Modal } from "@/shared/components/_ui/Modal";
 import { useCreateService } from "../hooks/useCreateService";
-import { useBusinessStore } from "@/modules/business/store/business.store";
-import type { CreateServiceData } from "../types/service.types";
-import { ServiceForm, type ServiceFormSubmitData } from "./ServiceForm";
+import { useTenantStore } from "@/modules/tenant/store/tenant.store";
+import { ServiceForm } from "./ServiceForm";
+import { useStaffs } from "@/modules/staff/hooks/useStaffs";
+import type { ServiceFormInput } from "../schemas/service-form.schema";
+import type { CreateServiceInput } from "../types/service-create.type";
 
 export const ServiceCreateModal = () => {
   const { closeModal } = useModalStore();
-  const currentBusiness = useBusinessStore((s) => s.currentBusiness);
-  const { mutateAsync, isPending } = useCreateService(currentBusiness?.id ?? "");
+  const currentTenant = useTenantStore((s) => s.currentTenant);
+  const { mutateAsync, isPending } = useCreateService(currentTenant?.id ?? "");
+  const { data: staffs } = useStaffs();
 
-  const onSubmit = async (data: ServiceFormSubmitData) => {
+  const onSubmit = async (data: ServiceFormInput) => {
     try {
-      const payload: CreateServiceData = {
+      const payload: CreateServiceInput = {
         name: data.name,
         description: data.description,
         price: Number(data.price),
         initialActiveMinutes: data.initialActiveMinutes,
-        passiveTimeMinutes: data.passiveTimeMinutes ?? undefined,
-        finalActiveMinutes: data.finalActiveMinutes ?? undefined,
         isActive: data.isActive,
         image: data.image,
+        staffIds: data.staffIds,
       };
       await mutateAsync(payload);
       closeModal();
@@ -36,10 +38,11 @@ export const ServiceCreateModal = () => {
       description="Crea un nuevo servicio para tu negocio."
     >
       <ServiceForm
+        staffs={staffs}
         onSubmit={onSubmit}
         isPending={isPending}
         onCancel={closeModal}
-        submitLabel="Guardar Servicio"
+        isEdit={false}
       />
     </Modal>
   );

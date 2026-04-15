@@ -1,17 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { staffApi, type BulkInviteData } from "../api/staff.api";
 
-export const useInviteStaff = (businessId: string) => {
+export const useInviteStaff = (tenantId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: BulkInviteData) =>
-      staffApi.inviteStaff(businessId, data),
+    mutationFn: (data: BulkInviteData) => staffApi.inviteStaff(tenantId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["business-invitations", businessId],
+        queryKey: ["tenant-invitations", tenantId],
       });
-      queryClient.invalidateQueries({ queryKey: ["business", businessId] });
+      queryClient.invalidateQueries({ queryKey: ["tenant", tenantId] });
     },
   });
 };

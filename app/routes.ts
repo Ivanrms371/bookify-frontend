@@ -3,7 +3,7 @@ import {
   layout,
   route,
   type RouteConfig,
-} from "@react-router/dev/routes";
+} from "@react-router/dev/routes"
 
 export default [
   layout("./routes/auth.layout.tsx", [
@@ -19,7 +19,7 @@ export default [
       "./modules/onboarding/pages/OnboardingPlanPage.tsx",
     ),
   ]),
-  route("dashboard/:businessId", "./routes/dashboard.layout.tsx", [
+  route("dashboard/:tenantId", "./routes/dashboard.layout.tsx", [
     index("./modules/dashboard/pages/DashboardPage.tsx"),
     route("calendar", "./modules/calendar/pages/CalendarPage.tsx"),
     route("services", "./modules/services/pages/ServicesPage.tsx"),
@@ -33,4 +33,4 @@ export default [
       // route("mercadopago", "./modules/mercadopago/pages/MercadoPagoPage.tsx"),
     ]),
   ]),
-] satisfies RouteConfig;
+] satisfies RouteConfig

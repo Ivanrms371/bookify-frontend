@@ -1,116 +1,116 @@
-import { useState } from "react";
-import { twMerge } from "tailwind-merge";
-import { useModalStore } from "@/shared/store/useModalStore";
-import { Modal } from "@/shared/components/_ui/Modal";
-import { Label } from "@/shared/components/form/Label";
-import { Input } from "@/shared/components/form/Input";
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Button } from "@/shared/components/form/Button";
-import { useBusinessStore } from "@/modules/business/store/business.store";
-import { useCreateWorkingHours } from "@/modules/availability/hooks/useCreateWorkingHours";
+import { useState } from "react"
+import { twMerge } from "tailwind-merge"
+import { useModalStore } from "@/shared/store/useModalStore"
+import { Modal } from "@/shared/components/_ui/Modal"
+import { Label } from "@/shared/components/form/Label"
+import { Input } from "@/shared/components/form/Input"
+import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/shared/components/form/Button"
+import { useTenantStore } from "@/modules/tenant/store/tenant.store"
+import { useCreateWorkingHours } from "@/modules/availability/hooks/useCreateWorkingHours"
 
 const daysOfWeek = [
-  { value: "monday", label: "Lunes", day: 0 },
-  { value: "tuesday", label: "Martes", day: 1 },
-  { value: "wednesday", label: "Miércoles", day: 2 },
-  { value: "thursday", label: "Jueves", day: 3 },
-  { value: "friday", label: "Viernes", day: 4 },
-  { value: "saturday", label: "Sábado", day: 5 },
-  { value: "sunday", label: "Domingo", day: 6 },
-];
+  { value: "monday", label: "Lunes", day: 1 },
+  { value: "tuesday", label: "Martes", day: 2 },
+  { value: "wednesday", label: "Miércoles", day: 3 },
+  { value: "thursday", label: "Jueves", day: 4 },
+  { value: "friday", label: "Viernes", day: 5 },
+  { value: "saturday", label: "Sábado", day: 6 },
+  { value: "sunday", label: "Domingo", day: 0 },
+]
 
 type TimeBlock = {
-  id: string;
-  startSchedule: string;
-  endSchedule: string;
-  name: string;
-};
+  id: string
+  startSchedule: string
+  endSchedule: string
+  name: string
+}
 
 export const AvailabilityModal = () => {
-  const { closeModal } = useModalStore();
-  const currentBusiness = useBusinessStore((state) => state.currentBusiness);
+  const { closeModal } = useModalStore()
+  const currentTenant = useTenantStore((state) => state.currentTenant)
   const { mutate: createHours, isPending } = useCreateWorkingHours(
-    currentBusiness?.id,
-  );
+    currentTenant?.id,
+  )
 
   const [blocks, setBlocks] = useState<TimeBlock[]>([
     { id: crypto.randomUUID(), startSchedule: "", endSchedule: "", name: "" },
-  ]);
+  ])
 
-  const [assignments, setAssignments] = useState<Record<number, string[]>>({});
+  const [assignments, setAssignments] = useState<Record<number, string[]>>({})
 
   const isBlockValid = (block: TimeBlock) => {
-    return block.startSchedule && block.endSchedule && block.name.trim() !== "";
-  };
+    return block.startSchedule && block.endSchedule && block.name.trim() !== ""
+  }
 
   const handleAddBlock = () => {
-    if (!blocks.every(isBlockValid)) return;
+    if (!blocks.every(isBlockValid)) return
     setBlocks([
       ...blocks,
       { id: crypto.randomUUID(), startSchedule: "", endSchedule: "", name: "" },
-    ]);
-  };
+    ])
+  }
 
   const handleUpdateBlock = (
     id: string,
     field: keyof TimeBlock,
     value: string,
   ) => {
-    setBlocks(blocks.map((b) => (b.id === id ? { ...b, [field]: value } : b)));
-  };
+    setBlocks(blocks.map((b) => (b.id === id ? { ...b, [field]: value } : b)))
+  }
 
   const handleRemoveBlock = (id: string) => {
-    setBlocks(blocks.filter((b) => b.id !== id));
+    setBlocks(blocks.filter((b) => b.id !== id))
     setAssignments((prev) => {
-      const next = { ...prev };
+      const next = { ...prev }
       Object.keys(next).forEach((dayKey) => {
-        const d = Number(dayKey);
-        next[d] = next[d].filter((blockId) => blockId !== id);
-      });
-      return next;
-    });
-  };
+        const d = Number(dayKey)
+        next[d] = next[d].filter((blockId) => blockId !== id)
+      })
+      return next
+    })
+  }
 
   const handleToggleDayBlock = (dayIndex: number, blockId: string) => {
     setAssignments((prev) => {
-      const currentAssigned = prev[dayIndex] || [];
+      const currentAssigned = prev[dayIndex] || []
       const nextAssigned = currentAssigned.includes(blockId)
         ? currentAssigned.filter((id) => id !== blockId)
-        : [...currentAssigned, blockId];
-      return { ...prev, [dayIndex]: nextAssigned };
-    });
-  };
+        : [...currentAssigned, blockId]
+      return { ...prev, [dayIndex]: nextAssigned }
+    })
+  }
 
   const onSubmit = () => {
-    if (!blocks.every(isBlockValid)) return;
+    if (!blocks.every(isBlockValid)) return
 
-    const payload = [];
+    const payload = []
     for (const [dayStr, blockIds] of Object.entries(assignments)) {
-      const dayOfWeek = Number(dayStr);
+      const dayOfWeek = Number(dayStr)
       for (const blockId of blockIds) {
-        const block = blocks.find((b) => b.id === blockId);
+        const block = blocks.find((b) => b.id === blockId)
         if (block) {
           payload.push({
             dayOfWeek,
             startTime: block.startSchedule,
             endTime: block.endSchedule,
             name: block.name,
-          });
+          })
         }
       }
     }
 
-    if (payload.length === 0) return;
+    if (payload.length === 0) return
 
     createHours(
       { workingHours: payload },
       {
         onSuccess: () => {
-          closeModal();
+          closeModal()
         },
       },
-    );
-  };
+    )
+  }
 
   return (
     <Modal
@@ -193,11 +193,11 @@ export const AvailabilityModal = () => {
 
               <div className="flex-1 flex gap-2 flex-wrap">
                 {blocks.map((block) => {
-                  if (!isBlockValid(block)) return null;
+                  if (!isBlockValid(block)) return null
 
                   const isAssigned = (assignments[day.day] || []).includes(
                     block.id,
-                  );
+                  )
 
                   return (
                     <button
@@ -212,7 +212,7 @@ export const AvailabilityModal = () => {
                     >
                       {block.name}
                     </button>
-                  );
+                  )
                 })}
               </div>
             </li>
@@ -241,5 +241,5 @@ export const AvailabilityModal = () => {
         </Button>
       </div>
     </Modal>
-  );
-};
+  )
+}

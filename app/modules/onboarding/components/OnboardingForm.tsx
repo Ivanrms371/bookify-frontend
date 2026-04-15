@@ -14,19 +14,19 @@ export const OnboardingForm = () => {
       className="flex flex-col gap-4 mt-10 max-w-lg px-6 mx-auto"
     >
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="businessName">Nombre de tu barbería</Label>
+        <Label htmlFor="tenantName">Nombre de tu barbería</Label>
         <Input
           {...register("name")}
           placeholder="Nombre de tu barbería"
-          id="businessName"
+          id="tenantName"
           hasError={!!errors.name}
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="businessSlug">URL de tu barbería</Label>
+        <Label htmlFor="tenantSlug">URL de tu barbería</Label>
         <label
-          htmlFor="businessSlug"
+          htmlFor="tenantSlug"
           className={cn(
             "rounded-2xl bg-white dark:bg-mist-950 border border-mist-200 dark:border-mist-800 px-4 h-11.5 py-3 transition text-sm font-medium flex items-center gap-1 focus-within:border-mist-500 focus-within:ring-2 focus-within:ring-mist-200 dark:focus-within:ring-mist-800",
             errors.slug &&
@@ -37,7 +37,7 @@ export const OnboardingForm = () => {
 
           <input
             {...register("slug")}
-            id="businessSlug"
+            id="tenantSlug"
             type="text"
             className="bg-transparent outline-none w-full text-sm"
           />

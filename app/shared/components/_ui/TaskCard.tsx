@@ -2,7 +2,7 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 interface StatsCardProps {
   title: string;

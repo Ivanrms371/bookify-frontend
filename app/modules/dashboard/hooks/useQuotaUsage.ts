@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { dashboardApi } from "../api/dashboard.api";
 
-export function useQuotaUsage(businessId: string | undefined) {
+export function useQuotaUsage(tenantId: string | undefined) {
   return useQuery({
-    queryKey: ["dashboard", "quota-usage", businessId],
-    queryFn: () => dashboardApi.getQuotaUsage(businessId!),
-    enabled: !!businessId,
+    queryKey: ["dashboard", "quota-usage", tenantId],
+    queryFn: () => dashboardApi.getQuotaUsage(tenantId!),
+    enabled: !!tenantId,
   });
 }

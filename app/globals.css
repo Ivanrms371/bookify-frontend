@@ -43,6 +43,10 @@ h3 {
   @apply flex gap-2 justify-center items-center bg-transparent dark:bg-mist-950  text-mist-900 dark:text-mist-100 rounded-full font-medium transition-all hover:bg-mist-100 dark:hover:bg-mist-900 text-sm cursor-pointer;
 }
 
+.button-danger {
+  @apply rounded-full  flex gap-2 justify-center items-center text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-all  text-sm;
+}
+
 .sk-chase {
   position: relative;
   animation: sk-chase 2.5s infinite linear both;
@@ -124,4 +128,16 @@ h3 {
   0% {
     transform: scale(1);
   }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-mist-800/50 rounded-full hover:bg-mist-700/50 transition-colors;
 }

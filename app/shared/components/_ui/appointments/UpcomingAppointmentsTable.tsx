@@ -4,6 +4,7 @@ import type { UpcomingAppointment } from "./UpcomingAppointments";
 
 interface UpcomingAppointmentsTableProps {
   appointments: UpcomingAppointment[];
+  todayCount?: number;
 }
 
 function formatTime(isoString: string) {
@@ -32,10 +33,9 @@ function formatCurrency(value: number) {
 
 export const UpcomingAppointmentsTable = ({
   appointments,
+  todayCount,
 }: UpcomingAppointmentsTableProps) => {
-  const sorted = [...appointments].sort(
-    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
-  );
+  const displayCount = todayCount ?? appointments.length;
 
   return (
     <div
@@ -49,12 +49,12 @@ export const UpcomingAppointmentsTable = ({
             Citas de hoy
           </p>
           <p className="text-2xl font-mono font-semibold text-mist-800 dark:text-mist-100 mt-1">
-            {sorted.length} {sorted.length === 1 ? "cita" : "citas"}
+            {displayCount} {displayCount === 1 ? "cita" : "citas"}
           </p>
         </div>
       </div>
 
-      {sorted.length === 0 ? (
+      {appointments.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center py-12 gap-3">
           <div className="p-4 rounded-full bg-mist-100 dark:bg-mist-900/40">
             <CalendarIcon className="size-6 text-mist-400 dark:text-mist-500" />
@@ -86,7 +86,7 @@ export const UpcomingAppointmentsTable = ({
               </tr>
             </thead>
             <tbody>
-              {sorted.map((appt, i) => (
+              {appointments.map((appt, i) => (
                 <tr
                   key={appt.id}
                   className={cn(

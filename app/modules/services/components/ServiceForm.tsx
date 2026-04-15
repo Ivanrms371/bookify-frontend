@@ -1,87 +1,38 @@
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Input } from "@/shared/components/form/Input";
 import { Label } from "@/shared/components/form/Label";
 import { Button } from "@/shared/components/form/Button";
 import { Textarea } from "@/shared/components/form/Textarea";
-import { PhotoIcon } from "@heroicons/react/24/outline";
-
-export const serviceSchema = z.object({
-  name: z.string().min(1, "El nombre es requerido"),
-  description: z.string().optional(),
-  price: z.string().min(1, "El precio es requerido"),
-  initialActiveMinutes: z.coerce
-    .number()
-    .min(1, "Debe durar al menos 1 minuto"),
-  passiveTimeMinutes: z.coerce.number().optional(),
-  finalActiveMinutes: z.coerce.number().optional(),
-  isActive: z.boolean().default(true),
-});
-
-export type ServiceFormValues = z.infer<typeof serviceSchema>;
-
-export type ServiceFormSubmitData = ServiceFormValues & { image?: File };
+import { CheckIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import { twMerge } from "tailwind-merge";
+import { useServiceForm,  } from "../hooks/useServiceForm";
+import type { ServiceFormInput } from "../schemas/service-form.schema";
+import type { Staff } from "@/modules/staff/types/staff.type";
 
 interface ServiceFormProps {
-  defaultValues?: Partial<ServiceFormValues>;
-  onSubmit: (data: ServiceFormSubmitData) => Promise<void>;
+  defaultValues?: Partial<ServiceFormInput>;
+  staffs?: Staff[];
+  onSubmit: (data: ServiceFormInput) => Promise<void>;
   isPending: boolean;
   onCancel: () => void;
-  submitLabel?: string;
+  imageUrl?: string | null;
+  isEdit?: boolean;
 }
 
 export const ServiceForm = ({
   defaultValues,
+  staffs = [],
   onSubmit,
   isPending,
   onCancel,
-  submitLabel = "Guardar",
+  imageUrl = '',
+  isEdit  = false,
 }: ServiceFormProps) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ServiceFormValues>({
-    resolver: zodResolver(serviceSchema) as any,
-    defaultValues: {
-      name: "",
-      description: "",
-      price: "",
-      initialActiveMinutes: undefined,
-      isActive: true,
-      ...defaultValues,
-    },
-  });
-
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (imageFile) {
-      const url = URL.createObjectURL(imageFile);
-      setImagePreview(url);
-      return () => URL.revokeObjectURL(url);
-    }
-    setImagePreview(null);
-  }, [imageFile]);
-
-  useEffect(() => {
-    if (defaultValues) {
-      reset(defaultValues);
-    }
-  }, [defaultValues, reset]);
-
-  const handleFormSubmit = (data: ServiceFormValues) => {
-    onSubmit({ ...data, image: imageFile ?? undefined });
-  };
+  
+  const {handleSubmit, register, errors, imageFile, setImageFile, imagePreview, imageInputRef, selectedStaffIds, toggleStaff} = useServiceForm({staffs, defaultValues, isEdit})
 
   return (
     <form
-      onSubmit={handleSubmit(handleFormSubmit as any)}
+      onSubmit={handleSubmit(onSubmit)}
       className="space-y-4 mt-6"
     >
       <div className="flex flex-col gap-1.5">
@@ -116,9 +67,9 @@ export const ServiceForm = ({
           htmlFor="image"
           className="aspect-square max-h-32 w-full border dark:border-mist-800 border-mist-300 border-dashed rounded-xl flex items-center justify-center text-center cursor-pointer overflow-hidden"
         >
-          {imagePreview ? (
+          {imagePreview || imageUrl ? (
             <img
-              src={imagePreview}
+              src={imagePreview || imageUrl || ""}
               alt="Vista previa"
               className="w-full h-full object-cover object-center"
             />
@@ -188,6 +139,36 @@ export const ServiceForm = ({
         />
       </div>
 
+      {staffs.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <Label>Asignar Profesionales</Label>
+          <ul className="flex flex-wrap gap-2 pt-2">
+            {staffs.map(({ displayName, id }) => {
+              const isSelected = selectedStaffIds.includes(id);
+              return (
+                <li
+                  key={id}
+                  onClick={() => toggleStaff(id)}
+                  className={twMerge(
+                    "py-1.5 px-3 rounded-lg transition-all duration-300 border cursor-pointer",
+                    "text-center font-medium text-sm flex gap-1.5 items-center  ",
+                    "bg-white  border-mist-200  text-mist-700 hover:border-mist-300 ",
+                    "dark:text-mist-300 dark:border-mist-800 dark:hover:border-mist-600 dark:bg-transparent",
+                    "hover:bg-mist-50 dark:hover:bg-mist-900/40",
+                    isSelected && "border-mist-300 dark:border-mist-800",
+                  )}
+                >
+                  <div className={twMerge("p-0.5 ring rounded-full text-mist-600 dark:text-mist-400", "ring-mist-200 dark:ring-mist-800")}>
+                    {isSelected ? <CheckIcon className="size-3.5 stroke-2" /> : <div className="size-3.5" />}
+                    </div>
+                  <span className="truncate">{displayName}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       <div className="pt-4 flex justify-end gap-3">
         <Button
           type="button"
@@ -203,7 +184,7 @@ export const ServiceForm = ({
           isLoading={isPending}
           disabled={isPending}
         >
-          {submitLabel}
+          {isEdit ? "Guardar Cambios" : "Crear Servicio"}
         </Button>
       </div>
     </form>

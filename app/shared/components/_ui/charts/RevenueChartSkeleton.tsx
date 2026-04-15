@@ -1,34 +1,21 @@
-import { cn } from "@/shared/lib/utils";
-import { useEffect, useState } from "react";
-
-function generateHeights(count: number, seed: number) {
-  const heights: number[] = [];
-  for (let i = 0; i < count; i++) {
-    const base =
-      25 +
-      Math.sin((i + seed) * 0.5) * 20 +
-      Math.cos((i + seed * 0.7) * 0.3) * 15;
-    heights.push(Math.max(10, Math.min(85, base)));
-  }
-  return heights;
-}
+import { cn } from "@/shared/lib/utils"
+import { generateHeights } from "@/shared/utils/chart"
+import { useEffect, useState } from "react"
 
 export const RevenueChartSkeleton = () => {
-  const [heights, setHeights] = useState(() => generateHeights(30, 0));
-  const [animate, setAnimate] = useState(false);
+  const [heights, setHeights] = useState(() => generateHeights(30, 0))
+  const [animate, setAnimate] = useState(false)
 
-  // Trigger initial grow animation
   useEffect(() => {
-    requestAnimationFrame(() => setAnimate(true));
-  }, []);
+    requestAnimationFrame(() => setAnimate(true))
+  }, [])
 
-  // Regenerate heights every 3s for a "living" feel
   useEffect(() => {
     const interval = setInterval(() => {
-      setHeights(generateHeights(30, Date.now() * 0.001));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+      setHeights(generateHeights(30, Date.now() * 0.001))
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div
@@ -56,5 +43,5 @@ export const RevenueChartSkeleton = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}

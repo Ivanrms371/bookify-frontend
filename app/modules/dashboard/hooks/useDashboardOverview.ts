@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { dashboardApi } from "../api/dashboard.api";
 
-export function useDashboardOverview(businessId: string | undefined) {
+export function useDashboardOverview(tenantId: string | undefined) {
   return useQuery({
-    queryKey: ["dashboard", "overview", businessId],
-    queryFn: () => dashboardApi.getOverview(businessId!),
-    enabled: !!businessId,
+    queryKey: ["dashboard", "overview", tenantId],
+    queryFn: () => dashboardApi.getOverview(tenantId!),
+    enabled: !!tenantId,
   });
 }

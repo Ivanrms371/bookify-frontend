@@ -1,7 +1,7 @@
 import { apiClient } from "@/shared/api/client";
 import type { OnboardingInitInput } from "../schemas/onboarding-init.schema";
 import type {
-  AddBusinessAddressInput,
+  AddTenantAddressInput,
   ChecklistResponse,
   OnboardingStatus,
   UpdateAssetsInput,
@@ -9,65 +9,67 @@ import type {
 } from "../types/onboarding.types";
 
 export const onboardingApi = {
-  addBusinessAddress: async (businessId: string, data: AddBusinessAddressInput) => {
+  addTenantAddress: async (tenantId: string, data: AddTenantAddressInput) => {
     const response = await apiClient.post(
-      `/business/${businessId}/onboarding/address`,
-      data
+      `/onboarding/tenants/${tenantId}/address`,
+      data,
     );
     return response.data;
   },
-  updateAvailability: async (businessId: string, data: UpdateAvailabilityInput) => {
+
+  updateAvailability: async (
+    tenantId: string,
+    data: UpdateAvailabilityInput,
+  ) => {
     const response = await apiClient.post(
-      `/business/${businessId}/onboarding/availability`,
-      data
+      `/onboarding/tenants/${tenantId}/availability`,
+      data,
     );
     return response.data;
   },
-  getChecklist: async (businessId: string): Promise<ChecklistResponse> => {
+
+  getChecklist: async (tenantId: string): Promise<ChecklistResponse> => {
     const response = await apiClient.get(
-      `/business/${businessId}/onboarding/checklist`,
+      `/onboarding/tenants/${tenantId}/checklist`,
     );
     return response.data;
   },
-  getOnboardingStatus: async (
-    businessId: string,
-  ): Promise<OnboardingStatus> => {
-    const response = await apiClient.get(
-      `/business/${businessId}/onboarding/status`,
-    );
+
+  getOnboardingStatus: async (tenantId: string): Promise<OnboardingStatus> => {
+    const response = await apiClient.get(`/onboarding/status`);
     return response.data;
   },
   getStatus: async () => {
-    const response = await apiClient.get(`/business/onboarding/status`);
+    const response = await apiClient.get(`/onboarding/status`);
     return response.data;
   },
   setup: async (data: OnboardingInitInput) => {
-    const response = await apiClient.post(`/business/onboarding/setup`, data);
+    const response = await apiClient.post(`/onboarding/setup`, data);
     return response.data;
   },
-  selectPlan: async (businessId: string, planType: string) => {
+  selectPlan: async (tenantId: string, plan: string) => {
     const response = await apiClient.post(
-      `/business/${businessId}/onboarding/select-plan`,
+      `/onboarding/tenants/${tenantId}/select-plan`,
       {
-        planType,
+        plan,
       },
     );
     return response.data;
   },
-  completeOnboarding: async (businessId: string) => {
+  completeOnboarding: async (tenantId: string) => {
     const response = await apiClient.post(
-      `/business/${businessId}/onboarding/complete`,
+      `/onboarding/tenants/${tenantId}/complete`,
     );
     return response.data;
   },
-  updateAssets: async (businessId: string, data: UpdateAssetsInput) => {
+  updateAssets: async (tenantId: string, data: UpdateAssetsInput) => {
     const formData = new FormData();
     if (data.logo) formData.append("logo", data.logo);
     if (data.banner) formData.append("banner", data.banner);
 
     const response = await apiClient.post(
-      `/business/${businessId}/onboarding/assets`,
-      formData
+      `/onboarding/tenants/${tenantId}/assets`,
+      formData,
     );
     return response.data;
   },

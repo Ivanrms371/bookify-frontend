@@ -1,17 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { serviceApi } from "../api/service.api";
-import type { CreateServiceData } from "../types/service.types";
+import type { CreateServiceInput } from "../types/service-create.type";
 
-export const useCreateService = (businessId: string) => {
+export const useCreateService = (tenantId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateServiceData) =>
-      serviceApi.createService(businessId, data),
+    mutationFn: (data: CreateServiceInput) =>
+      serviceApi.createService(tenantId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["services", businessId] });
-      queryClient.invalidateQueries({ queryKey: ["business", businessId] });
-      queryClient.invalidateQueries({ queryKey: ["onboarding-checklist", businessId] });
+      queryClient.invalidateQueries({ queryKey: ["services", tenantId] });
+      queryClient.invalidateQueries({ queryKey: ["tenant", tenantId] });
+      queryClient.invalidateQueries({
+        queryKey: ["onboarding-checklist", tenantId],
+      });
     },
   });
 };

@@ -12,7 +12,7 @@ export const TurnifyLogo = ({ className, center = false, ...props }: Props) => {
       className={twMerge(
         className,
         center && "flex justify-center mx-auto ",
-        "bg-mist-800 dark:bg-mist-950  size-18 flex justify-center items-center rounded-full",
+        "bg-mist-800 dark:bg-mist-950 border border-mist-800/70  size-20 flex justify-center items-center rounded-full",
       )}
       {...props}
     >
@@ -21,7 +21,7 @@ export const TurnifyLogo = ({ className, center = false, ...props }: Props) => {
         alt="Turnify Logo"
         className="rounded-full"
       /> */}
-      <span className="font-bold font-mono text-mist-100">Bookify</span>
+      <span className="font-bold font-mono text-mist-100 text-sm">Bookify</span>
     </Link>
   );
 };

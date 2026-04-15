@@ -5,18 +5,18 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
-import "@fontsource/geist-sans";
+} from "react-router"
+import "@fontsource/geist-sans"
 
-import type { Route } from "./+types/root";
-import "./globals.css";
+import type { Route } from "./+types/root"
+import "./globals.css"
 
 export const links: Route.LinksFunction = () => [
   {
     rel: "stylesheet",
     href: "https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500&f[]=satoshi@400,500,700&display=swap",
   },
-];
+]
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -33,35 +33,37 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ScreenLoader } from "./shared/components/_ui/ScreenLoader"
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ScreenLoader />
       <Outlet />
     </QueryClientProvider>
-  );
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+  let message = "Oops!"
+  let details = "An unexpected error occurred."
+  let stack: string | undefined
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? "404" : "Error"
     details =
       error.status === 404
         ? "The requested page could not be found."
-        : error.statusText || details;
+        : error.statusText || details
   } else if (import.meta.env.DEV && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+    details = error.message
+    stack = error.stack
   }
 
   return (
@@ -74,7 +76,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
-  );
+  )
 }
 
 export function HydrateFallback() {
@@ -82,5 +84,5 @@ export function HydrateFallback() {
     <div className="flex items-center justify-center h-screen">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
     </div>
-  );
+  )
 }
