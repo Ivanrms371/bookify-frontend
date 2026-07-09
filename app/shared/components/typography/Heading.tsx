@@ -1,26 +1,13 @@
-import { cn } from "@/shared/lib/utils"
+import { cn } from '@/shared/utils/cn';
 
 type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> & {
-  as?: "h1" | "h2" | "h3" | "h4"
-}
+  as?: 'h1' | 'h2' | 'h3' | 'h4';
+};
 
-export const Heading = ({
-  as: Tag = "h2",
-  className,
-  children,
-  ...rest
-}: HeadingProps) => {
+export const Heading = ({ as: Tag = 'h2', className, children, ...rest }: HeadingProps) => {
   return (
-    <Tag
-      className={cn(
-        "text-3xl font-bold font-mono",
-        "text-mist-800",
-        "dark:text-mist-200",
-        className,
-      )}
-      {...rest}
-    >
+    <Tag className={cn('font-bold font-mono tracking-tight', 'text-mist-900', className ? className : 'text-2xl md:text-3xl ')} {...rest}>
       {children}
     </Tag>
-  )
-}
+  );
+};

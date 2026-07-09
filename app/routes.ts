@@ -1,36 +1,33 @@
-import {
-  index,
-  layout,
-  route,
-  type RouteConfig,
-} from "@react-router/dev/routes"
+import { type RouteConfig, index, layout, route } from '@react-router/dev/routes';
 
 export default [
-  layout("./routes/auth.layout.tsx", [
-    route("login", "./modules/auth/pages/LoginPage.tsx"),
-    route("signup", "./modules/auth/pages/SignupPage.tsx"),
-    route("verify-email", "./modules/auth/pages/VerifyEmail.tsx"),
-    route("verify-error", "./modules/auth/pages/VerifyError.tsx"),
+  route('/', 'routes/index.tsx'),
+
+  layout('routes/auth/_layout.tsx', [
+    route('auth/login', 'routes/auth/login.tsx'),
+    route('auth/signup', 'routes/auth/signup.tsx'),
+    // route('auth/verify-email', 'routes/auth/verify-email.tsx'),
   ]),
-  layout("./routes/onboarding.layout.tsx", [
-    route("onboarding", "./modules/onboarding/pages/OnboardingSetupPage.tsx"),
-    route(
-      "onboarding/plan",
-      "./modules/onboarding/pages/OnboardingPlanPage.tsx",
-    ),
-  ]),
-  route("dashboard/:tenantId", "./routes/dashboard.layout.tsx", [
-    index("./modules/dashboard/pages/DashboardPage.tsx"),
-    route("calendar", "./modules/calendar/pages/CalendarPage.tsx"),
-    route("services", "./modules/services/pages/ServicesPage.tsx"),
-    route("staff", "./modules/staff/pages/StaffPage.tsx"),
-    route("customers", "./modules/customers/pages/CustomersPage.tsx"),
-    route("reports", "./modules/reports/pages/ReportsPage.tsx"),
-    route("settings", "./modules/settings/pages/SettingsPage.tsx"),
-    route("profile", "./modules/profile/pages/ProfilePage.tsx"),
-    route("help", "./modules/help/pages/HelpPage.tsx"),
-    route("billing", "./modules/billing/pages/BillingPage.tsx", [
-      // route("mercadopago", "./modules/mercadopago/pages/MercadoPagoPage.tsx"),
+
+  layout('routes/app/_layout.tsx', [
+    route('/:slug', 'routes/app/_slug.tsx', [
+      index('routes/app/index.tsx'),
+      route('calendar', 'routes/app/calendar.tsx'),
+      route('services', 'routes/app/services.tsx'),
+      route('customers', 'routes/app/customers.tsx'),
+      route('staff', 'routes/app/staff.tsx'),
+      route('reports', 'routes/app/reports.tsx'),
     ]),
   ]),
-] satisfies RouteConfig
+
+  layout('routes/onboarding/_layout.tsx', [
+    route('/onboarding/welcome', 'routes/onboarding/welcome.tsx'),
+    route('/onboarding/business', 'routes/onboarding/business.tsx'),
+    route('/onboarding/schedule', 'routes/onboarding/schedule.tsx'),
+    route('/onboarding/services', 'routes/onboarding/services.tsx'),
+    route('/onboarding/team', 'routes/onboarding/team.tsx'),
+    route('/onboarding/customize', 'routes/onboarding/customize.tsx'),
+    route('/onboarding/confirm', 'routes/onboarding/confirm.tsx'),
+    route('/onboarding/completed', 'routes/onboarding/completed.tsx'),
+  ]),
+] satisfies RouteConfig;

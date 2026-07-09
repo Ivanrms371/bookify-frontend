@@ -1,4 +1,4 @@
-import { COLORS } from "../constants/colors"
+import { COLORS } from "@/shared/constants"
 
 export const getColor = (color: string | null = null, isDark: boolean) => {
   const theme = isDark ? "dark" : "light"

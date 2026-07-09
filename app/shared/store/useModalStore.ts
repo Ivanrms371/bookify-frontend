@@ -1,49 +1,34 @@
-import { create } from "zustand"
+import { create } from 'zustand';
 
-export type ModalType =
-  | "serviceCreate"
-  | "serviceUpdate"
-  | "availability"
-  | "tenantImages"
-  | "inviteTeam"
-  | "address"
-  | "publishTenant"
-  | "appointmentDetail"
-  | "newAppointment"
-  | "rescheduleAppointment"
-  | "newCustomer"
-  | "updateCustomer"
-  | "deleteCustomer"
-  | "blockCustomer"
-  | "customerProfile"
-  | "addCustomerNote"
-  | null
+type ModalProps = Record<string, unknown>;
 
-interface ModalState {
-  isOpen: boolean
-  isVisible: boolean
-  type: ModalType
-  props?: Record<string, any>
-  openModal: (type: ModalType, props?: Record<string, any>) => void
-  closeModal: () => void
+interface ModalStore {
+  modals: Record<string, ModalProps>;
+  open: (key: string, props?: ModalProps) => void;
+  close: (key: string) => void;
+  closeAll: () => void;
+  isOpen: (key: string) => boolean;
+  getProps: <T extends ModalProps = ModalProps>(key: string) => T | undefined;
 }
 
-export const useModalStore = create<ModalState>((set, get) => ({
-  isOpen: false,
-  isVisible: false,
-  type: null,
-  props: {},
-  openModal: (type, props = {}) => {
-    set({ isOpen: true, type, props })
+export const useModalStore = create<ModalStore>((set, get) => ({
+  modals: {},
 
-    setTimeout(() => {
-      set({ isVisible: true })
-    }, 50)
-  },
-  closeModal: () => {
-    set({ isVisible: false })
-    setTimeout(() => {
-      set({ isOpen: false, type: null, props: {} })
-    }, 300)
-  },
-}))
+  open: (key, props = {}) =>
+    set((state) => ({
+      modals: { ...state.modals, [key]: props },
+    })),
+
+  close: (key) =>
+    set((state) => {
+      const next = { ...state.modals };
+      delete next[key];
+      return { modals: next };
+    }),
+
+  closeAll: () => set({ modals: {} }),
+
+  isOpen: (key) => key in get().modals,
+
+  getProps: <T extends ModalProps = ModalProps>(key: string) => get().modals[key] as T | undefined,
+}));

@@ -1,20 +1,37 @@
-import { twMerge } from "tailwind-merge";
+import { cn } from '@/shared/utils/cn';
+import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 
 type Props = React.SelectHTMLAttributes<HTMLSelectElement> & {
+  label?: string;
+  error?: string;
+  helperText?: string;
   hasError?: boolean;
+  fullWidth?: boolean;
 };
 
-export const Select = ({ children, className, hasError, ...props }: Props) => {
+export const Select = ({ label, error, helperText, hasError, className, id, fullWidth = true, children, ...props }: Props) => {
   return (
-    <select
-      {...props}
-      className={twMerge(
-        "rounded-xl bg-white dark:bg-mist-950 border border-mist-200 dark:border-mist-800 px-4 h-10 py-2 transition text-sm focus:border-mist-500 focus:ring-2 focus:ring-mist-200 dark:focus:ring-mist-800 outline-none font-medium resize-none",
-        hasError && "border-red-500 focus:border-red-500 focus:ring-red-200",
-        className,
+    <div className={cn('space-y-1.5', fullWidth && 'w-full')}>
+      {label && (
+        <label htmlFor={id} className="label">
+          {label}
+        </label>
       )}
-    >
-      {children}
-    </select>
+
+      <div className="relative">
+        <select id={id} className={cn('input', (error || hasError) && 'input-error', className)} {...props}>
+          {children}
+        </select>
+      </div>
+
+      {error ? (
+        <div className="error-text">
+          <ExclamationCircleIcon className="size-4" />
+          <p>{error}</p>
+        </div>
+      ) : (
+        helperText && <p className="text-sm text-muted">{helperText}</p>
+      )}
+    </div>
   );
 };

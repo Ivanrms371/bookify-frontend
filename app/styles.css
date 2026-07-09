@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@import './shared/styles/globals.css';
+@import './shared/styles/components.css';
+@import './shared/styles/utilities.css';

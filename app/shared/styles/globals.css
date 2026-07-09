@@ -1,0 +1,29 @@
+@theme {
+  --color-primary: #2b4c7e;
+  --color-primary-hover: #1f3a5f;
+  --color-primary-active: #162a45;
+
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+
+  --color-border: #e2e8f0;
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  --font-sans: 'Satoshi', sans-serif;
+  --font-mono: 'Cabinet Grotesk', monospace;
+}
+
+html,
+body {
+  @apply bg-mist-50 font-sans text-mist-600;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
