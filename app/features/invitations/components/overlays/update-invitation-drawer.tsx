@@ -29,7 +29,7 @@ export const UpdateInvitationDrawer = () => {
 
   return (
     <Drawer overlayKey={OVERLAY_KEY} size="lg" closeOnBackdrop title="Editar Invitación">
-      <InviteForm onSubmit={handleSubmit} onCancel={close} isSubmitting={isPending} submitLabel="Guardar cambios" />
+      <InviteForm onSubmit={handleSubmit} onCancel={close} isSubmitting={isPending} submitLabel="Guardar Cambios" editing />
     </Drawer>
   );
 };
