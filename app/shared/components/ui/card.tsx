@@ -5,7 +5,7 @@ type CardProps = HTMLAttributes<HTMLDivElement>;
 
 export const Card = ({ children, className, ...props }: CardProps) => {
   return (
-    <div className={cn('rounded-4xl bg-white p-5 shadow', className)} {...props}>
+    <div className={cn('rounded-2xl border border-gray-100 bg-white p-5', className)} {...props}>
       {children}
     </div>
   );

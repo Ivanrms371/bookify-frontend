@@ -40,17 +40,17 @@ export const DayScheduleRow = ({
   };
 
   return (
-    <div className={cn('space-y-4 rounded-2xl border border-mist-200 p-4 sm:p-5 bg-white', !isActive && 'border-mist-200/50')}>
+    <div className={cn('space-y-4 rounded-2xl border border-gray-200 p-4 sm:p-5 bg-white', !isActive && 'border-gray-200/50')}>
       <div className="flex justify-between items-end">
         <div className={cn(!isActive && 'opacity-50')}>
-          <Text className="text-mist-800">{DAY_LABELS[day].full}</Text>
-          {!isActive && <p className="text-xs font-medium text-mist-500">Cerrado</p>}
+          <Text className="text-gray-800">{DAY_LABELS[day].full}</Text>
+          {!isActive && <p className="text-xs font-medium text-gray-500">Cerrado</p>}
         </div>
 
         {isActive ? (
           <button
             type="button"
-            className="flex cursor-pointer items-center gap-1 text-xs font-medium text-mist-500"
+            className="flex cursor-pointer items-center gap-1 text-xs font-medium text-gray-500"
             onClick={() => {
               setHasCopied(true);
               onCopyToAll(day);

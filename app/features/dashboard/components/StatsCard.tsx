@@ -6,7 +6,7 @@ interface StatsCardProps {
   title: string;
   value: string;
   trend?: string;
-  color?: 'indigo' | 'mist';
+  color?: 'indigo' | 'gray';
   className?: string;
 }
 
@@ -19,13 +19,13 @@ export const StatsCard = ({ title, value, trend, color = 'indigo', className }: 
         'flex w-full justify-between px-3.5 py-4.5 sm:px-6 sm:py-6',
         'border-0 shadow-sm transition-all',
         color === 'indigo' && 'bg-indigo-500 text-white',
-        color === 'mist' && 'bg-mist-900 text-white',
+        color === 'gray' && 'bg-gray-900 text-white',
         className,
       )}
     >
       <div className="flex flex-col justify-between gap-2 sm:gap-4">
         <span className="text-sm font-medium text-white sm:text-base">{title}</span>
-        <div className="font-mono text-2xl font-bold tracking-tight min-[400px]:text-3xl sm:text-4xl">{value}</div>
+        <div className=" text-2xl font-bold tracking-tight min-[400px]:text-3xl sm:text-4xl">{value}</div>
       </div>
 
       {trend && (

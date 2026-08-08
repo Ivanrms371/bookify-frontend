@@ -1,7 +1,7 @@
 export const roleLabels: Record<string, string> = {
   OWNER: 'Dueño',
   ADMIN: 'Administrador',
-  EMPLOYEE: 'Employee',
+  EMPLOYEE: 'Professional',
 };
 
 export const statusLabels: Record<string, string> = {
@@ -19,6 +19,6 @@ export function getRoleColor(role: string) {
     case 'EMPLOYEE':
       return 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400';
     default:
-      return 'bg-mist-100 dark:bg-mist-900/20 text-mist-700 dark:text-mist-400';
+      return 'bg-gray-100 dark:bg-gray-900/20 text-gray-700 dark:text-gray-400';
   }
 }

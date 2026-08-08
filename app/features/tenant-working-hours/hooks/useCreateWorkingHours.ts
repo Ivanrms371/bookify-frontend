@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import type { TenantWorkingHoursCreateInput } from '../types/tenant-working-hours.types';
-import { workingHoursService } from '../services/working-hours.service';
+import { workingHoursService } from '../api/working-hours-api';
 
 export const useCreateWorkingHours = (tenantId: string) => {
   return useMutation({

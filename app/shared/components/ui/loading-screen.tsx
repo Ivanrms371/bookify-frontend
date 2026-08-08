@@ -13,7 +13,7 @@ export const LoadingScreen = ({ message = 'Cargando...', fullScreen = true, clas
       aria-live="polite"
       aria-busy="true"
       className={cn(
-        'flex flex-col items-center justify-center gap-2 bg-mist-50 dark:bg-mist-950 absolute inset-0 z-50',
+        'flex flex-col items-center justify-center gap-2 bg-gray-50 dark:bg-gray-950 absolute inset-0 z-50',
         fullScreen && 'min-h-screen',
         className,
       )}
@@ -25,7 +25,7 @@ export const LoadingScreen = ({ message = 'Cargando...', fullScreen = true, clas
         <div className="bounce3"></div>
       </div>
 
-      {message ? <p className="font-medium text-mist-600 dark:text-mist-300 text-sm">{message}</p> : null}
+      {message ? <p className="font-medium text-gray-600 dark:text-gray-300 text-sm">{message}</p> : null}
     </div>
   );
 };

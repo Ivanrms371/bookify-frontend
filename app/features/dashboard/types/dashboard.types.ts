@@ -12,14 +12,17 @@ export interface DashboardStats {
 
 export interface DashboardOverviewResponse {
   chart: DashboardChartEntry[];
-  lifetime: DashboardLifetime;
-  monthStats: DashboardChartEntry[];
-  upcomingAppointments: UpcomingAppointment[];
-  quota: DashboardQuota;
   stats: DashboardStats;
+  upcomingAppointments: UpcomingAppointment[];
+  /** @deprecated kept for backwards-compat, not returned by the new endpoint */
+  lifetime?: DashboardLifetime;
+  /** @deprecated kept for backwards-compat, not returned by the new endpoint */
+  monthStats?: DashboardChartEntry[];
+  /** @deprecated kept for backwards-compat, not returned by the new endpoint */
+  quota?: DashboardQuota;
 }
 
 export type { DashboardChartEntry } from './chart.types';
 export type { DashboardLifetime } from './lifetime.types';
-export type { UpcomingAppointment, AppointmentEmployee, AppointmentStatus } from './appointment.types';
+export type { UpcomingAppointment, AppointmentProfessional, AppointmentStatus } from './appointment.types';
 export type { DashboardQuota, QuotaItem } from './quota.types';

@@ -5,14 +5,14 @@ import { getInitials } from '@/shared/utils/string';
 
 interface AvatarProps {
   src?: string | null;
-  name?: string;
+  name?: string | null;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   color?: string;
 }
 
 export const Avatar = ({ src, name, size = 'md', className, color }: AvatarProps) => {
-  const initials = getInitials(name);
+  const initials = getInitials(name || '')?.toUpperCase();
 
   if (src) {
     return (
@@ -20,7 +20,7 @@ export const Avatar = ({ src, name, size = 'md', className, color }: AvatarProps
         src={src}
         alt={name ?? 'Profile'}
         className={cn(
-          'rounded-full object-cover border border-mist-300 ',
+          'rounded-full object-cover',
           size === 'lg' && 'size-11',
           size === 'md' && 'size-10',
           size === 'sm' && 'size-9',
@@ -33,7 +33,7 @@ export const Avatar = ({ src, name, size = 'md', className, color }: AvatarProps
   return (
     <div
       className={cn(
-        'flex justify-center items-center rounded-full font-semibold font-mono bg-mist-200 text-mist-800',
+        'flex justify-center items-center rounded-full font-semibold  bg-gray-200 text-gray-800',
         size === 'lg' && 'size-11',
         size === 'md' && 'size-10',
         size === 'sm' && 'size-9 text-sm',

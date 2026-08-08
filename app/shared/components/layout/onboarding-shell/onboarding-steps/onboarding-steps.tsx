@@ -25,13 +25,11 @@ export function OnboardingSteps() {
   const halfSlotPct = slotWidthPct / 2;
   const progressWidthPct = totalSteps > 0 ? (safeIndex / totalSteps) * 100 : 0;
 
-  const stepsSignature = steps.map((step) => step.id).join('|');
-
   return (
-    <header className="w-full sticky top-0 z-30 bg-mist-50 py-4">
+    <header className="w-full sticky top-0 z-30 bg-gray-50 py-4">
       <div className="max-w-4xl mx-auto w-full relative">
         <div
-          className="pointer-events-none absolute top-5 h-0.5 -translate-y-1/2 bg-mist-200"
+          className="pointer-events-none absolute top-5 h-0.5 -translate-y-1/2 bg-gray-200"
           style={{ left: `${halfSlotPct}%`, right: `${halfSlotPct}%` }}
           aria-hidden
         />
@@ -41,7 +39,7 @@ export function OnboardingSteps() {
           aria-hidden
         />
 
-        <ol key={stepsSignature} className="relative flex w-full list-none" aria-label="Progreso del onboarding">
+        <ol className="relative flex w-full list-none" aria-label="Progreso del onboarding">
           {steps.map((step, index) => {
             const state = getStepState(index, currentStepIndex);
             const isActive = state === 'active';
@@ -62,7 +60,7 @@ export function OnboardingSteps() {
                 <div className="flex h-10 items-center justify-center transition-transform duration-200">
                   <StepIndicator state={state} />
                 </div>
-                <span className="md:block hidden mt-2 text-center text-sm font-semibold text-mist-900">{step.label}</span>
+                <span className="md:block hidden mt-2 text-center text-sm font-semibold text-gray-900">{step.label}</span>
               </li>
             );
           })}

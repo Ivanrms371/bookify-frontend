@@ -19,7 +19,7 @@ export const StepNavigation = ({
   return (
     <div className="mt-8 flex items-center justify-between gap-4">
       {!hideBack ? (
-        <Button type="button" onClick={onBack} size="md" className="button-tertiary">
+        <Button variant="secondary" type="button" onClick={onBack} size="md">
           <ArrowLongLeftIcon className="size-4" />
           {backLabel}
         </Button>
@@ -27,7 +27,7 @@ export const StepNavigation = ({
         <div />
       )}
 
-      <Button size="md" type="submit" disabled={isNextDisabled} className="button-primary">
+      <Button variant="primary" size="md" type="submit" disabled={isNextDisabled}>
         {nextLabel}
         <ArrowLongRightIcon className="size-4" />
       </Button>

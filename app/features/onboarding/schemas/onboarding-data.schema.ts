@@ -31,7 +31,7 @@ export const onboardingScheduleSchema = z.array(
   }),
 );
 
-export const onboardingServiceSchema = z.array(
+export const onboardingApiSchema = z.array(
   z.object({
     id: z.string().optional(),
     name: z.string(),
@@ -49,7 +49,7 @@ export const onboardingDataSchema = z.object({
   subscription: onboardingSubscriptionSchema.nullable().optional(),
   schedules: z.array(onboardingScheduleSchema).nullable().optional(),
   invitations: z.any().optional(),
-  services: z.array(onboardingServiceSchema).nullable().optional(),
+  services: z.array(onboardingApiSchema).nullable().optional(),
 });
 
 export type OnboardingData = z.infer<typeof onboardingDataSchema>;

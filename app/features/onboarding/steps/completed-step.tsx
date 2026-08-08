@@ -5,10 +5,10 @@ import { useLoadingScreen } from '@/shared/store/use-loading-screen';
 
 export const CompletedStep = () => {
   const navigate = useNavigate();
-  const { refetch, isRefetching, tenant } = useAuthStore();
+  const { refetch, isRefetching, session } = useAuthStore();
   const { show, hide } = useLoadingScreen();
 
-  const slug = tenant?.slug;
+  const slug = session?.activeTenant?.slug;
 
   useEffect(() => {
     if (!slug) {

@@ -1,8 +1,8 @@
 import { cn } from '@/shared/utils/cn';
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant: 'primary' | 'secondary' | 'ghost' | 'danger' | 'dashed';
+  size?: 'sm' | 'md' | 'lg' | 'icon' | 'icon-md';
   loading?: boolean;
   fullWidth?: boolean;
 
@@ -27,28 +27,29 @@ export const Button = ({
     secondary: 'btn-secondary',
     ghost: 'btn-ghost',
     danger: 'btn-danger',
+    dashed: 'btn-dashed',
   };
 
   const sizes = {
-    sm: 'px-3 h-10 text-sm',
-    md: 'px-4 h-11 text-sm',
-    lg: 'px-6 h-11.5 text-sm',
+    sm: 'px-4 h-8 text-sm',
+    md: 'px-4 h-10 text-sm',
+    lg: 'px-6 h-12 text-sm',
+
+    icon: 'p-1.5',
+    'icon-md': 'size-10',
   };
 
   return (
     <button
       disabled={disabled || loading}
       className={`
-        btn
-        ${variants[variant]}
-        ${sizes[size]}
-        ${fullWidth ? 'w-full' : ''}
+        btn ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''}
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
         ${className}
       `}
       {...props}
     >
-      {loading && <span className="animate-spin">⏳</span>}
+      {/* {loading && <span className="animate-spin">⏳</span>} */}
 
       {!loading && icon && iconPosition === 'left' && icon}
 

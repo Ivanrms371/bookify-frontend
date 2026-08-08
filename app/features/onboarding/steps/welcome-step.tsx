@@ -57,16 +57,16 @@ export const WelcomeStep = () => {
                 aria-pressed={isSelected}
                 className={cn(
                   'relative flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-4 text-left shadow-sm transition-colors duration-300',
-                  isSelected ? 'border-indigo-500 hover:bg-white' : 'border-mist-200 hover:bg-mist-100',
+                  isSelected ? 'border-indigo-500 hover:bg-white' : 'border-gray-200 hover:bg-gray-100',
                   isPending && 'pointer-events-none opacity-60',
                 )}
                 onClick={() => handleChangeWorkspaceType(option.value)}
               >
-                <Icon className={cn('size-6 text-mist-500', isSelected && 'text-indigo-500')} />
+                <Icon className={cn('size-6 text-gray-500', isSelected && 'text-indigo-500')} />
                 <Heading className="text-xl font-medium" as="h3">
                   {option.label}
                 </Heading>
-                <Text className="text-sm text-mist-500">{option.description}</Text>
+                <Text className="text-sm text-gray-500">{option.description}</Text>
               </button>
             );
           })}

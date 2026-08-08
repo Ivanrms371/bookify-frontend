@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/core/auth/useAuthStore';
-import { onboardingService } from '@/features/onboarding/services/onboarding.service';
+import { onboardingApi } from '@/features/onboarding/api/onboarding-api';
 
 export default function RootGatePage() {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function RootGatePage() {
 
   const { data: onboardingData, isLoading: isOnboardingLoading } = useQuery({
     queryKey: ['root-onboarding-status'],
-    queryFn: onboardingService.getStatus,
+    queryFn: onboardingApi.getStatus,
     enabled: isAuthenticated && !!tenant,
     retry: false,
   });
@@ -38,5 +38,5 @@ export default function RootGatePage() {
     navigate(`/${tenant.slug}`, { replace: true });
   }, [isLoading, isAuthenticated, tenant, isOnboardingLoading, onboardingData, navigate]);
 
-  return <div className="p-4 text-sm text-mist-500">Redirigiendo...</div>;
+  return <div className="p-4 text-sm text-gray-500">Redirigiendo...</div>;
 }

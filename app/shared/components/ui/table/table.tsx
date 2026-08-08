@@ -5,9 +5,13 @@ import { cn } from '@/shared/utils/cn';
  * Table
  * ───────────────────────────────────────────── */
 
-export const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(({ className, ...props }, ref) => (
-  <div className="w-full overflow-x-auto">
-    <table ref={ref} className={cn('w-full text-sm', className)} {...props} />
+export interface TableProps extends HTMLAttributes<HTMLTableElement> {
+  containerClassName?: string;
+}
+
+export const Table = forwardRef<HTMLTableElement, TableProps>(({ className, containerClassName, ...props }, ref) => (
+  <div className={cn('w-full max-w-full overflow-x-auto rounded-xl bg-white border border-gray-100', containerClassName)}>
+    <table ref={ref} className={cn('w-full text-sm border-separate border-spacing-0', className)} {...props} />
   </div>
 ));
 Table.displayName = 'Table';
@@ -17,7 +21,7 @@ Table.displayName = 'Table';
  * ───────────────────────────────────────────── */
 
 export const Thead = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn('border-b border-mist-200', className)} {...props} />
+  <thead ref={ref} className={cn('', className)} {...props} />
 ));
 Thead.displayName = 'Thead';
 
@@ -25,9 +29,13 @@ Thead.displayName = 'Thead';
  * Tbody
  * ───────────────────────────────────────────── */
 
-export const Tbody = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(({ className, ...props }, ref) => (
-  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
-));
+export const Tbody = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, children, ...props }, ref) => (
+    <tbody ref={ref} className={cn('[&_tr:last-child_td]:border-0', className)} {...props}>
+      {children}
+    </tbody>
+  ),
+);
 Tbody.displayName = 'Tbody';
 
 /* ─────────────────────────────────────────────
@@ -35,16 +43,7 @@ Tbody.displayName = 'Tbody';
  * ───────────────────────────────────────────── */
 
 export const Tr = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      'border-b border-mist-100',
-      'transition-colors duration-150',
-      'hover:bg-mist-50',
-      className,
-    )}
-    {...props}
-  />
+  <tr ref={ref} className={cn('', className)} {...props} />
 ));
 Tr.displayName = 'Tr';
 
@@ -53,11 +52,7 @@ Tr.displayName = 'Tr';
  * ───────────────────────────────────────────── */
 
 export const Th = forwardRef<HTMLTableCellElement, ThHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
-  <th
-    ref={ref}
-    className={cn('px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase', 'text-mist-400', className)}
-    {...props}
-  />
+  <th ref={ref} className={cn('px-4 py-3 text-left text-sm font-medium text-gray-500 whitespace-nowrap', className)} {...props} />
 ));
 Th.displayName = 'Th';
 
@@ -66,6 +61,6 @@ Th.displayName = 'Th';
  * ───────────────────────────────────────────── */
 
 export const Td = forwardRef<HTMLTableCellElement, TdHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
-  <td ref={ref} className={cn('px-4 py-3.5', 'text-mist-700', className)} {...props} />
+  <td ref={ref} className={cn('px-4 py-3 text-gray-700 border-b border-gray-100 whitespace-nowrap', className)} {...props} />
 ));
 Td.displayName = 'Td';

@@ -9,10 +9,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       show('Cargando...');
-      console.log('Cargando');
       refetch();
     } catch (error) {
-      console.error('Error al obtener el usuario:', error);
     } finally {
       hide();
     }

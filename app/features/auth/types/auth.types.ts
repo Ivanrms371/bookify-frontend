@@ -1,16 +1,38 @@
-export interface AuthUser {
+export interface UserSessionContext {
   id: string;
   email: string;
   name: string;
   avatarUrl: string | null;
+  activeTenant: ActiveTenant | null;
+  hasMultipleTenants: boolean;
 }
 
-export interface TenantSummary {
+type MembershipRole = 'OWNER' | 'ADMIN' | 'PROFESSIONAL';
+
+type OnboardingStatus =
+  | 'WORKSPACE_TYPE'
+  | 'BUSINESS_DETAILS'
+  | 'SCHEDULE'
+  | 'SERVICES'
+  | 'TEAM_INVITE'
+  | 'CUSTOMIZE'
+  | 'CONFIRM'
+  | 'COMPLETED';
+
+export interface ActiveTenant {
   id: string;
   name: string;
   slug: string;
-  logoUrl: string | null;
-  role: 'owner' | 'admin' | 'employee';
-  membershipStatus: 'active' | 'expired' | 'cancelled';
-  onboardingStatus?: string;
+  logo: string | null;
+  role: MembershipRole;
+  onboardingStatus: OnboardingStatus;
+  professionalid: string | null;
+  subscription: Subscription | null;
+}
+
+type SubscriptionStatus = 'ACTIVE' | 'TRIAL' | 'PAST_DUE' | 'CANCELLED' | 'EXPIRED' | 'SUSPENDED' | 'PENDING_PAYMENT';
+
+export interface Subscription {
+  status: SubscriptionStatus;
+  planName: string;
 }

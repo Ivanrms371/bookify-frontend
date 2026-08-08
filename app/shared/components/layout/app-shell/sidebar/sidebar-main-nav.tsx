@@ -33,8 +33,8 @@ const getSidebarItems = (slug: string) => [
     icon: <UserGroupIcon className="size-5" />,
   },
   {
-    label: 'Empleados',
-    href: `/${slug}/staff`,
+    label: 'Equipo',
+    href: `/${slug}/team`,
     icon: <UsersIcon className="size-5" />,
   },
   {
@@ -45,9 +45,7 @@ const getSidebarItems = (slug: string) => [
 ];
 
 export const SidebarMainNav = () => {
-  const { slug: slugParam } = useParams();
-  const tenantSlug = useAuthStore((s) => s.tenant?.slug);
-  const slug = slugParam ?? tenantSlug;
+  const { slug } = useParams();
   const location = useLocation();
 
   if (!slug) return null;
@@ -62,8 +60,8 @@ export const SidebarMainNav = () => {
             <Link
               to={item.href}
               className={cn(
-                'flex items-center gap-2 rounded-xl px-3 py-3 font-medium text-mist-800 transition-colors duration-300 hover:bg-mist-800 hover:text-mist-200',
-                isActive ? 'bg-mist-800 text-mist-200' : '',
+                'flex items-center gap-2 rounded-xl px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white',
+                isActive ? 'bg-indigo-500 text-white' : '',
               )}
             >
               {item.icon}

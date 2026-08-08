@@ -37,8 +37,8 @@ export const BannerImageInput = (props: ImageInputProps) => {
         className={cn(
           'group relative flex w-full items-center justify-center rounded-xl border transition-all duration-300 ease-out aspect-3/1 select-none outline-none p-3 overflow-hidden cursor-pointer',
           'bg-white',
-          !hasImage && 'cursor-pointer border-dashed border-mist-300 hover:border-mist-500 hover:bg-mist-100/50',
-          hasImage && 'border-solid border-mist-200 bg-white',
+          !hasImage && 'cursor-pointer border-dashed border-gray-300 hover:border-gray-500 hover:bg-gray-100/50',
+          hasImage && 'border-solid border-gray-200 bg-white',
           isDragging && !hasImage && 'border-indigo-400 bg-indigo-50/50 ring-2 ring-indigo-200/60',
           errorMessage && fieldErrorBorderClassName,
         )}
@@ -48,7 +48,7 @@ export const BannerImageInput = (props: ImageInputProps) => {
           <>
             <img src={previewUrl!} alt="Banner preview" className={cn('absolute inset-0 size-full object-cover', previewClassName)} />
             {/* Subtle photorealistic gradient overlay matching avatar styling hover overlay */}
-            <div className="absolute inset-0 bg-mist-900/0 opacity-0 transition-all duration-200 group-hover:bg-mist-900/40 group-hover:opacity-100 group-focus-within:bg-mist-900/40 group-focus-within:opacity-100 pointer-events-none" />
+            <div className="absolute inset-0 bg-gray-900/0 opacity-0 transition-all duration-200 group-hover:bg-gray-900/40 group-hover:opacity-100 group-focus-within:bg-gray-900/40 group-focus-within:opacity-100 pointer-events-none" />
 
             {/* Floating Action Bar - Mobile-first: always visible on mobile, fades in on hover on desktop */}
             <div className="absolute right-3 top-3 flex items-center gap-2 z-10 transition-all duration-300 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
@@ -61,7 +61,7 @@ export const BannerImageInput = (props: ImageInputProps) => {
                 className={cn(actionButtonClassName, 'flex items-center gap-1 px-2.5 py-1 text-[10px] cursor-pointer')}
                 title="Cambiar portada"
               >
-                <ArrowUpTrayIcon className="size-3 text-mist-600 " strokeWidth={2} />
+                <ArrowUpTrayIcon className="size-3 text-gray-600 " strokeWidth={2} />
                 <span>Cambiar</span>
               </button>
               <button
@@ -83,11 +83,11 @@ export const BannerImageInput = (props: ImageInputProps) => {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center text-center size-full py-8 px-4">
-            <PhotoIcon className="size-7 text-mist-400 " strokeWidth={1} />
+            <PhotoIcon className="size-7 text-gray-400 " strokeWidth={1} />
 
-            <h3 className="mt-2 text-base font-semibold text-mist-800">Subí tu imagen de portada</h3>
+            <h3 className="mt-2 text-base font-semibold text-gray-800">Subí tu imagen de portada</h3>
 
-            <p className="mt-1 max-w-xs text-sm font-medium text-mist-500 leading-normal">
+            <p className="mt-1 max-w-xs text-sm font-medium text-gray-500 leading-normal">
               Arrastrá y soltá tu imagen aquí, o hacé clic para explorar
             </p>
           </div>

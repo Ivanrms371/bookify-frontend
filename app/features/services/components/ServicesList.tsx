@@ -1,31 +1,31 @@
 import { Label } from '@/shared/components/form/Label';
 import { cn } from '@/shared/utils/cn';
-import type { CreateServicePayload } from '../schemas/create-service.schema';
+import type { ServiceFormData } from '../schemas/service-form-schema';
 import { SERVICE_DURATION_OPTIONS } from '../constants/service-duration';
 import { ImageInput } from '@/shared/components/form/image-input';
-import { Input } from '@/shared/components/form/Input';
+import { Input } from '@/shared/components/form/input';
 import { Select } from '@/shared/components/form/Select';
 
 type ServicesListProps = {
-  services: CreateServicePayload[];
-  onUpdate: (index: number, service: CreateServicePayload) => void;
+  services: ServiceFormData[];
+  onUpdate: (index: number, service: ServiceFormData) => void;
   onRemove: (index: number) => void;
   className?: string;
   title?: string;
 };
 
 type ServiceListItemProps = {
-  service: CreateServicePayload;
+  service: ServiceFormData;
   index: number;
-  onUpdate: (index: number, service: CreateServicePayload) => void;
+  onUpdate: (index: number, service: ServiceFormData) => void;
   onRemove: (index: number) => void;
 };
 
 function ServiceListItem({ service, index, onUpdate }: ServiceListItemProps) {
-  const update = (patch: Partial<CreateServicePayload>) => onUpdate(index, { ...service, ...patch });
+  const update = (patch: Partial<ServiceFormData>) => onUpdate(index, { ...service, ...patch });
 
   return (
-    <li className="rounded-2xl border border-mist-200 bg-white p-3.5 transition-all duration-200 hover:border-mist-300 hover:shadow-md md:p-4">
+    <li className="rounded-2xl border border-gray-200 bg-white p-3.5 transition-all duration-200 hover:border-gray-300 hover:shadow-md md:p-4">
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:items-start lg:gap-4">
         <div className="flex flex-col gap-3 min-w-0 md:flex-row md:items-start md:gap-3.5 lg:col-span-2">
           <ImageInput

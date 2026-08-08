@@ -3,14 +3,10 @@ import { useNavigate } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ONBOARDING_STATUS_TO_ROUTE } from '@/shared/constants/onboarding';
 import { getOnboardingStepIdFromPathname } from '@/shared/utils/onboarding-steps';
-import { onboardingService } from '../services/onboarding.service';
+import { onboardingApi } from '../api/onboarding-api';
 import { useOnboardingInitializer } from '../hooks/use-onboarding';
 import { useAuthStore } from '@/core/auth/useAuthStore';
-import type {
-  OnboardingStatusResponse,
-  OnboardingStepStatus,
-  OnboardingSavedData,
-} from '../schemas/onboarding-status.schema';
+import type { OnboardingStatusResponse, OnboardingStepStatus, OnboardingSavedData } from '../schemas/onboarding-status.schema';
 
 export const ONBOARDING_STATUS_QUERY_KEY = ['onboarding-status'] as const;
 
@@ -35,7 +31,7 @@ export const OnboardingContext = createContext<OnboardingContextType | undefined
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { isAuthenticated, isLoading: isAuthLoading, tenant } = useAuthStore();
+  const { isAuthenticated, isLoading: isAuthLoading, session } = useAuthStore();
 
   useOnboardingInitializer();
 
@@ -45,8 +41,8 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     isError,
   } = useQuery({
     queryKey: ONBOARDING_STATUS_QUERY_KEY,
-    queryFn: () => onboardingService.getStatus(),
-    enabled: isAuthenticated && !isAuthLoading && !!tenant,
+    queryFn: () => onboardingApi.getStatus(),
+    enabled: isAuthenticated && !isAuthLoading && !!session?.activeTenant,
   });
 
   const totalSteps = useMemo(() => onboardingData?.steps.length ?? 0, [onboardingData]);

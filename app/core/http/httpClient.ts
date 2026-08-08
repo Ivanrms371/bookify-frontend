@@ -13,19 +13,52 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  const tenantId = useAuthStore.getState().tenant?.id;
+  let urlSlug: string | null = null;
 
-  if (tenantId) {
-    config.headers['X-Tenant-Id'] = tenantId;
+  if (typeof window !== 'undefined') {
+    const { pathname } = window.location;
+    const pathParts = pathname.replace(/^\/|\/$/g, '').split('/');
+    const firstSegment = pathParts[0];
+
+    const globalRoutes = ['onboarding', 'auth', '404', 'maintenance'];
+    const isGlobalRoute = globalRoutes.includes(firstSegment);
+
+    if (firstSegment && !isGlobalRoute) {
+      urlSlug = firstSegment;
+    }
   }
+
+  if (urlSlug) {
+    config.headers['x-tenant-slug'] = urlSlug;
+
+    const session = useAuthStore.getState().session;
+
+    if (session?.activeTenant?.slug === urlSlug) {
+      config.headers['x-tenant-id'] = session.activeTenant.id;
+    }
+  }
+
+  console.group(`🚀 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
+
+  console.log('URL:', `${config.baseURL}${config.url}`);
+  console.log('Method:', config.method?.toUpperCase());
+  console.log('Headers:', config.headers);
+
+  if (config.data) {
+    console.log('Body:', config.data);
+    console.log('Body JSON:', JSON.stringify(config.data, null, 2));
+  }
+
+  console.groupEnd();
 
   return config;
 });
-
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    console.log('ERROR AQUI -->', error);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -36,22 +69,28 @@ axiosInstance.interceptors.response.use(
       } catch (error) {
         useAuthStore.getState().clearAuth();
         window.location.href = '/auth/login';
+        throw new ApiError('Tu sesión ha expirado', { status: 401, code: 'SESSION_EXPIRED' });
       }
     }
 
-    if (error.response?.status === 400) {
-      const { message, fields } = error.response.data;
-
-      throw new ApiError('Revisa los campos ingresados en el formulario.', 400, 'VALIDATION_ERROR', fields);
+    if (!error.response) {
+      throw new ApiError('No se pudo conectar con el servidor. Verificá tu conexión.', {
+        code: 'NETWORK_ERROR',
+      });
     }
+
+    const responseData = error.response?.data;
+    const { message, code, fields } = responseData;
 
     if (axios.isAxiosError(error)) {
-      return Promise.reject(
-        new ApiError(error.response?.data?.message ?? 'Unexpected error', error.response?.status, error.response?.data?.code),
-      );
+      throw new ApiError(message ?? 'Ha ocurrido un error inesperado', {
+        status: error.response?.status,
+        fields,
+        code,
+      });
     }
 
-    return Promise.reject(error);
+    throw new ApiError('Ha ocurrido un error inesperado', { code: 'UNKNOWN_ERROR' });
   },
 );
 

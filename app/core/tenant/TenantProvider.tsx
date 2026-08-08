@@ -7,7 +7,8 @@ interface Props {
 
 export function TenantProvider({ children }: Props) {
   const { slug } = useParams();
-  const { tenant, isLoading, isAuthenticated } = useAuthStore();
+  const { session, isLoading, isAuthenticated } = useAuthStore();
+  const tenant = session?.activeTenant;
 
   if (isLoading) return 'Loading...';
 

@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupFormValues } from '../schemas/signup.schema';
-import { Input } from '@/shared/components/form/Input';
+import { Input } from '@/shared/components/form/input';
 import { Label } from '@/shared/components/form/Label';
 import { FormField } from '@/shared/components/form/FormField';
 import { Alert } from '@/shared/components/feedback/Alert';

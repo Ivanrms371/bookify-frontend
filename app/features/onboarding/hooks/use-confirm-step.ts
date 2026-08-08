@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { onboardingService } from '../services/onboarding.service';
+import { onboardingApi } from '../api/onboarding-api';
 
 export const useConfirmStep = () => {
   return useMutation({
-    mutationFn: () => onboardingService.confirm(),
+    mutationFn: () => onboardingApi.confirm(),
   });
 };

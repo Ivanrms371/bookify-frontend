@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { loginSchema, type LoginFormValues } from '../schemas/login.schema';
 import { useLogin } from '../hooks/useLogin';
-import { Input } from '@/shared/components/form/Input';
+import { Input } from '@/shared/components/form/input';
 import { Label } from '@/shared/components/form/Label';
 import { Alert } from '@/shared/components/feedback/Alert';
 import { Link } from 'react-router';
@@ -49,7 +49,7 @@ export const LoginForm = () => {
       <FormField>
         <div className="flex justify-between">
           <Label htmlFor="password">Contraseña</Label>
-          <Link to="/forgot-password" className="text-sm font-medium text-mist-500 dark:text-mist-400">
+          <Link to="/forgot-password" className="text-sm font-medium text-gray-500 dark:text-gray-400">
             ¿Olvidaste tu contraseña?
           </Link>
         </div>
@@ -66,7 +66,7 @@ export const LoginForm = () => {
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            className="absolute right-2 top-1/2 flex -translate-y-1/2 pr-2  text-mist-500 transition-colors  hover:text-mist-700  "
+            className="absolute right-2 top-1/2 flex -translate-y-1/2 pr-2  text-gray-500 transition-colors  hover:text-gray-700  "
           >
             {showPassword ? <EyeSlashIcon className="size-5" /> : <EyeIcon className="size-5" />}
           </button>

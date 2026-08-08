@@ -35,8 +35,8 @@ export const AvatarImageInput = (props: ImageInputProps) => {
         className={cn(
           'group flex w-full items-center gap-3 rounded-xl border border-dashed p-3 transition-all duration-300 ease-out',
           'bg-white',
-          !hasImage && 'cursor-pointer border-mist-300 hover:border-mist-500 hover:bg-mist-100/80 ',
-          hasImage && 'border-solid border-mist-200 bg-white ',
+          !hasImage && 'cursor-pointer border-gray-300 hover:border-gray-500 hover:bg-gray-100/80 ',
+          hasImage && 'border-solid border-gray-200 bg-white ',
           isDragging && 'border-indigo-400 bg-indigo-50/50 ring-2 ring-indigo-200/60 ',
           errorMessage && fieldErrorBorderClassName,
         )}
@@ -45,8 +45,8 @@ export const AvatarImageInput = (props: ImageInputProps) => {
         <div
           className={cn(
             'relative size-16 shrink-0 overflow-hidden rounded-full border border-dashed transition-colors',
-            !hasImage && 'border-mist-300 bg-white ',
-            hasImage && 'border-mist-200 ',
+            !hasImage && 'border-gray-300 bg-white ',
+            hasImage && 'border-gray-200 ',
             isDragging && 'border-indigo-400',
             previewClassName,
           )}
@@ -54,7 +54,7 @@ export const AvatarImageInput = (props: ImageInputProps) => {
           {hasImage ? (
             <>
               <img src={previewUrl!} alt="" className="size-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center gap-0.5 bg-mist-900/0 opacity-0 transition-all duration-200 group-hover:bg-mist-900/55 group-hover:opacity-100 group-focus-within:bg-mist-900/55 group-focus-within:opacity-100">
+              <div className="absolute inset-0 flex items-center justify-center gap-0.5 bg-gray-900/0 opacity-0 transition-all duration-200 group-hover:bg-gray-900/55 group-hover:opacity-100 group-focus-within:bg-gray-900/55 group-focus-within:opacity-100">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -82,17 +82,17 @@ export const AvatarImageInput = (props: ImageInputProps) => {
               {isDragging ? (
                 <ArrowUpTrayIcon className="size-5 text-indigo-600" strokeWidth={1.5} />
               ) : (
-                <PhotoIcon className="size-5 text-mist-400 " strokeWidth={1.25} />
+                <PhotoIcon className="size-5 text-gray-400 " strokeWidth={1.25} />
               )}
             </div>
           )}
         </div>
 
         <div className="min-w-0 flex-1 text-left">
-          <p className="text-sm font-semibold text-mist-800 ">
+          <p className="text-sm font-semibold text-gray-800 ">
             {isDragging ? 'Soltá la imagen acá' : hasImage ? 'Avatar listo' : 'Subí tu foto de perfil'}
           </p>
-          <p className="mt-0.5 text-xs text-mist-500 ">
+          <p className="mt-0.5 text-xs text-gray-500 ">
             {hasImage ? 'Pasá el mouse sobre la imagen para cambiarla o quitarla' : 'Arrastrá y soltá o hacé clic para elegir un archivo'}
           </p>
         </div>

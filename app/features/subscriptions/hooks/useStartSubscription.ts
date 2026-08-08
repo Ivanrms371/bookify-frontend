@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { subscriptionsService } from '../services/subscriptions.service';
+import { subscriptionsApi } from '../api/subscriptions-api';
 import { useNavigate, useParams } from 'react-router';
 
 export const useStartSubscription = () => {
@@ -7,7 +7,7 @@ export const useStartSubscription = () => {
   const { tenantId } = useParams<{ tenantId: string }>();
   const { mutate: selectPlan, isPending } = useMutation({
     mutationFn: async (planId: string) => {
-      await subscriptionsService.createSubscription({
+      await subscriptionsApi.createSubscription({
         planId,
         tenantId,
       });

@@ -8,15 +8,10 @@ import { ErrorBoundary as CustomErrorBoundary } from '@/core/error/ErrorBoundary
 import '@/styles.css';
 import { useThemeStore } from './shared/store/useThemeStore';
 import { LoadingScreen } from './shared/components/ui';
-import { ModalRenderer } from './shared/components/modal';
+import { OverlayRenderer } from './shared/components/overlays';
 import { useLoadingScreen } from './shared/store/use-loading-screen';
 
-export const links: Route.LinksFunction = () => [
-  {
-    rel: 'stylesheet',
-    href: 'https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400,300&f[]=cabinet-grotesk@800,700,500&display=swap',
-  },
-];
+export const links: Route.LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -47,7 +42,7 @@ export default function App() {
           {isLoading && <LoadingScreen message={message || 'Cargando...'} fullScreen={true} className="rounded-3xl" />}
 
           <Outlet />
-          <ModalRenderer />
+          <OverlayRenderer />
           <Toaster position="top-center" expand visibleToasts={5} richColors theme={theme} />
         </AuthProvider>
       </QueryClientProvider>

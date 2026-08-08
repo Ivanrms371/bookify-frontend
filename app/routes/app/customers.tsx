@@ -1,18 +1,30 @@
 import { useAuthStore } from '@/core/auth/useAuthStore';
+import { Customers } from '@/features/customers/components/customers';
 import { Heading, Text } from '@/shared/components/typography';
+import { Button } from '@/shared/components/ui';
+import { useOverlay } from '@/shared/hooks/use-overlay';
+import { PlusIcon } from '@heroicons/react/20/solid';
 
 const CustomersPage = () => {
-  const tenant = useAuthStore((s) => s.tenant);
-
-  if (!tenant) return null;
-
+  const { open } = useOverlay('create-customer-drawer');
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Heading as="h1" className="text-xl font-medium text-mist-600 lg:text-2xl xl:text-3xl">
-        Clientes
-      </Heading>
-      <Text className="mt-1 text-base md:text-lg">Gestiona tu cartera de clientes y su historial de visitas.</Text>
-    </div>
+    <>
+      <div className="flex flex-col gap-2 md:flex-row justify-between md:items-center pb-4 border-b border-gray-200">
+        <div>
+          <Heading as="h1" className="text-3xl font-semibold">
+            Clientes
+          </Heading>
+          <Text className="text-gray-600">Gestiona tus clientes</Text>
+        </div>
+        <div>
+          <Button variant="primary" className="min-w-40" icon={<PlusIcon className="size-5" />} iconPosition="left" onClick={open}>
+            Nuevo Cliente
+          </Button>
+        </div>
+      </div>
+
+      <Customers />
+    </>
   );
 };
 

@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 const ACCEPT = 'image/png,image/jpeg,image/jpg,image/webp,image/avif';
 
 const actionButtonClassName =
-  'shrink-0 rounded-lg border border-mist-200 bg-mist-50 px-3 py-1.5 text-xs font-medium text-mist-700 transition-colors hover:bg-mist-100 dark:border-mist-700 dark:bg-mist-950 dark:text-mist-300 dark:hover:bg-mist-900/50';
+  'shrink-0 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-300 dark:hover:bg-gray-900/50';
 
 export const ImageInput = ({ value = null, onChange, previewClassName, errorMessage, className, id }: Props) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -76,29 +76,29 @@ export const ImageInput = ({ value = null, onChange, previewClassName, errorMess
         onDrop={handleDrop}
         className={cn(
           'flex items-center gap-3 rounded-xl border bg-white p-3 transition-[border-color,box-shadow,background-color] duration-300 ease-out',
-          'border-mist-200 border-dashed hover:bg-mist-50 dark:border-mist-800 dark:bg-mist-950/50 dark:hover:bg-mist-900/50',
-          isDragging && 'border-mist-400 bg-mist-50 dark:border-mist-600 dark:bg-mist-900/60',
+          'border-gray-200 border-dashed hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950/50 dark:hover:bg-gray-900/50',
+          isDragging && 'border-gray-400 bg-gray-50 dark:border-gray-600 dark:bg-gray-900/60',
           errorMessage && fieldErrorBorderClassName,
           className,
         )}
       >
         <div
           className={cn(
-            'relative size-14 shrink-0 overflow-hidden rounded-lg border border-dashed border-mist-200 dark:border-mist-800',
-            !hasImage && 'flex items-center justify-center bg-mist-50 dark:bg-mist-900/50',
+            'relative size-14 shrink-0 overflow-hidden rounded-lg border border-dashed border-gray-200 dark:border-gray-800',
+            !hasImage && 'flex items-center justify-center bg-gray-50 dark:bg-gray-900/50',
             previewClassName,
           )}
         >
           {hasImage ? (
             <img src={previewUrl!} alt="" className="size-full object-cover" />
           ) : (
-            <PhotoIcon className="size-6 text-mist-400 dark:text-mist-500" strokeWidth={1.25} />
+            <PhotoIcon className="size-6 text-gray-400 dark:text-gray-500" strokeWidth={1.25} />
           )}
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-mist-900 dark:text-mist-100">Seleccionar imagen</p>
-          <p className="mt-0.5 text-sm text-mist-500 dark:text-mist-400">Haz click o arrastrá una imagen</p>
+          <p className="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">Seleccionar imagen</p>
+          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Haz click o arrastrá una imagen</p>
         </div>
 
         <button type="button" onClick={openPicker} className={actionButtonClassName}>

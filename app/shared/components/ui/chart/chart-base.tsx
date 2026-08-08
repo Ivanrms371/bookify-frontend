@@ -39,14 +39,14 @@ export const ChartBase = ({
             </linearGradient>
           </defs>
 
-          <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-mist-300 dark:stroke-mist-800" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-gray-300 dark:stroke-gray-800" />
 
           <XAxis
             dataKey={xKey}
             axisLine={false}
             tickLine={false}
             tickFormatter={formatXAxis}
-            className="text-xs font-medium text-mist-600 dark:text-mist-300"
+            className="text-xs font-medium text-gray-600 dark:text-gray-300"
             minTickGap={40}
           />
 
@@ -54,7 +54,7 @@ export const ChartBase = ({
             tickFormatter={formatYAxis}
             axisLine={false}
             tickLine={false}
-            className="text-xs font-medium text-mist-600 dark:text-mist-300"
+            className="text-xs font-medium text-gray-600 dark:text-gray-300"
             width={70}
           />
 

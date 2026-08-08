@@ -42,7 +42,7 @@ export const ConfirmStep = () => {
         </div>
       </div>
 
-      <ul className="divide-y divide-mist-100 overflow-hidden rounded-2xl border border-mist-200 bg-white mb-6">
+      <ul className="divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-200 bg-white mb-6">
         {READY_ITEMS.map((item) => {
           const Icon = item.icon;
 
@@ -55,8 +55,8 @@ export const ConfirmStep = () => {
                 <Icon className="size-5" strokeWidth={1.75} aria-hidden />
               </span>
               <div className="min-w-0 flex-1 pt-0.5">
-                <p className="text-sm font-semibold text-mist-900">{item.label}</p>
-                <p className="text-sm text-mist-500">{item.description}</p>
+                <p className="text-sm font-semibold text-gray-900">{item.label}</p>
+                <p className="text-sm text-gray-500">{item.description}</p>
               </div>
               <div className={cn('shrink-0 rounded-full p-1 bg-indigo-50 ring-1 ring-indigo-100')}>
                 <CheckIcon className={cn('size-4 text-indigo-400')} />

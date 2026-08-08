@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Heading, Text } from '@/shared/components/typography';
-import { Input } from '@/shared/components/form/Input';
+import { Input } from '@/shared/components/form/input';
 import { cn } from '@/shared/utils/cn';
 import { TENANT_TYPES_OPTIONS } from '@/shared/constants/tenant-type';
 import { BackButton, NextButton, StepNavigation } from '../components/step-navigation';
@@ -73,15 +73,15 @@ export const BusinessStep = () => {
               <div
                 key={option.value}
                 className={cn(
-                  'flex flex-col items-center justify-center bg-white border hover:bg-mist-100 transition-colors duration-300 cursor-pointer border-mist-200 p-4 rounded-lg text-sm text-center h-24',
+                  'flex flex-col items-center justify-center bg-white border hover:bg-gray-100 transition-colors duration-300 cursor-pointer border-gray-200 p-4 rounded-lg text-sm text-center h-24',
                   formData.type === option.value && ' border-indigo-500 hover:bg-white cursor-default',
                 )}
                 onClick={() => setFormData({ ...formData, type: option.value })}
               >
-                <option.icon className={cn('size-6 text-mist-400 mb-2', formData.type === option.value && 'text-indigo-400')} />
+                <option.icon className={cn('size-6 text-gray-400 mb-2', formData.type === option.value && 'text-indigo-400')} />
                 <span
                   className={cn(
-                    'text-mist-600 transition-all duration-150 text-xs sm:text-sm',
+                    'text-gray-600 transition-all duration-150 text-xs sm:text-sm',
                     formData.type === option.value && 'text-indigo-500 font-semibold',
                   )}
                 >

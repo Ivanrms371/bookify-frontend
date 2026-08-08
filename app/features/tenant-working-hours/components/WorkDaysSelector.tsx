@@ -10,7 +10,7 @@ interface Props {
 export const WorkDaysSelector = ({ onDayToggle, weeklySchedule }: Props) => {
   return (
     <div className="mt-6">
-      <Text className="text-lg text-mist-700 dark:text-mist-300">Días de atención</Text>
+      <Text className="text-lg text-gray-700 dark:text-gray-300">Días de atención</Text>
 
       <div className="mt-2 flex gap-2">
         {DAYS_OF_WEEK.map((day) => (
@@ -18,9 +18,9 @@ export const WorkDaysSelector = ({ onDayToggle, weeklySchedule }: Props) => {
             type="button"
             key={day}
             className={cn(
-              'w-11 h-10 cursor-pointer rounded-2xl bg-mist-200 text-sm font-medium text-mist-800 transition-colors hover:bg-mist-300 dark:bg-mist-900 dark:text-mist-200 dark:hover:bg-mist-800',
+              'w-11 h-10 cursor-pointer rounded-2xl bg-gray-200 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-300 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800',
               weeklySchedule[day].isActive &&
-                'bg-indigo-500 text-mist-50 hover:bg-indigo-600 dark:bg-indigo-600 dark:text-mist-50 hover:dark:bg-indigo-500',
+                'bg-indigo-500 text-gray-50 hover:bg-indigo-600 dark:bg-indigo-600 dark:text-gray-50 hover:dark:bg-indigo-500',
             )}
             onClick={() => onDayToggle(day)}
           >

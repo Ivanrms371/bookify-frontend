@@ -36,7 +36,7 @@ export function Alert({ variant = 'error', title, message, dismissible = false, 
     >
       <div className={cn('min-w-0', hasBoth && 'space-y-0.5')}>
         {title && <p className={cn(hasBoth && 'font-semibold')}>{title}</p>}
-        {message && <p className={cn(hasBoth && 'font-normal opacity-90')}>{message}</p>}
+        {message && <p className={cn(hasBoth && 'font-medium opacity-90')}>{message}</p>}
       </div>
 
       {dismissible && onDismiss && (

@@ -1,7 +1,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import { authService } from "../services/auth.service";
+import { authApi } from "../api/auth-api";
 import { useAuthStore } from "@/core/auth/useAuthStore";
 
 export const useLogin = () => {
@@ -9,7 +9,7 @@ export const useLogin = () => {
     const setAuth = useAuthStore((state) => state.setAuth);
 
     return useMutation({
-        mutationFn: authService.login,
+        mutationFn: authApi.login,
         onSuccess: ({ user, tenant }) => {
             setAuth(user, tenant);
 

@@ -1,31 +1,32 @@
-import { useAuthStore } from '@/core/auth/useAuthStore';
 import { ServiceGrid, useServices } from '@/features/services';
 import { Button } from '@/shared/components/ui';
 import { Heading, Text } from '@/shared/components/typography';
+import { PlusIcon } from '@heroicons/react/20/solid';
+import { useOverlay } from '@/shared/hooks/use-overlay';
 
 const ServicesPage = () => {
-  const { data: services = [], isLoading } = useServices();
-  const tenant = useAuthStore((s) => s.tenant);
-
-  if (!tenant) return null;
+  const { open } = useOverlay('create-service-drawer');
+  const { data, isLoading } = useServices();
+  const { data: services = [] } = data ?? {};
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <>
+      <div className="flex flex-col gap-2 md:flex-row justify-between md:items-center pb-4 border-b border-gray-200">
         <div>
-          <Heading as="h1" className="text-xl font-medium text-mist-600 lg:text-2xl xl:text-3xl">
+          <Heading as="h1" className="text-3xl font-semibold">
             Servicios
           </Heading>
-          <Text className="mt-1 text-base md:text-lg">Configura y gestiona el catálogo de servicios de tu negocio.</Text>
+          <Text className="text-gray-600">Gestiona las citas de hoy y visualiza el estado de cada turno de forma simple.</Text>
         </div>
-
-        <Button type="button" className="button-primary shrink-0">
-          Nuevo Servicio
-        </Button>
+        <div>
+          <Button variant="primary" className="min-w-40" icon={<PlusIcon className="size-5" />} iconPosition="left" onClick={open}>
+            Nuevo Servicio
+          </Button>
+        </div>
       </div>
 
-      <ServiceGrid services={services} isLoading={isLoading} className="mt-6 md:mt-8" />
-    </div>
+      <ServiceGrid services={services} />
+    </>
   );
 };
 

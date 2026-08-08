@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { type Control, type FieldPath, type FieldValues, useController } from 'react-hook-form';
-import { Input } from './Input';
+import { Input } from './input';
 import { decimalInputToNumber, numberToDecimalInput, sanitizeDecimalInput } from '@/shared/utils/numeric-input';
 
 type Props<T extends FieldValues> = Omit<React.ComponentProps<typeof Input>, 'type' | 'value' | 'onChange' | 'onBlur'> & {

@@ -16,7 +16,7 @@ interface Props {
 const ACCEPT = 'image/png,image/jpeg,image/jpg,image/webp,image/avif';
 
 const actionButtonClassName =
-  'rounded-md border border-white/30 bg-white/95 px-2 py-0.5 text-[10px] font-semibold text-mist-800 shadow-sm backdrop-blur-sm transition-colors hover:bg-white';
+  'rounded-md border border-white/30 bg-white/95 px-2 py-0.5 text-[10px] font-semibold text-gray-800 shadow-sm backdrop-blur-sm transition-colors hover:bg-white';
 
 export const LogoInput = ({ value = null, onChange, previewClassName, errorMessage, className, id }: Props) => {
   const fallbackId = useId();
@@ -98,10 +98,10 @@ export const LogoInput = ({ value = null, onChange, previewClassName, errorMessa
         onDrop={handleDrop}
         className={cn(
           'group flex w-full items-center gap-3 rounded-xl border border-dashed p-3 transition-all duration-300 ease-out',
-          'bg-mist-50/80 dark:bg-mist-950/40',
+          'bg-gray-50/80 dark:bg-gray-950/40',
           !hasImage &&
-            'cursor-pointer border-mist-300 hover:border-mist-500 hover:bg-mist-100/80 dark:hover:border-mist-600 dark:hover:bg-mist-900/50',
-          hasImage && 'border-solid border-mist-200 bg-white dark:border-mist-800',
+            'cursor-pointer border-gray-300 hover:border-gray-500 hover:bg-gray-100/80 dark:hover:border-gray-600 dark:hover:bg-gray-900/50',
+          hasImage && 'border-solid border-gray-200 bg-white dark:border-gray-800',
           isDragging && 'border-indigo-400 bg-indigo-50/50 ring-2 ring-indigo-200/60 dark:border-indigo-500 dark:bg-indigo-950/30',
           errorMessage && fieldErrorBorderClassName,
         )}
@@ -110,8 +110,8 @@ export const LogoInput = ({ value = null, onChange, previewClassName, errorMessa
         <div
           className={cn(
             'relative size-16 shrink-0 overflow-hidden rounded-full border border-dashed transition-colors',
-            !hasImage && 'border-mist-300 bg-white dark:border-mist-700 dark:bg-mist-900',
-            hasImage && 'border-mist-200 dark:border-mist-700',
+            !hasImage && 'border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900',
+            hasImage && 'border-gray-200 dark:border-gray-700',
             isDragging && 'border-indigo-400',
             previewClassName,
           )}
@@ -119,7 +119,7 @@ export const LogoInput = ({ value = null, onChange, previewClassName, errorMessa
           {hasImage ? (
             <>
               <img src={previewUrl!} alt="" className="size-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center gap-0.5 bg-mist-900/0 opacity-0 transition-all duration-200 group-hover:bg-mist-900/55 group-hover:opacity-100 group-focus-within:bg-mist-900/55 group-focus-within:opacity-100">
+              <div className="absolute inset-0 flex items-center justify-center gap-0.5 bg-gray-900/0 opacity-0 transition-all duration-200 group-hover:bg-gray-900/55 group-hover:opacity-100 group-focus-within:bg-gray-900/55 group-focus-within:opacity-100">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -147,17 +147,17 @@ export const LogoInput = ({ value = null, onChange, previewClassName, errorMessa
               {isDragging ? (
                 <ArrowUpTrayIcon className="size-5 text-indigo-600" strokeWidth={1.5} />
               ) : (
-                <PhotoIcon className="size-5 text-mist-400 dark:text-mist-500" strokeWidth={1.25} />
+                <PhotoIcon className="size-5 text-gray-400 dark:text-gray-500" strokeWidth={1.25} />
               )}
             </div>
           )}
         </div>
 
         <div className="min-w-0 flex-1 text-left">
-          <p className="text-sm font-semibold text-mist-800 dark:text-mist-100">
+          <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
             {isDragging ? 'Soltá el logo acá' : hasImage ? 'Logo listo' : 'Subí el logo de tu negocio'}
           </p>
-          <p className="mt-0.5 text-xs text-mist-500 dark:text-mist-400">
+          <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
             {hasImage ? 'Pasá el mouse sobre la imagen para cambiarla o quitarla' : 'Arrastrá y soltá o hacé clic para elegir un archivo'}
           </p>
         </div>
@@ -165,7 +165,7 @@ export const LogoInput = ({ value = null, onChange, previewClassName, errorMessa
         <input id={inputId} ref={fileInputRef} type="file" accept={ACCEPT} className="sr-only" onChange={handleInputChange} />
       </div>
 
-      <p className="text-xs text-mist-500 dark:text-mist-400">PNG o WebP · Recomendado 200 × 200 px</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400">PNG o WebP · Recomendado 200 × 200 px</p>
 
       {errorMessage && <Alert message={errorMessage} variant="error" />}
     </div>

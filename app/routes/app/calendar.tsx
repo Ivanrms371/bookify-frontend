@@ -1,29 +1,29 @@
-import { useAuthStore } from '@/core/auth/useAuthStore';
+import { Appointments } from '@/features/appointments';
 import { Heading, Text } from '@/shared/components/typography';
 import { Button } from '@/shared/components/ui';
-import { PlusIcon } from '@heroicons/react/16/solid';
+import { useOverlay } from '@/shared/hooks/use-overlay';
 
 const CalendarPage = () => {
-  const tenant = useAuthStore((s) => s.tenant);
-
-  if (!tenant) return null;
+  const { open } = useOverlay('new-appointment-modal');
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
-      <div className="flex flex-col md:flex-row md:justify-between items-center">
+    <>
+      <div className="flex flex-col gap-2 md:flex-row justify-between md:items-center pb-4 border-b border-gray-200">
         <div>
           <Heading as="h1" className="text-3xl font-semibold">
             Calendario
           </Heading>
-          <Text className="text-mist-600 mb-4">Gestiona las citas de hoy y visualiza el estado de cada turno de forma simple.</Text>
+          <Text className="text-gray-600">Gestiona las citas de hoy y visualiza el estado de cada turno de forma simple.</Text>
         </div>
-        <div className="w-full md:w-fit">
-          <Button variant="primary" icon={<PlusIcon className="size-4" />} iconPosition="left" fullWidth>
-            Nuevo Turno
+        <div>
+          <Button variant="primary" onClick={() => open({})}>
+            + Nuevo Turno
           </Button>
         </div>
       </div>
-    </div>
+
+      <Appointments />
+    </>
   );
 };
 

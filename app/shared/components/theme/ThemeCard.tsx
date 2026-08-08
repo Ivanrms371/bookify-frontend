@@ -9,16 +9,16 @@ type ThemeBrowserPreviewProps = {
 
 function ThemeBrowserPreview({ theme }: ThemeBrowserPreviewProps) {
   return (
-    <div className="overflow-hidden rounded-lg border border-mist-200/90 bg-white shadow-sm">
-      <div className="flex items-center gap-2 border-b border-mist-200 bg-mist-50 px-2.5 py-2">
+    <div className="overflow-hidden rounded-lg border border-gray-200/90 bg-white shadow-sm">
+      <div className="flex items-center gap-2 border-b border-gray-200 bg-gray-50 px-2.5 py-2">
         <div className="flex shrink-0 gap-1" aria-hidden>
           <span className="size-2 rounded-full bg-[#ff5f57]" />
           <span className="size-2 rounded-full bg-[#febc2e]" />
           <span className="size-2 rounded-full bg-[#28c840]" />
         </div>
-        <div className="flex min-w-0 flex-1 items-center gap-1 rounded-md border border-mist-200 bg-white px-2 py-1">
-          <LockClosedIcon className="size-2.5 shrink-0 text-mist-400" strokeWidth={2} />
-          <span className="truncate text-[9px] text-mist-500">turnify.app/tu-negocio</span>
+        <div className="flex min-w-0 flex-1 items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1">
+          <LockClosedIcon className="size-2.5 shrink-0 text-gray-400" strokeWidth={2} />
+          <span className="truncate text-[9px] text-gray-500">turnify.app/tu-negocio</span>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ function ThemeBrowserPreview({ theme }: ThemeBrowserPreviewProps) {
                 key={day}
                 className={cn(
                   'flex flex-col items-center rounded px-0.5 py-1',
-                  i === 1 ? 'text-white shadow-sm' : 'border border-mist-200 bg-white text-mist-600',
+                  i === 1 ? 'text-white shadow-sm' : 'border border-gray-200 bg-white text-gray-600',
                 )}
                 style={i === 1 ? { backgroundColor: theme.accent } : undefined}
               >
@@ -50,7 +50,7 @@ function ThemeBrowserPreview({ theme }: ThemeBrowserPreviewProps) {
                 key={time}
                 className={cn(
                   'rounded py-0.5 text-center text-[7px] font-semibold',
-                  i === 1 ? 'text-white' : 'border border-mist-200 bg-mist-50 text-mist-600',
+                  i === 1 ? 'text-white' : 'border border-gray-200 bg-gray-50 text-gray-600',
                 )}
                 style={i === 1 ? { backgroundColor: theme.accent } : undefined}
               >
@@ -85,7 +85,7 @@ export function ThemeCard({ theme, isSelected, onSelect }: ThemeCardProps) {
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         isSelected
           ? cn('border-transparent shadow-md ring-2 ring-offset-2', theme.ring, 'focus-visible:ring-offset-white')
-          : cn('border-mist-200', theme.hover, 'hover:shadow-md'),
+          : cn('border-gray-200', theme.hover, 'hover:shadow-md'),
       )}
     >
       {theme.recommend && (
@@ -102,7 +102,7 @@ export function ThemeCard({ theme, isSelected, onSelect }: ThemeCardProps) {
       <ThemeBrowserPreview theme={theme} />
 
       <div className="mt-3 flex items-center justify-between gap-2">
-        <span className={cn('text-sm font-bold text-mist-900', theme.text)}>{theme.name}</span>
+        <span className={cn('text-sm font-bold text-gray-900', theme.text)}>{theme.name}</span>
         <span className="size-4 shrink-0 rounded-full ring-2 ring-white" style={{ backgroundColor: theme.accent }} aria-hidden />
       </div>
     </button>

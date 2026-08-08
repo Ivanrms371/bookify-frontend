@@ -1,6 +1,6 @@
 import { StepNavigation } from '@/features/onboarding/components/StepNavigation';
 import { FormField } from '@/shared/components/form/FormField';
-import { Input } from '@/shared/components/form/Input';
+import { Input } from '@/shared/components/form/input';
 import { Label } from '@/shared/components/form/Label';
 import { useForm } from 'react-hook-form';
 import type { TenantAddressInput } from '../types/tenant.type';

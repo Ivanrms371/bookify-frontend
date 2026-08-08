@@ -33,7 +33,7 @@ export const ConfirmStep = () => {
               <SparklesIcon className="size-4" aria-hidden />
               Último paso
             </span>
-            <Heading as="h1" className="font-mono text-2xl font-semibold text-white md:text-3xl">
+            <Heading as="h1" className=" text-2xl font-semibold text-white md:text-3xl">
               ¡Todo listo para lanzar en Bookify!
             </Heading>
             <Text className="text-sm font-medium text-indigo-100 md:text-base">
@@ -52,7 +52,7 @@ export const ConfirmStep = () => {
 
       <Card className="mb-6 border border-gray-100 p-0 shadow-sm ring-1 ring-gray-100/80">
         <div className="border-b border-gray-100 px-5 py-4 md:px-6">
-          <Heading as="h2" className="font-mono text-lg font-semibold text-gray-900 md:text-xl">
+          <Heading as="h2" className=" text-lg font-semibold text-gray-900 md:text-xl">
             Resumen de configuración
           </Heading>
           <Text className="mt-1 text-sm text-gray-500">Estos bloques ya forman parte de tu espacio de trabajo.</Text>

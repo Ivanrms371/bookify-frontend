@@ -1,21 +1,21 @@
 export type AppointmentStatus = 'CONFIRMED' | 'PENDING' | 'CANCELLED' | 'COMPLETED' | 'NO_SHOW';
 
-export interface AppointmentEmployee {
+export interface AppointmentProfessional {
   id: string;
   avatarUrl: string | null;
-  displayName: string;
+  displayName: string | null;
   colorTheme: string | null;
 }
 
 export interface UpcomingAppointment {
   id: string;
   status: AppointmentStatus;
-  startTime: string;
-  endTime: string;
+  startsAt: string;
+  endsAt: string;
   customerName: string;
   confirmationCode: string;
   durationMinutes: number;
-  employee: AppointmentEmployee;
+  professional: AppointmentProfessional;
   service?: {
     name: string;
     price: number;

@@ -9,7 +9,7 @@ export const QuotaGrid = () => {
     return (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-32 w-full animate-pulse rounded-3xl bg-mist-100 dark:bg-mist-900/30" />
+          <div key={i} className="h-32 w-full animate-pulse rounded-3xl bg-gray-100 dark:bg-gray-900/30" />
         ))}
       </div>
     );

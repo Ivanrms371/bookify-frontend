@@ -20,7 +20,7 @@ export const SidebarSecondaryNav = () => {
         <li key={item.label}>
           <a
             href={item.href}
-            className="flex items-center gap-2 rounded-2xl px-3 py-3 font-medium text-mist-800 transition-colors duration-300 hover:bg-mist-800 hover:text-mist-200 "
+            className="flex items-center gap-2 rounded-xl px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white "
           >
             {item.icon}
             <span>{item.label}</span>
@@ -28,7 +28,7 @@ export const SidebarSecondaryNav = () => {
         </li>
       ))}
       <li>
-        <button className="flex w-full items-center gap-2 rounded-2xl px-3 py-3 font-medium text-mist-800 transition-colors duration-300 hover:bg-mist-800 hover:text-mist-200 disabled:opacity-50 ">
+        <button className="flex w-full items-center gap-2 rounded-xl px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white disabled:opacity-50 ">
           <ArrowRightStartOnRectangleIcon className="size-5" />
           <span>Cerrar Sesión</span>
         </button>

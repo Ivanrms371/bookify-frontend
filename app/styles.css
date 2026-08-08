@@ -3,4 +3,5 @@
 
 @import './shared/styles/globals.css';
 @import './shared/styles/components.css';
+@import './shared/styles/fonts.css';
 @import './shared/styles/utilities.css';

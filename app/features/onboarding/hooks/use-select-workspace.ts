@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { onboardingService } from '../services/onboarding.service';
+import { onboardingApi } from '../api/onboarding-api';
 import type { WorkspaceStepPayload } from '../schemas/workspace-step.schema';
 
 export const useSelectWorkspace = () => {
   return useMutation({
-    mutationFn: (data: WorkspaceStepPayload) => onboardingService.updateWorkspace(data),
+    mutationFn: (data: WorkspaceStepPayload) => onboardingApi.updateWorkspace(data),
   });
 };

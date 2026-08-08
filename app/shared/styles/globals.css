@@ -1,5 +1,5 @@
 @theme {
-  --color-primary: #2b4c7e;
+  /* --color-primary: #2b4c7e;
   --color-primary-hover: #1f3a5f;
   --color-primary-active: #162a45;
 
@@ -13,17 +13,65 @@
 
   --color-success: #22c55e;
   --color-warning: #f59e0b;
-  --color-danger: #ef4444;
+  --color-danger: #ef4444; */
 
-  --font-sans: 'Satoshi', sans-serif;
-  --font-mono: 'Cabinet Grotesk', monospace;
+  /* Modificamos los fallbacks para que use los del sistema en lugar de Times New Roman */
+  --font-sans: 'Satoshi', 'Times New Roman', ui-sans-serif, system-ui, sans-serif;
 }
 
 html,
 body {
-  @apply bg-mist-50 font-sans text-mist-600;
+  /* Forzamos font-sans para todo el documento */
+  @apply bg-gray-50 font-sans text-gray-600;
+}
+/* Spinner animation */
+.spinner {
+  margin: auto;
+  width: 40px;
+  text-align: center;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+.spinner > div {
+  @apply bg-indigo-400;
+  width: 12px;
+  height: 12px;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
   }
 }

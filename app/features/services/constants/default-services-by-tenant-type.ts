@@ -1,22 +1,23 @@
 import type { TenantOption } from '@/shared/constants/tenant-type';
-import type { CreateServicePayload } from '../schemas/create-service.schema';
+import type { ServiceFormData } from '../schemas/service-form-schema';
 
 export type TenantType = TenantOption['value'];
 
-type DefaultServiceTemplate = Pick<CreateServicePayload, 'name' | 'durationMinutes' | 'price'>;
+type DefaultServiceTemplate = Pick<ServiceFormData, 'name' | 'durationMinutes' | 'price'>;
 
 const SERVICE_DEFAULTS = {
   image: null,
   description: null,
-  discountPercentage: 0,
-  discountFixed: 0,
-} satisfies Omit<CreateServicePayload, 'name' | 'durationMinutes' | 'price'>;
+  discountPercentage: null,
+  discountFixed: null,
+  professionalIds: [],
+} satisfies Omit<ServiceFormData, 'name' | 'durationMinutes' | 'price'>;
 
-function buildService(template: DefaultServiceTemplate): CreateServicePayload {
+function buildService(template: DefaultServiceTemplate): ServiceFormData {
   return { ...SERVICE_DEFAULTS, ...template };
 }
 
-function buildServices(templates: DefaultServiceTemplate[]): CreateServicePayload[] {
+function buildServices(templates: DefaultServiceTemplate[]): ServiceFormData[] {
   return templates.map(buildService);
 }
 
@@ -68,9 +69,9 @@ export const DEFAULT_SERVICES = Object.fromEntries(
     tenantType,
     buildServices(templates),
   ]),
-) as Record<TenantType, CreateServicePayload[]>;
+) as Record<TenantType, ServiceFormData[]>;
 
-export function getDefaultServicesForTenantType(tenantType: string | null | undefined): CreateServicePayload[] {
+export function getDefaultServicesForTenantType(tenantType: string | null | undefined): ServiceFormData[] {
   if (!tenantType || !(tenantType in DEFAULT_SERVICES)) {
     return DEFAULT_SERVICES.OTHER;
   }

@@ -26,8 +26,8 @@ export const StepIndicator = ({ state }: Props) => {
   }
 
   return (
-    <span className={cn('relative z-10 flex shrink-0 items-center justify-center rounded-full bg-white ring-2 ring-mist-200 size-6')}>
-      <span className="size-2 rounded-full bg-mist-200" />
+    <span className={cn('relative z-10 flex shrink-0 items-center justify-center rounded-full bg-white ring-2 ring-gray-200 size-6')}>
+      <span className="size-2 rounded-full bg-gray-200" />
     </span>
   );
 };

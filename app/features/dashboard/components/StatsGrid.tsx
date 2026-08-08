@@ -9,7 +9,7 @@ export const StatsGrid = () => {
     return (
       <div className="grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-[140px] w-full animate-pulse rounded-3xl bg-mist-100 dark:bg-mist-900/30" />
+          <div key={i} className="h-[140px] w-full animate-pulse rounded-3xl bg-gray-100 dark:bg-gray-900/30" />
         ))}
       </div>
     );
@@ -30,7 +30,7 @@ export const StatsGrid = () => {
         title="Turnos hoy"
         value={stats.appointmentsToday.current.toString()}
         trend={stats.appointmentsToday.trend}
-        color="mist"
+        color="gray"
         className="order-2 lg:order-2"
       />
       <StatsCard
@@ -40,7 +40,7 @@ export const StatsGrid = () => {
         color="indigo"
         className="order-4 lg:order-3"
       />
-      <StatsCard title="Clientes totales" value={stats.totalCustomers.current.toString()} color="mist" className="order-3 lg:order-4" />
+      <StatsCard title="Clientes totales" value={stats.totalCustomers.current.toString()} color="gray" className="order-3 lg:order-4" />
     </div>
   );
 };

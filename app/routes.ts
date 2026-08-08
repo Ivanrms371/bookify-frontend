@@ -15,7 +15,7 @@ export default [
       route('calendar', 'routes/app/calendar.tsx'),
       route('services', 'routes/app/services.tsx'),
       route('customers', 'routes/app/customers.tsx'),
-      route('staff', 'routes/app/staff.tsx'),
+      route('team', 'routes/app/team.tsx'),
       route('reports', 'routes/app/reports.tsx'),
     ]),
   ]),

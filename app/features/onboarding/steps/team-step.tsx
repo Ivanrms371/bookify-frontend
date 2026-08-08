@@ -26,8 +26,8 @@ export const TeamStep = () => {
 
   return (
     <>
-      <Text className="mb-1.5 font-mono text-xl font-semibold text-mist-800 md:text-2xl">Invitá a tu equipo</Text>
-      <Text className="mb-4 max-w-xl text-sm font-medium text-mist-500">
+      <Text className="mb-1.5  text-xl font-semibold text-gray-800 md:text-2xl">Invitá a tu equipo</Text>
+      <Text className="mb-4 max-w-xl text-sm font-medium text-gray-500">
         Copiá este enlace y mandalo a tus colaboradores para que puedan crear su cuenta.
       </Text>
 
@@ -37,7 +37,7 @@ export const TeamStep = () => {
             type="text"
             readOnly
             value={INVITE_LINK}
-            className="flex-1 rounded-xl border bg-white border-mist-200 px-4 py-3 text-sm text-mist-700 outline-none"
+            className="flex-1 rounded-xl border bg-white border-gray-200 px-4 py-3 text-sm text-gray-700 outline-none"
           />
           <Button variant="primary" type="button" onClick={() => navigator.clipboard.writeText(INVITE_LINK)} className="button-secondary">
             <ClipboardDocumentIcon className="size-4" />
@@ -45,7 +45,7 @@ export const TeamStep = () => {
           </Button>
         </div>
 
-        <Text className="mb-6 max-w-xl text-sm font-medium text-mist-500">
+        <Text className="mb-6 max-w-xl text-sm font-medium text-gray-500">
           El enlace es válido por 24 horas, podrás generar uno nuevo en cualquier momento en el panel de control.
         </Text>
 

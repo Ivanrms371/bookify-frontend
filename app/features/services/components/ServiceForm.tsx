@@ -1,17 +1,17 @@
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import { FormField } from '@/shared/components/form/FormField';
 import { Label } from '@/shared/components/form/Label';
-import { Input } from '@/shared/components/form/Input';
+import { Input } from '@/shared/components/form/input';
 import { NumberInput } from '@/shared/components/form/NumberInput';
 import { Textarea } from '@/shared/components/form/Textarea';
 import { Alert } from '@/shared/components/feedback/Alert';
-import type { CreateServicePayload } from '../schemas/create-service.schema';
+import type { ServiceFormData } from '../schemas/service-form-schema';
 import { ImageInput } from '@/shared/components/form/ImageInput';
 import { Select } from '@/shared/components/form/Select';
 import { SERVICE_DURATION_OPTIONS } from '../constants/service-duration';
 
 interface Props {
-  methods: UseFormReturn<CreateServicePayload>;
+  methods: UseFormReturn<ServiceFormData>;
   imageInputKey?: number;
 }
 
@@ -52,7 +52,7 @@ export const ServiceForm = ({ methods, imageInputKey }: Props) => {
         <FormField className="flex-1">
           <Label htmlFor="price">Precio</Label>
           <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-sm text-mist-600 dark:text-mist-400">
+            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-sm text-gray-600 dark:text-gray-400">
               $
             </span>
             <NumberInput
