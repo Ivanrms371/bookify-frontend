@@ -20,6 +20,9 @@ export const invitationsApi = {
   update: (id: string, payload: CreateInvitePayload): Promise<CreateInviteResponse> =>
     httpClient.put<CreateInviteResponse>(`/invitations/${id}`, payload),
 
+  cancel: (id: string): Promise<{ success: boolean }> =>
+    httpClient.patch<{ success: boolean }>(`/invitations/${id}/cancel`),
+
   accept: (token: string): Promise<AcceptInviteResponse> =>
     httpClient.get<AcceptInviteResponse>(`/invitations/accept/${token}`),
 };

@@ -4,6 +4,8 @@ import { useOverlay } from '@/shared/hooks/use-overlay';
 import type { OverlayKey } from '@/shared/components/overlays/overlay-registry';
 import type { Invitation } from '../../types/invitation.types';
 import { Text } from '@/shared/components/typography';
+import { useCancelInvite } from '../../hooks/use-cancel-invite';
+import { toast } from 'sonner';
 
 const OVERLAY_KEY: OverlayKey = 'cancel-invitation-modal';
 
@@ -13,10 +15,17 @@ interface Props {
 
 export const CancelInvitationModal = ({ invitation }: Props) => {
   const { close } = useOverlay(OVERLAY_KEY);
+  const { mutateAsync: cancelInvite, isPending } = useCancelInvite();
 
-  const handleCancel = () => {
-    // Logic for cancelling invitation will go here
-    close();
+  const handleCancel = async () => {
+    if (!invitation) return;
+    try {
+      await cancelInvite(invitation.id);
+      toast.success('Invitación cancelada correctamente');
+      close();
+    } catch {
+      toast.error('Ocurrió un error al cancelar la invitación');
+    }
   };
 
   return (
@@ -29,10 +38,10 @@ export const CancelInvitationModal = ({ invitation }: Props) => {
           dejará de ser válido.
         </Text>
         <div className="flex w-full gap-3">
-          <Button type="button" variant="secondary" onClick={close}>
+          <Button type="button" variant="secondary" onClick={close} disabled={isPending}>
             Volver
           </Button>
-          <Button type="button" variant="danger" onClick={handleCancel} className="flex-1">
+          <Button type="button" variant="danger" onClick={handleCancel} className="flex-1" loading={isPending}>
             Cancelar Invitación
           </Button>
         </div>
