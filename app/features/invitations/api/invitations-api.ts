@@ -17,6 +17,9 @@ export const invitationsApi = {
   invite: (payload: CreateInvitePayload): Promise<CreateInviteResponse> =>
     httpClient.post<CreateInviteResponse>('/invitations/invite', payload),
 
+  update: (id: string, payload: CreateInvitePayload): Promise<CreateInviteResponse> =>
+    httpClient.put<CreateInviteResponse>(`/invitations/${id}`, payload),
+
   accept: (token: string): Promise<AcceptInviteResponse> =>
     httpClient.get<AcceptInviteResponse>(`/invitations/accept/${token}`),
 };

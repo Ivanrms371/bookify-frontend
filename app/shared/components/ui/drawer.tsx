@@ -81,7 +81,7 @@ export const Drawer = ({
           className,
         )}
       >
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div className="w-full">
             <Heading className="text-xl font-bold">{title}</Heading>
           </div>

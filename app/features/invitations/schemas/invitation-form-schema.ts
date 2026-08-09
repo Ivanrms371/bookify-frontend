@@ -5,7 +5,10 @@ export const inviteProfessionalSchema = z.object({
   email: z.string().email('Ingresá un correo válido'),
   phone: z.string().optional(),
   role: z.enum(['PROFESSIONAL', 'ADMIN']),
-  serviceIds: z.array(z.string()).min(1, 'Seleccioná al menos un servicio'),
+  serviceIds: z.array(z.string()),
+  commissionType: z.enum(['PERCENTAGE', 'FIXED']).optional(),
+  commissionValue: z.number().min(0, 'La comisión debe ser mayor o igual a 0').optional(),
 });
 
 export type InviteProfessionalFormData = z.infer<typeof inviteProfessionalSchema>;
+

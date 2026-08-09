@@ -10,6 +10,11 @@ export interface Invitation {
   phone?: string | null;
   role: InvitationRole;
   status: InvitationStatus;
+  commissionType?: 'PERCENTAGE' | 'FIXED' | null;
+  commissionPercent?: number | null;
+  commissionFixed?: number | null;
+  commissionValue?: number | null;
+  serviceIds?: string[];
   createdAt: string;
   expiresAt: string;
 }
@@ -22,6 +27,8 @@ export interface CreateInvitePayload {
   phone?: string;
   role: InvitationRole;
   serviceIds?: string[];
+  commissionType?: 'PERCENTAGE' | 'FIXED';
+  commissionValue?: number;
 }
 
 // ── Response shapes ──────────────────────────────────────────────

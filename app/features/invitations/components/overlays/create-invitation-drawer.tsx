@@ -14,12 +14,7 @@ export const CreateInvitationDrawer = () => {
 
   const handleSubmit = async (data: InviteProfessionalFormData): Promise<void> => {
     try {
-      await createInvite({
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        serviceIds: data.serviceIds,
-      });
+      await createInvite(data);
       toast.success(`Invitación enviada a ${data.email}`);
       close();
     } catch {

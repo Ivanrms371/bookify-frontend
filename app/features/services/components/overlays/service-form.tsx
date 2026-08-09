@@ -63,8 +63,6 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
     }
   };
 
-  console.log(errors);
-
   return (
     <form
       onSubmit={handleSubmit((data) =>
