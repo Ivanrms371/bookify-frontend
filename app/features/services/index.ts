@@ -1,4 +1,4 @@
-export { type Service, type ServiceCreateInput } from './types/services.types';
+export { type Service } from './types/services.types';
 
 export { ServiceForm } from './components/ServiceForm';
 export { ServiceGrid } from './components/grid/service-grid';

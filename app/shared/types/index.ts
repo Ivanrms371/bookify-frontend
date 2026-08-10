@@ -1,1 +1,2 @@
-export { type IconType } from './icon-types';
+export * from './role.types';
+export * from './icon-types';

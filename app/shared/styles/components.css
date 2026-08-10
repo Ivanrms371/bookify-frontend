@@ -68,6 +68,10 @@
     @apply border-indigo-600;
   }
 
+  .input:disabled {
+    @apply bg-gray-100 border-gray-100 cursor-not-allowed;
+  }
+
   .input-error {
     @apply border-red-500;
   }

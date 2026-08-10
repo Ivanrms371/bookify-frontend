@@ -1,6 +1,6 @@
 import type { IconType } from '@/shared/types';
 import { cn } from '@/shared/utils/cn';
-import { ExclamationTriangleIcon, InformationCircleIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import { ExclamationTriangleIcon, InformationCircleIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import type { ReactNode } from 'react';
 
 export type CalloutType = 'info' | 'success' | 'warning' | 'error' | 'neutral';
@@ -67,7 +67,7 @@ export const Callout = ({ type = 'info', icon, title, children }: CalloutProps) 
 
   return (
     <div className={cn('flex items-start gap-2 px-4 py-3 rounded-xl', colorClass.container)} role="status">
-      <IconComponent className={cn('mt-0.5 size-4.5 shrink-0', colorClass.icon)} />
+      <IconComponent className={cn('mt-0.5 size-5 shrink-0', colorClass.icon)} />
       <div className="flex flex-col gap-0.5">
         {title && <p className={cn('text-sm font-medium', colorClass.title)}>{title}</p>}
         <p className={cn('text-sm', colorClass.paragraph)}>{children}</p>

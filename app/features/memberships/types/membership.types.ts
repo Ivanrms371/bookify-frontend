@@ -1,17 +1,17 @@
-type MembershipRole = 'OWNER' | 'ADMIN' | 'MEMBER';
+import type { Role } from '@/shared/types';
 
 export type Membership = {
   id: string;
   userId: string;
   tenantId: string;
-  role: MembershipRole;
+  role: Role;
   invitationToken: string;
   jointedAt: Date;
 };
 
 export type CreateInvitationInput = {
   email: string;
-  role: MembershipRole;
+  role: Role;
   comissionType: 'FIXED' | 'PERCENTAGE';
   comissionPercent: number;
   comissionFixed: number;

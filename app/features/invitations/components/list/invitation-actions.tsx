@@ -1,7 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button } from '@/shared/components/ui';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
-import { DocumentDuplicateIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import type { Invitation } from '../../types/invitation.types';
 
@@ -14,7 +14,6 @@ export const InvitationActions = ({ invitation }: Props) => {
 
   const { open: openCancelInvitation } = useOverlay('cancel-invitation-modal');
 
-  const copyInvitationLink = () => {};
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -29,13 +28,6 @@ export const InvitationActions = ({ invitation }: Props) => {
           align="end"
           className="z-50 min-w-32 overflow-hidden rounded-xl border border-gray-100 bg-white p-1 text-gray-600 shadow-xl shadow-gray-200/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
         >
-          <DropdownMenu.Item
-            className="relative flex cursor-pointer gap-2 select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none transition-colors focus:bg-gray-100 focus:text-gray-900 text-gray-800"
-            onClick={() => copyInvitationLink()}
-          >
-            <DocumentDuplicateIcon className="size-4.5" />
-            Copiar link
-          </DropdownMenu.Item>
           <DropdownMenu.Item
             className="relative flex cursor-pointer gap-2 select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none transition-colors focus:bg-gray-100 focus:text-gray-900 text-gray-800"
             onClick={() => openUpdateInvitation({ invitation })}

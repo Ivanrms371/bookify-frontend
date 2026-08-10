@@ -6,8 +6,7 @@ export const useUpdateInvite = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: CreateInvitePayload }) =>
-      invitationsApi.update(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: CreateInvitePayload }) => invitationsApi.update(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invitations'] });
       queryClient.invalidateQueries({ queryKey: ['professionals'] });

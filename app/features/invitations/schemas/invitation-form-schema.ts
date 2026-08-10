@@ -1,14 +1,14 @@
 import { z } from 'zod';
+import { ROLES } from '@/shared/types';
 
 export const inviteProfessionalSchema = z.object({
-  name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
-  email: z.string().email('Ingresá un correo válido'),
+  name: z.string().min(1, 'El nombre es requerido'),
+  email: z.string().email('El email es requerido'),
   phone: z.string().optional(),
-  role: z.enum(['PROFESSIONAL', 'ADMIN']),
-  serviceIds: z.array(z.string()),
+  role: z.enum(ROLES),
+  serviceIds: z.array(z.string()).optional(),
   commissionType: z.enum(['PERCENTAGE', 'FIXED']).optional(),
-  commissionValue: z.number().min(0, 'La comisión debe ser mayor o igual a 0').optional(),
+  commissionAmount: z.number().optional(),
 });
 
 export type InviteProfessionalFormData = z.infer<typeof inviteProfessionalSchema>;
-
