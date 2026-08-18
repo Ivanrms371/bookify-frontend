@@ -1,23 +1,15 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/shared/components/ui/accordion';
 import { Button } from '@/shared/components/ui/button';
-import { FormField } from '@/shared/components/form/FormField';
-import { Input } from '@/shared/components/form/input';
-import { useEffect, useState } from 'react';
-import { Textarea } from '@/shared/components/form/Textarea';
-import { useServices } from '@/features/services';
-import { CheckIcon } from '@heroicons/react/16/solid';
-import { cn } from '@/shared/utils';
+import { useEffect } from 'react';
 import { WorkingHoursForm } from '@/features/schedule/components/working-hours-form';
-import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { professionalFormSchema, type ProfessionalFormValues } from '../../schemas/professional-form-schema';
 import { CommissionForm } from './commission-form';
 import { ProfessionalInfoForm } from './personal-info-form';
 import { ServicesSelector } from './services-selector';
-import { DEFAULT_SCHEDULE } from '@/shared/constants/week-days';
 import { ConfigForm } from './config-form';
+import { DrawerFooter } from '@/shared/components/ui/drawer';
 
 const defaultValues: ProfessionalFormValues = {
   displayName: '',
@@ -40,11 +32,8 @@ interface Props {
 }
 
 export function ProfessionalForm({ onSubmit, onCancel, canEditContactData = false, initialData, isSubmitting = false }: Props) {
-  const { data: servicesResponse, isLoading: isLoadingServices } = useServices();
-  const services = servicesResponse?.data ?? [];
-
   const methods = useForm<ProfessionalFormValues>({
-    defaultValues: (initialData || defaultValues) as ProfessionalFormValues,
+    defaultValues: initialData ?? (defaultValues as ProfessionalFormValues),
     resolver: zodResolver(professionalFormSchema),
   });
 
@@ -57,7 +46,7 @@ export function ProfessionalForm({ onSubmit, onCancel, canEditContactData = fals
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-5 flex h-full flex-col">
-        <Accordion type="multiple" defaultValue={['personal', 'services', 'commission']} className="w-full flex-1 overflow-y-auto">
+        <Accordion type="multiple" defaultValue={['personal']} className="w-full flex-1 overflow-y-auto">
           <AccordionItem value="personal">
             <AccordionTrigger>Información Personal</AccordionTrigger>
             <AccordionContent>
@@ -94,16 +83,14 @@ export function ProfessionalForm({ onSubmit, onCancel, canEditContactData = fals
           </AccordionItem>
         </Accordion>
 
-        <div className="flex pt-4 gap-3">
-          {onCancel && (
-            <Button variant="secondary" type="button" onClick={onCancel}>
-              Cancelar
-            </Button>
-          )}
-          <Button variant="primary" type="submit" className="flex-1" loading={isSubmitting}>
-            Guardar
+        <DrawerFooter>
+          <Button variant="secondary" type="button" className="flex-1" onClick={onCancel}>
+            Cancelar
           </Button>
-        </div>
+          <Button variant="primary" type="submit" className="flex-1" isSubmitting={isSubmitting}>
+            Guardar Cambios
+          </Button>
+        </DrawerFooter>
       </form>
     </FormProvider>
   );

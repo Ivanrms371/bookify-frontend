@@ -1,4 +1,4 @@
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { Input } from '@/shared/components/form/input';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';

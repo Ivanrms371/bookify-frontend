@@ -1,4 +1,4 @@
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { Input } from '@/shared/components/form/input';
 import { Callout } from '@/shared/components/ui';
 import { useFormContext } from 'react-hook-form';
@@ -16,7 +16,7 @@ export const CommissionForm = () => {
   const commissionType = watch('commissionType');
 
   return (
-    <div>
+    <>
       <div className="grid grid-cols-2 gap-2.5 mb-2">
         <FormField label="Tipo de Comisión" id="commissionType" error={errors.commissionType?.message}>
           <Select
@@ -44,9 +44,9 @@ export const CommissionForm = () => {
           />
         </FormField>
       </div>
-      <Callout className="mt-2" type="warning">
+      <Callout className="mt-2" type="info">
         Estás comisiones se aplican a partir del total generado por el profesional
       </Callout>
-    </div>
+    </>
   );
 };

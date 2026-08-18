@@ -37,7 +37,7 @@ export const ProfessionalsCard = ({ professional }: Props) => {
         {professional.phone && (
           <div className="flex items-center justify-center gap-1.5 truncate">
             <PhoneIcon className="size-4.5 text-gray-500 shrink-0" />
-            <span>{formatPhoneForDisplay(professional.phone, 'UY')}</span>
+            <span>{formatPhoneForDisplay(professional.phone, professional.phoneCountryCode)}</span>
           </div>
         )}
       </div>

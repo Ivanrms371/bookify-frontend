@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { Input } from '@/shared/components/form/input';
 import { Textarea } from '@/shared/components/form/Textarea';
 import { Select } from '@/shared/components/form/Select';
+import { PhoneCountryCode } from '@/shared/components/form/phone-country-code';
 import type { ProfessionalFormValues } from '../../schemas/professional-form-schema';
 
 interface Props {
@@ -51,8 +52,15 @@ export const ProfessionalInfoForm = ({ canEditContactData = true }: Props) => {
         <Input type="text" id="email" {...register('email')} disabled={!canEditContactData} />
       </FormField>
 
-      <FormField label="Teléfono" id="phone" error={errors.phone?.message}>
-        <Input type="text" id="phone" {...register('phone')} disabled={!canEditContactData} />
+      <FormField label="Teléfono" id="phone" error={errors.phone?.message || errors.phoneCountryCode?.message}>
+        <div className="flex gap-2">
+          <PhoneCountryCode
+            value={watch('phoneCountryCode') || '598'}
+            onChange={(val) => setValue('phoneCountryCode', val, { shouldValidate: true })}
+            disabled={!canEditContactData}
+          />
+          <Input type="text" id="phone" {...register('phone')} disabled={!canEditContactData} fullWidth />
+        </div>
       </FormField>
 
       {role !== 'OWNER' && (
