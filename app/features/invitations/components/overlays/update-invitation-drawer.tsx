@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { InviteForm } from './invite-form';
 import { useUpdateInvite } from '../../hooks/use-update-invite';
 import type { Invitation } from '../../types/invitation.types';
+import { Callout } from '@/shared/components/ui';
 
 const OVERLAY_KEY: OverlayKey = 'update-invitation-drawer';
 
@@ -22,15 +23,7 @@ export const UpdateInvitationDrawer = ({ invitation }: Props) => {
     try {
       await updateInvite({
         id: invitation.id,
-        payload: {
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          role: data.role,
-          serviceIds: data.serviceIds,
-          commissionType: data.commissionType,
-          commissionValue: data.commissionValue,
-        },
+        payload: data,
       });
       toast.success(`Invitación actualizada para ${data.email}`);
       close();
@@ -43,11 +36,12 @@ export const UpdateInvitationDrawer = ({ invitation }: Props) => {
     ? {
         name: invitation.name ?? '',
         email: invitation.email,
+        phoneCountryCode: invitation.phoneCountryCode ?? undefined,
         phone: invitation.phone ?? '',
         role: invitation.role,
         serviceIds: invitation.serviceIds ?? [],
         commissionType: invitation.commissionType ?? undefined,
-        commissionValue: invitation.commissionValue ?? undefined,
+        commissionAmount: invitation.commissionAmount ?? undefined,
       }
     : undefined;
 

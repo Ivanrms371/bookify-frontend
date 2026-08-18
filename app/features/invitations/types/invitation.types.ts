@@ -7,8 +7,9 @@ export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'EXPIRED';
 export interface Invitation {
   id: string;
   email: string;
-  name: string | null;
-  phone?: string | null;
+  name: string;
+  phoneCountryCode: string;
+  phone: string;
   role: Role;
   status: InvitationStatus;
   commissionType?: 'PERCENTAGE' | 'FIXED' | null;
@@ -23,7 +24,8 @@ export interface Invitation {
 export interface CreateInvitePayload {
   name: string;
   email: string;
-  phone?: string;
+  phoneCountryCode: string;
+  phone: string;
   role: Role;
   serviceIds?: string[];
   commissionType?: 'PERCENTAGE' | 'FIXED';

@@ -33,16 +33,15 @@ export const CancelInvitationModal = ({ invitation }: Props) => {
       <div className="flex flex-col items-center text-center">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">¿Cancelar invitación?</h3>
         <Text className="text-gray-500 mb-6">
-          La invitación enviada a{' '}
-          <span className="text-gray-800 font-semibold">{invitation?.name || invitation?.email}</span> será cancelada y el enlace
-          dejará de ser válido.
+          La invitación enviada a <span className="text-gray-800 font-semibold">{invitation?.name || invitation?.email}</span> será
+          cancelada y el enlace dejará de ser válido.
         </Text>
         <div className="flex w-full gap-3">
-          <Button type="button" variant="secondary" onClick={close} disabled={isPending}>
+          <Button type="button" variant="secondary" onClick={close} className="flex-1" disabled={isPending}>
             Volver
           </Button>
           <Button type="button" variant="danger" onClick={handleCancel} className="flex-1" loading={isPending}>
-            Cancelar Invitación
+            Cancelar
           </Button>
         </div>
       </div>
