@@ -14,7 +14,7 @@ export const WorkingHoursForm = ({ onSuccess, children, tenantId }: Props) => {
 
   return (
     <>
-      <div className="overflow-y-auto pl-0.5 pr-2 space-y-5 overflow-x-hidden custom-scrollbar">
+      <div className="@container overflow-y-auto pl-0.5 pr-2 space-y-5 overflow-x-hidden custom-scrollbar">
         {DAYS_OF_WEEK.map((day) => {
           const schedule = weeklySchedule[day];
           return (

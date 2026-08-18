@@ -1,9 +1,9 @@
 import { Text } from '@/shared/components/typography';
 import { DAY_LABELS, type DayOfWeek, type Interval } from '@/shared/constants/week-days';
-import { CheckIcon, ClipboardDocumentCheckIcon, ClipboardDocumentIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { PlusIcon } from '@heroicons/react/16/solid';
+import { ClipboardDocumentCheckIcon, ClipboardDocumentIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { TimeIntervalRow } from './time-interval-row';
 import { useState } from 'react';
+import { Switch } from '@/shared/components/form/Switch';
 import { cn } from '@/shared/utils/cn';
 
 interface DayScheduleRowProps {
@@ -39,60 +39,43 @@ export const DayScheduleRow = ({
     }
   };
 
-  return (
-    <div className={cn('space-y-3 border-gray-200 dark:border-gray-800', !isActive && 'border-gray-200/50')}>
-      <div className="flex justify-between items-end">
-        <div className={cn(!isActive && 'opacity-50')}>
-          <Text className="text-gray-700 text-lg">{DAY_LABELS[day].full}</Text>
-          {!isActive && <p className="text-xs font-medium text-gray-500">Cerrado</p>}
-        </div>
+  const handleToggle = (checked: boolean) => {
+    if (checked) {
+      onActivateDay(day);
+    } else {
+      onDeactivateDay(day);
+    }
+  };
 
-        {isActive ? (
-          <button
-            type="button"
-            className="flex cursor-pointer items-center gap-1 text-xs font-medium text-gray-500"
-            onClick={() => {
-              setHasCopied(true);
-              onCopyToAll(day);
-              setTimeout(() => {
-                setHasCopied(false);
-              }, 2000);
-            }}
-          >
-            {hasCopied ? (
-              <>
-                <ClipboardDocumentCheckIcon className="size-4 text-green-500 dark:text-green-400" />
-                <span className="text-green-500 dark:text-green-400">¡Copiado a todos!</span>
-              </>
-            ) : (
-              <>
-                <ClipboardDocumentIcon className="size-4" />
-                Copiar a todos
-              </>
-            )}
-          </button>
-        ) : (
-          <></>
-        )}
+  return (
+    <div className="flex flex-col @3xl:flex-row items-start gap-4 @3xl:gap-4 border-b border-gray-100 pb-5 last:border-0">
+      {/* 1. Lado Izquierdo: Switch + Label */}
+      <div className="flex items-center justify-between @3xl:justify-start gap-4 w-full @3xl:w-48 shrink-0 @3xl:pt-1">
+        <div className="flex items-center gap-4">
+          <Switch checked={isActive} onCheckedChange={handleToggle} />
+          <Text className={cn('font-medium', isActive ? 'text-gray-800' : 'text-gray-400')}>{DAY_LABELS[day].full}</Text>
+        </div>
       </div>
 
-      {isActive && (
+      {isActive ? (
         <>
-          <div className="flex flex-col gap-2">
+          {/* 2. Centro: Horarios */}
+          <div className="flex-1 flex flex-col gap-2 w-full">
             {intervals.map((interval, index) => (
               <TimeIntervalRow
                 key={index}
                 interval={interval}
                 onRemove={() => onRemove(index)}
-                onChange={(interval) => onIntervalChange(day, index, interval)}
+                onChange={(newInterval) => onIntervalChange(day, index, newInterval)}
               />
             ))}
           </div>
 
-          <div className="flex justify-between">
+          {/* 3. Lado Derecho: Acciones */}
+          <div className="flex flex-row @3xl:flex-col items-center @3xl:items-start justify-between @3xl:justify-start gap-4 @3xl:gap-3 shrink-0 w-full @3xl:w-48 @3xl:pt-2">
             <button
               type="button"
-              className="flex cursor-pointer items-center gap-1 text-xs font-medium text-indigo-500"
+              className="flex cursor-pointer items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-400 transition-colors"
               onClick={() => onAddInterval(day)}
             >
               <PlusIcon className="size-4" />
@@ -101,28 +84,32 @@ export const DayScheduleRow = ({
 
             <button
               type="button"
-              className="flex cursor-pointer items-center gap-1 text-xs font-medium text-rose-500"
-              onClick={() => onDeactivateDay(day)}
+              className="flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors"
+              onClick={() => {
+                setHasCopied(true);
+                onCopyToAll(day);
+                setTimeout(() => setHasCopied(false), 2000);
+              }}
+              title="Copiar horarios a todos los días"
             >
-              <XMarkIcon className="size-4" />
-              Cerrar {DAY_LABELS[day].full.toLowerCase()}
+              {hasCopied ? (
+                <>
+                  <ClipboardDocumentCheckIcon className="size-4 text-green-500" />
+                  <span className="text-green-500">¡Copiado a todos!</span>
+                </>
+              ) : (
+                <>
+                  <ClipboardDocumentIcon className="size-4" />
+                  <span>Copiar a todos</span>
+                </>
+              )}
             </button>
           </div>
         </>
-      )}
-
-      {!isActive && (
-        <>
-          <div className="flex justify-between">
-            <button
-              type="button"
-              className="flex cursor-pointer items-center gap-1 text-xs font-medium text-indigo-500"
-              onClick={() => onActivateDay(day)}
-            >
-              <PlusIcon className="size-4" /> Configurar horarios de {DAY_LABELS[day].full.toLowerCase()}
-            </button>
-          </div>
-        </>
+      ) : (
+        <div className="flex-1 flex items-center h-10 @3xl:pt-1">
+          <Text className="text-gray-400 text-sm">Cerrado</Text>
+        </div>
       )}
     </div>
   );
