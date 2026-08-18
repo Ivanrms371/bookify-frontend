@@ -1,10 +1,12 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { cn } from '@/shared/utils/cn';
 import type { OverlayKey } from '../overlays/overlay-registry';
 import { Button } from './button';
+import { Heading } from '../typography';
+import { DrawerHeader, DrawerTitle } from './drawer';
 
 const EXIT_MS = 300;
 
@@ -34,7 +36,15 @@ type ModalProps = {
   showCloseButton?: boolean;
 };
 
-export const Modal = ({ overlayKey, children, size = 'md', className, closeOnBackdrop = true, showCloseButton = true }: ModalProps) => {
+export const Modal = ({
+  overlayKey,
+  children,
+  size = 'md',
+  title,
+  className,
+  closeOnBackdrop = true,
+  showCloseButton = true,
+}: ModalProps) => {
   const { close, isVisible, shouldRender } = useOverlay(overlayKey);
 
   useEffect(() => {
@@ -83,15 +93,47 @@ export const Modal = ({ overlayKey, children, size = 'md', className, closeOnBac
           className,
         )}
       >
-        {showCloseButton && (
-          <Button type="button" onClick={close} aria-label="Cerrar" size="icon" variant="ghost" className="absolute top-2 right-2 z-10">
-            <XMarkIcon className="size-5" />
-          </Button>
-        )}
+        <ModalHeader onClose={showCloseButton ? close : undefined}>
+          <DrawerTitle>{title}</DrawerTitle>
+        </ModalHeader>
 
-        <div className="min-h-0 flex-1 pr-1 pt-1">{children}</div>
+        <div className="min-h-0 flex-1">{children}</div>
       </div>
     </div>,
     document.body,
   );
+};
+
+interface ModalHeaderProps {
+  children: React.ReactNode;
+  onClose?: () => void;
+}
+
+export const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
+  return (
+    <div className="flex items-center justify-between mb-6">
+      {children}
+      {onClose && (
+        <Button type="button" onClick={onClose} aria-label="Cerrar" size="icon-md" variant="ghost" className="">
+          <XMarkIcon className="size-7" />
+        </Button>
+      )}
+    </div>
+  );
+};
+
+export const ModalTitle = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="w-full">
+      <Heading className="text-xl font-bold">{children}</Heading>
+    </div>
+  );
+};
+
+export const ModalBody = ({ children }: { children: React.ReactNode }) => {
+  return <div className="overflow-y-auto px-2 space-y-5 flex-1">{children}</div>;
+};
+
+export const ModalFooter = ({ children }: { children: React.ReactNode }) => {
+  return <div className="pt-6 flex justify-end gap-2">{children}</div>;
 };

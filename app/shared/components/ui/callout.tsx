@@ -38,7 +38,7 @@ const COLORS: Record<CalloutType, CalloutColorClasses> = {
     icon: 'text-rose-600',
   },
   neutral: {
-    container: 'bg-gray-50 border-gray-200',
+    container: 'bg-gray-100 border-gray-300',
     title: 'text-gray-900',
     paragraph: 'text-gray-700',
     icon: 'text-gray-600',
@@ -61,12 +61,12 @@ interface CalloutProps {
   className?: string;
 }
 
-export const Callout = ({ type = 'info', icon, title, children }: CalloutProps) => {
+export const Callout = ({ type = 'info', icon, title, children, className = '' }: CalloutProps) => {
   const colorClass = COLORS[type];
   const IconComponent = icon || ICONS[type];
 
   return (
-    <div className={cn('flex items-start gap-2 px-4 py-3 rounded-xl', colorClass.container)} role="status">
+    <div className={cn('flex items-start gap-2 px-4 py-3 rounded-xl', colorClass.container, className)} role="status">
       <IconComponent className={cn('mt-0.5 size-5 shrink-0', colorClass.icon)} />
       <div className="flex flex-col gap-0.5">
         {title && <p className={cn('text-sm font-medium', colorClass.title)}>{title}</p>}

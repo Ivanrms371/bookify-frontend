@@ -75,24 +75,52 @@ export const Drawer = ({
       <div
         role="dialog"
         className={cn(
-          'relative z-10 flex h-full w-full flex-col overflow-y-auo bg-white shadow-2xl transition-transform duration-300 ease-out py-3 px-4 sm:py-6 sm:px-8',
+          'relative z-10 flex h-full w-full flex-col overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out py-3 px-4 sm:py-6 sm:px-8',
           drawerSizeClasses[size],
           isVisible ? 'translate-x-0' : position === 'right' ? 'translate-x-full' : '-translate-x-full',
           className,
         )}
       >
-        <div className="flex items-center justify-between mb-6">
-          <div className="w-full">
-            <Heading className="text-xl font-bold">{title}</Heading>
-          </div>
-          <Button type="button" onClick={close} aria-label="Cerrar" size="icon-md" variant="ghost" className="">
-            <XMarkIcon className="size-7" />
-          </Button>
-        </div>
-
+        <DrawerHeader onClose={close}>
+          <DrawerTitle>{title}</DrawerTitle>
+        </DrawerHeader>
         <div className="min-h-0 flex-1">{children}</div>
       </div>
     </div>,
     document.body,
   );
+};
+
+interface DrawerHeaderProps {
+  children: React.ReactNode;
+  onClose?: () => void;
+}
+
+export const DrawerHeader = ({ children, onClose }: DrawerHeaderProps) => {
+  return (
+    <div className="flex items-center justify-between mb-6">
+      {children}
+      {onClose && (
+        <Button type="button" onClick={onClose} aria-label="Cerrar" size="icon-md" variant="ghost" className="">
+          <XMarkIcon className="size-7" />
+        </Button>
+      )}
+    </div>
+  );
+};
+
+export const DrawerTitle = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="w-full">
+      <Heading className="text-xl font-bold">{children}</Heading>
+    </div>
+  );
+};
+
+export const DrawerBody = ({ children }: { children: React.ReactNode }) => {
+  return <div className="overflow-y-auto px-2 space-y-5 flex-1">{children}</div>;
+};
+
+export const DrawerFooter = ({ children }: { children: React.ReactNode }) => {
+  return <div className="pt-6 flex justify-end gap-2">{children}</div>;
 };

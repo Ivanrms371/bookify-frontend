@@ -12,10 +12,7 @@ export const TopBar = ({ onOpenSidebar }: Props) => {
   return (
     <>
       <header className="sticky top-0 z-0 h-15 flex items-center gap-4 bg-gray-50 py-4 mb-4">
-        <div className="flex justify-between items-center w-full">
-          <div className="max-w-80 w-full">
-            <Input leftIcon={<MagnifyingGlassIcon className="size-4 text-gray-500" />} placeholder="Buscar citas..." />
-          </div>
+        <div className="flex justify-end items-center w-full">
           <div className="flex gap-4">
             <NotificationToggle />
             <Button variant="ghost" type="button" size="icon" onClick={onOpenSidebar} className="xl:hidden">

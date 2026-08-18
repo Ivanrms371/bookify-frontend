@@ -7,7 +7,6 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline';
 import { Link, useLocation, useParams } from 'react-router';
-import { useAuthStore } from '@/core/auth/useAuthStore';
 import { cn } from '@/shared/utils/cn';
 
 const getSidebarItems = (slug: string) => [
