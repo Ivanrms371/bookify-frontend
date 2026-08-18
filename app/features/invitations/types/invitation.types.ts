@@ -1,4 +1,5 @@
-export type InvitationRole = 'PROFESSIONAL' | 'ADMIN';
+import type { Role } from '@/shared/types';
+
 export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'EXPIRED';
 
 // ── Domain types ──────────────────────────────────────────────────
@@ -6,10 +7,14 @@ export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'EXPIRED';
 export interface Invitation {
   id: string;
   email: string;
-  name: string | null;
-  phone?: string | null;
-  role: InvitationRole;
+  name: string;
+  phoneCountryCode: string;
+  phone: string;
+  role: Role;
   status: InvitationStatus;
+  commissionType?: 'PERCENTAGE' | 'FIXED' | null;
+  commissionAmount?: number | null;
+  serviceIds?: string[];
   createdAt: string;
   expiresAt: string;
 }
@@ -19,9 +24,12 @@ export interface Invitation {
 export interface CreateInvitePayload {
   name: string;
   email: string;
-  phone?: string;
-  role: InvitationRole;
+  phoneCountryCode: string;
+  phone: string;
+  role: Role;
   serviceIds?: string[];
+  commissionType?: 'PERCENTAGE' | 'FIXED';
+  commissionAmount?: number;
 }
 
 // ── Response shapes ──────────────────────────────────────────────

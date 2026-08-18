@@ -1,5 +1,5 @@
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { Label } from '@/shared/components/form/Label';
 import { Input } from '@/shared/components/form/input';
 import { NumberInput } from '@/shared/components/form/NumberInput';

@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const InvitationCard = ({ invitation }: Props) => {
-  const { name, email, phone } = invitation;
+  const { name, email, phone, phoneCountryCode } = invitation;
 
   return (
     <div className="relative group flex flex-col items-center text-center rounded-2xl border border-gray-100 bg-white p-5">
@@ -39,14 +39,14 @@ export const InvitationCard = ({ invitation }: Props) => {
         {phone && (
           <div className="flex items-center justify-center gap-1.5 truncate">
             <PhoneIcon className="size-4.5 text-gray-500 shrink-0" />
-            <span>{formatPhoneForDisplay(phone, 'UY')}</span>
+            <span>{formatPhoneForDisplay(phone, phoneCountryCode)}</span>
           </div>
         )}
       </div>
 
       <div className="mt-5 w-full flex gap-2">
         <Button variant="primary" fullWidth size="sm" iconPosition="left">
-          Reenviar Invitación
+          Reenviar
         </Button>
         <InvitationActions invitation={invitation} />
       </div>

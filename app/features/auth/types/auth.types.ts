@@ -1,3 +1,5 @@
+import type { Role } from '@/shared/types';
+
 export interface UserSessionContext {
   id: string;
   email: string;
@@ -6,8 +8,6 @@ export interface UserSessionContext {
   activeTenant: ActiveTenant | null;
   hasMultipleTenants: boolean;
 }
-
-type MembershipRole = 'OWNER' | 'ADMIN' | 'PROFESSIONAL';
 
 type OnboardingStatus =
   | 'WORKSPACE_TYPE'
@@ -24,7 +24,7 @@ export interface ActiveTenant {
   name: string;
   slug: string;
   logo: string | null;
-  role: MembershipRole;
+  role: Role;
   onboardingStatus: OnboardingStatus;
   professionalid: string | null;
   subscription: Subscription | null;

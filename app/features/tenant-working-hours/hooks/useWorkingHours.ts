@@ -8,17 +8,18 @@ import {
   type Interval,
   type WeeklySchedule,
 } from '@/shared/constants/week-days';
-import { mapScheduleToDTO } from '../types/mapScheduleToDTO';
+import { mapScheduleToDTO } from '../utils/map-schedule-to-dto';
 import { useCreateWorkingHours } from './useCreateWorkingHours';
 import { toast } from 'sonner';
 
 interface Props {
   onSuccessAction?: () => void;
   tenantId: string;
+  initialSchedule?: WeeklySchedule;
 }
 
-export const useWorkingHours = ({ onSuccessAction, tenantId }: Props) => {
-  const [weeklySchedule, setWeeklySchedule] = useState<WeeklySchedule>(DEFAULT_SCHEDULE);
+export const useWorkingHours = ({ onSuccessAction, tenantId, initialSchedule }: Props) => {
+  const [weeklySchedule, setWeeklySchedule] = useState<WeeklySchedule>(initialSchedule || DEFAULT_SCHEDULE);
 
   const { mutateAsync: createWorkingHours } = useCreateWorkingHours(tenantId);
 
@@ -134,7 +135,6 @@ export const useWorkingHours = ({ onSuccessAction, tenantId }: Props) => {
 
     try {
       const workingHours = mapScheduleToDTO(weeklySchedule);
-      await createWorkingHours(workingHours);
       onSuccessAction?.();
     } catch (error) {
       toast.error('Error al guardar los horarios de trabajo', {
@@ -145,6 +145,7 @@ export const useWorkingHours = ({ onSuccessAction, tenantId }: Props) => {
 
   return {
     weeklySchedule,
+    setWeeklySchedule,
     copyToAll,
     onToggleDay,
     onActivateDay,

@@ -7,3 +7,5 @@ export { Modal, type ModalSize } from './modal';
 export { TrashButton } from './trash-button';
 export { StatusPlaceholder } from './status-placeholder';
 export { Drawer, type DrawerSize, type DrawerPosition } from './drawer';
+export { Callout } from './callout';
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion';

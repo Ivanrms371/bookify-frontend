@@ -16,24 +16,40 @@ import type { ComponentProps } from 'react';
 import { CreateInvitationDrawer } from '@/features/invitations/components/overlays/create-invitation-drawer';
 import { UpdateInvitationDrawer } from '@/features/invitations/components/overlays/update-invitation-drawer';
 import { CancelInvitationModal } from '@/features/invitations/components/overlays/cancel-invitation-modal';
+import { AddExceptionModal } from '@/features/schedule/components/exceptions/add-exception-modal';
+import { UpdateExceptionModal } from '@/features/schedule/components/exceptions/update-exception-modal';
+import { DeleteExceptionModal } from '@/features/schedule/components/exceptions/delete-exception-modal';
 
 export const overlayRegistry = {
   'new-appointment-modal': AppointmentWizardModal,
+
+  // Services
   'create-service-drawer': CreateServiceDrawer,
   'update-service-drawer': UpdateServiceDrawer,
   'toggle-service-status-modal': ToggleServiceStatusModal,
   'delete-service-modal': DeleteServiceModal,
+
+  // Customers
   'create-customer-drawer': CreateCustomerDrawer,
   'update-customer-drawer': UpdateCustomerModal,
   'view-customer-drawer': ViewCustomerDrawer,
   'block-customer-modal': BlockCustomerModal,
   'unblock-customer-modal': UnblockCustomerModal,
   'delete-customer-modal': DeleteCustomerModal,
+
+  // Invitations
   'create-invitation-drawer': CreateInvitationDrawer,
   'update-invitation-drawer': UpdateInvitationDrawer,
   'cancel-invitation-modal': CancelInvitationModal,
+
+  // Professionals
   'update-professional-drawer': UpdateProfessionalDrawer,
   'delete-professional-modal': DeleteProfessionalModal,
+
+  // Exceptions
+  'add-exception-modal': AddExceptionModal,
+  'update-exception-modal': UpdateExceptionModal,
+  'delete-exception-modal': DeleteExceptionModal,
 };
 
 export type OverlayKey = keyof typeof overlayRegistry;

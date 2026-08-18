@@ -1,9 +1,10 @@
 import { cn } from '@/shared/utils/cn';
+import { Loader2 } from 'lucide-react';
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant: 'primary' | 'secondary' | 'ghost' | 'danger' | 'dashed';
   size?: 'sm' | 'md' | 'lg' | 'icon' | 'icon-md';
-  loading?: boolean;
+  isSubmitting?: boolean;
   fullWidth?: boolean;
 
   icon?: React.ReactNode;
@@ -19,7 +20,7 @@ export const Button = ({
   fullWidth,
   icon,
   iconPosition,
-  loading,
+  isSubmitting = false,
   ...props
 }: Props) => {
   const variants = {
@@ -41,7 +42,7 @@ export const Button = ({
 
   return (
     <button
-      disabled={disabled || loading}
+      disabled={disabled || isSubmitting}
       className={`
         btn ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''}
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
@@ -49,13 +50,13 @@ export const Button = ({
       `}
       {...props}
     >
-      {/* {loading && <span className="animate-spin">⏳</span>} */}
+      {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 
-      {!loading && icon && iconPosition === 'left' && icon}
+      {!isSubmitting && icon && iconPosition === 'left' && icon}
 
       {children}
 
-      {!loading && icon && iconPosition === 'right' && icon}
+      {!isSubmitting && icon && iconPosition === 'right' && icon}
     </button>
   );
 };

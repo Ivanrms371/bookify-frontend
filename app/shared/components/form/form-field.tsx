@@ -7,9 +7,9 @@ type Props = HTMLAttributes<HTMLDivElement> & {
   error?: string;
 };
 
-export const FormField = ({ children, label, id, error, ...props }: Props) => {
+export const FormField = ({ children, label, id, error, className, ...props }: Props) => {
   return (
-    <div {...props} className={cn('flex flex-col gap-2.5 relative')}>
+    <div {...props} className={cn('flex flex-col gap-2.5 relative', className)}>
       {label && (
         <label htmlFor={id} className="label">
           {label}

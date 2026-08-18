@@ -31,7 +31,8 @@ export const UpdateServiceDrawer = ({ service }: Props) => {
       ...service,
       durationMinutes: Number(service.durationMinutes),
       price: Number(service.price),
-      discountPercentage: service.discountPercentage !== null && service.discountPercentage !== undefined ? Number(service.discountPercentage) : null,
+      discountPercentage:
+        service.discountPercentage !== null && service.discountPercentage !== undefined ? Number(service.discountPercentage) : null,
       discountFixed: service.discountFixed !== null && service.discountFixed !== undefined ? Number(service.discountFixed) : null,
       professionalIds,
     };
@@ -76,7 +77,7 @@ export const UpdateServiceDrawer = ({ service }: Props) => {
   };
 
   return (
-    <Drawer overlayKey={OVERLAY_KEY} size="2xl" closeOnBackdrop title="Editar Servicio">
+    <Drawer overlayKey={OVERLAY_KEY} size="xl" closeOnBackdrop title="Editar Servicio">
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
           <p className="text-gray-500">Cargando datos del servicio...</p>

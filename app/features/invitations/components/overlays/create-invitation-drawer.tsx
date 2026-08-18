@@ -5,6 +5,7 @@ import { InviteForm } from './invite-form';
 import type { InviteProfessionalFormData } from '../../schemas/invitation-form-schema';
 import { toast } from 'sonner';
 import { useCreateInvite } from '../../hooks/use-create-invite';
+import { Callout } from '@/shared/components/ui';
 
 const OVERLAY_KEY: OverlayKey = 'create-invitation-drawer';
 
@@ -14,12 +15,7 @@ export const CreateInvitationDrawer = () => {
 
   const handleSubmit = async (data: InviteProfessionalFormData): Promise<void> => {
     try {
-      await createInvite({
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        serviceIds: data.serviceIds,
-      });
+      await createInvite(data);
       toast.success(`Invitación enviada a ${data.email}`);
       close();
     } catch {

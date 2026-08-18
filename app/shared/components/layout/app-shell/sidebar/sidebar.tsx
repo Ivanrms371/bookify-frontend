@@ -4,6 +4,7 @@ import { SidebarSecondaryNav } from './sidebar-secondary-nav';
 import { Heading } from '@/shared/components/typography';
 
 import { cn } from '@/shared/utils/cn';
+import { useParams } from 'react-router';
 
 interface Props {
   open: boolean;
@@ -14,12 +15,16 @@ export const Sidebar = ({ open, onClose }: Props) => {
   return (
     <>
       {/* Mobile backdrop overlay */}
-      {open && (
-        <div className="fixed inset-0 z-40 bg-gray-950/40 backdrop-blur-xs transition-opacity duration-300 xl:hidden" onClick={onClose} />
-      )}
       <div
         className={cn(
-          'fixed xl:sticky xl:left-0 z-50 top-0 left-0 xl:z-auto h-screen w-68 flex flex-col justify-between bg-white p-4 pt-4  transition-all duration-500 ease-in-out',
+          'fixed inset-0 z-40 bg-gray-950/40 backdrop-blur-xs transition-opacity duration-300 xl:hidden',
+          open ? 'opacity-100 visible' : 'opacity-0 invisible',
+        )}
+        onClick={onClose}
+      />
+      <div
+        className={cn(
+          'fixed xl:sticky xl:left-0 z-50 top-0 left-0 xl:z-auto h-screen w-72 flex flex-col justify-between bg-white p-4 pt-4  transition-all duration-500 ease-in-out',
           open ? 'translate-x-0 opacity-100' : '-translate-x-full xl:translate-x-0 opacity-0 xl:opacity-100',
         )}
       >
