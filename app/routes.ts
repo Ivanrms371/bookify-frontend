@@ -17,6 +17,7 @@ export default [
       route('customers', 'routes/app/customers.tsx'),
       route('team', 'routes/app/team.tsx'),
       route('reports', 'routes/app/reports.tsx'),
+      route('settings', 'routes/app/settings.tsx'),
     ]),
   ]),
 

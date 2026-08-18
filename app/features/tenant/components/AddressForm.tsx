@@ -1,5 +1,5 @@
 import { StepNavigation } from '@/features/onboarding/components/StepNavigation';
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { Input } from '@/shared/components/form/input';
 import { Label } from '@/shared/components/form/Label';
 import { useForm } from 'react-hook-form';

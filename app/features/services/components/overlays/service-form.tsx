@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/shared/components/form/input';
-
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { Textarea } from '@/shared/components/form/Textarea';
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { cn } from '@/shared/utils/cn';
@@ -11,6 +10,7 @@ import { useProfessionals } from '@/features/professionals/hooks/use-professiona
 import { serviceFormSchema, type ServiceFormData } from '../../schemas/service-form-schema';
 import type { ApiError } from '@/core/error/api-error';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
 
 interface Props {
   defaultValues?: Partial<ServiceFormData>;
@@ -75,7 +75,7 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
       )}
       className="flex flex-col h-full"
     >
-      <div className="space-y-5 flex-1 overflow-y-auto">
+      <DrawerBody>
         <FormField label="Nombre" id="name" error={errors.name?.message}>
           <Input id="name" {...register('name', { required: true })} placeholder="Ej: Corte de pelo" />
         </FormField>
@@ -183,16 +183,16 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
             })}
           </div>
         </FormField>
-      </div>
+      </DrawerBody>
 
-      <div className="pt-6 mt-6 border-t border-gray-200 flex gap-2">
-        <Button variant="secondary" type="button" onClick={onCancel}>
+      <DrawerFooter>
+        <Button variant="secondary" type="button" className="flex-1" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button variant="primary" type="submit" fullWidth loading={isSubmitting}>
+        <Button variant="primary" type="submit" className="flex-1" loading={isSubmitting}>
           {submitLabel || 'Crear Servicio'}
         </Button>
-      </div>
+      </DrawerFooter>
     </form>
   );
 };

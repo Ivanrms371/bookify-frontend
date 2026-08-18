@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupFormValues } from '../schemas/signup.schema';
 import { Input } from '@/shared/components/form/input';
 import { Label } from '@/shared/components/form/Label';
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { Alert } from '@/shared/components/feedback/Alert';
 import { Button } from '@/shared/components/ui';
 import { useSignup } from '../hooks/useSignup';

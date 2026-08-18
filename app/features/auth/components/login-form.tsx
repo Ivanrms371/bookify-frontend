@@ -10,7 +10,7 @@ import { Alert } from '@/shared/components/feedback/Alert';
 import { Link } from 'react-router';
 import { Button } from '@/shared/components/ui';
 import { getApiError } from '@/shared/utils/getApiError';
-import { FormField } from '@/shared/components/form/FormField';
+import { FormField } from '@/shared/components/form/form-field';
 import { toast } from 'sonner';
 
 export const LoginForm = () => {

@@ -54,7 +54,7 @@ export const CreateServiceDrawer = () => {
   };
 
   return (
-    <Drawer overlayKey={OVERLAY_KEY} size="2xl" closeOnBackdrop title="Nuevo Servicio">
+    <Drawer overlayKey={OVERLAY_KEY} size="xl" closeOnBackdrop title="Nuevo Servicio">
       <ServiceForm onSubmit={onSubmit} onCancel={close} isSubmitting={isSubmitting} />
     </Drawer>
   );
