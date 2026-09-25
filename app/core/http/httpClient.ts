@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
-import { useAuthStore } from '@/core/auth/useAuthStore';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { ApiError } from '../error/api-error';
 
 export const axiosInstance = axios.create({
@@ -66,17 +66,27 @@ axiosInstance.interceptors.response.use(
       try {
         await axiosInstance.post('/auth/refresh');
         return axiosInstance(originalRequest);
-      } catch (error) {
-        useAuthStore.getState().clearAuth();
-        window.location.href = '/auth/login';
-        throw new ApiError('Tu sesión ha expirado', { status: 401, code: 'SESSION_EXPIRED' });
+      } catch (refreshError) {
+        if (axios.isAxiosError(refreshError)) {
+          const status = refreshError.response?.status;
+
+          if (!status) {
+            throw new ApiError('No se pudo conectar con el servidor.', {
+              code: 'NETWORK_ERROR',
+            });
+          }
+
+          if (status >= 500) {
+            throw new ApiError('El servidor no está disponible en este momento.', { status, code: 'SERVER_ERROR' });
+          }
+
+          useAuthStore.getState().clearAuth();
+          throw new ApiError('Tu sesión ha expirado', { status: 401, code: 'SESSION_EXPIRED' });
+        }
       }
     }
 
     if (!error.response) {
-      throw new ApiError('No se pudo conectar con el servidor. Verificá tu conexión.', {
-        code: 'NETWORK_ERROR',
-      });
     }
 
     const responseData = error.response?.data;
