@@ -7,7 +7,7 @@ export type Professional = {
   userId: string;
   bio: string | null;
   avatarUrl: string;
-  displayName: string;
+  name: string;
   colorTheme: string | null;
   slotIntervalMinutes: number;
   maxAdvancedDays: number;
@@ -23,11 +23,11 @@ export type Professional = {
 export type ProfessionalBasic = {
   id: string;
   avatarUrl: string;
-  displayName: string;
+  name: string;
   colorTheme: string;
   bio: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   phoneCountryCode: string;
 };
 
@@ -37,9 +37,9 @@ export type ProfessionalWithDetails = {
   id: string;
   userId: string;
   avatarUrl: string;
-  displayName: string;
+  name: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   phoneCountryCode: string;
   role: Role;
   bio: string;

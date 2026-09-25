@@ -44,22 +44,22 @@ export const ProfessionalInfoForm = ({ canEditContactData = true }: Props) => {
         </div>
       </FormField>
 
-      <FormField label="Nombre" id="name" error={errors.displayName?.message}>
-        <Input type="text" id="name" {...register('displayName')} />
+      <FormField label="Nombre" id="name" error={errors.name?.message}>
+        <Input type="text" id="name" {...register('name')} />
       </FormField>
 
       <FormField label="Email" id="email" error={errors.email?.message}>
         <Input type="text" id="email" {...register('email')} disabled={!canEditContactData} />
       </FormField>
 
-      <FormField label="Teléfono" id="phone" error={errors.phone?.message || errors.phoneCountryCode?.message}>
+      <FormField label="Teléfono" id="phoneNumber" error={errors.phoneNumber?.message || errors.phoneCountryCode?.message}>
         <div className="flex gap-2">
           <PhoneCountryCode
             value={watch('phoneCountryCode') || '598'}
             onChange={(val) => setValue('phoneCountryCode', val, { shouldValidate: true })}
             disabled={!canEditContactData}
           />
-          <Input type="text" id="phone" {...register('phone')} disabled={!canEditContactData} fullWidth />
+          <Input type="text" id="phoneNumber" {...register('phoneNumber')} disabled={!canEditContactData} fullWidth />
         </div>
       </FormField>
 
@@ -69,11 +69,11 @@ export const ProfessionalInfoForm = ({ canEditContactData = true }: Props) => {
             id="role"
             {...register('role')}
             options={[
-              { value: 'PROFESSIONAL', label: 'Profesional' },
+              { value: 'STAFF', label: 'Profesional' },
               { value: 'ADMIN', label: 'Admin' },
             ]}
             value={watch('role')}
-            onChange={(e) => setValue('role', e.target.value as 'PROFESSIONAL' | 'ADMIN', { shouldValidate: true })}
+            onChange={(e) => setValue('role', e.target.value as 'STAFF' | 'ADMIN', { shouldValidate: true })}
           />
         </FormField>
       )}

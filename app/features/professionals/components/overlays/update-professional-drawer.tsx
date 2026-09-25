@@ -20,7 +20,7 @@ export const UpdateProfessionalDrawer = ({ professional }: Props) => {
   const { mutateAsync: updateProfessional } = useUpdateProfessional(professional.id);
 
   const onSubmit = async (data: ProfessionalFormValues) => {
-    const { phone, email, ...rest } = data;
+    const { phoneNumber, email, ...rest } = data;
     await updateProfessional(rest);
     close();
   };

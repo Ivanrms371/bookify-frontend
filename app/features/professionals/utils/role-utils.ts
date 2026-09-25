@@ -3,7 +3,7 @@ import type { Role } from '@/shared/types';
 export const ROLE_LABELS: Record<string, string> = {
   OWNER: 'Dueño',
   ADMIN: 'Admin',
-  PROFESSIONAL: 'Profesional',
+  STAFF: 'Profesional',
 };
 
 export const formatRoleLabel = (role?: string | null): string => {

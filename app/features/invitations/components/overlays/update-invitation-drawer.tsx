@@ -37,7 +37,7 @@ export const UpdateInvitationDrawer = ({ invitation }: Props) => {
         name: invitation.name ?? '',
         email: invitation.email,
         phoneCountryCode: invitation.phoneCountryCode ?? undefined,
-        phone: invitation.phone ?? '',
+        phoneNumber: invitation.phoneNumber ?? '',
         role: invitation.role,
         serviceIds: invitation.serviceIds ?? [],
         commissionType: invitation.commissionType ?? undefined,

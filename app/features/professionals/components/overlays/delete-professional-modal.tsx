@@ -22,13 +22,10 @@ export const DeleteProfessionalModal = ({ professional }: Props) => {
   return (
     <Modal overlayKey={OVERLAY_KEY} size="md">
       <div className="flex flex-col items-center text-center">
-        <h3 className="mb-2 text-xl font-semibold text-gray-900">
-          ¿Estás seguro de eliminar este profesional?
-        </h3>
+        <h3 className="mb-2 text-xl font-semibold text-gray-900">¿Estás seguro de eliminar este profesional?</h3>
         <Text className="mb-6 text-gray-500">
-          Al eliminar a{' '}
-          <span className="font-semibold text-gray-800">{professional.displayName}</span>, perderá
-          acceso al sistema y sus turnos podrían verse afectados.
+          Al eliminar a <span className="font-semibold text-gray-800">{professional.name}</span>, perderá acceso al sistema y sus turnos
+          podrían verse afectados.
         </Text>
         <div className="flex w-full gap-3">
           <Button type="button" variant="secondary" onClick={close} className="flex-1">

@@ -9,7 +9,7 @@ export interface Invitation {
   email: string;
   name: string;
   phoneCountryCode: string;
-  phone: string;
+  phoneNumber: string;
   role: Role;
   status: InvitationStatus;
   commissionType?: 'PERCENTAGE' | 'FIXED' | null;
@@ -25,7 +25,7 @@ export interface CreateInvitePayload {
   name: string;
   email: string;
   phoneCountryCode: string;
-  phone: string;
+  phoneNumber: string;
   role: Role;
   serviceIds?: string[];
   commissionType?: 'PERCENTAGE' | 'FIXED';

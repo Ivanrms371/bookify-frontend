@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/shared/components/ui/accordion';
 import { Button } from '@/shared/components/ui/button';
 import { useEffect } from 'react';
-import { WorkingHoursForm } from '@/features/schedule/components/working-hours-form';
 import { professionalFormSchema, type ProfessionalFormValues } from '../../schemas/professional-form-schema';
 import { CommissionForm } from './commission-form';
 import { ProfessionalInfoForm } from './personal-info-form';
@@ -12,7 +11,7 @@ import { ConfigForm } from './config-form';
 import { DrawerFooter } from '@/shared/components/ui/drawer';
 
 const defaultValues: ProfessionalFormValues = {
-  displayName: '',
+  name: '',
   bio: '',
   serviceIds: [],
   schedule: { workingHours: [] },
@@ -70,9 +69,7 @@ export function ProfessionalForm({ onSubmit, onCancel, canEditContactData = fals
 
           <AccordionItem value="schedule">
             <AccordionTrigger>Horarios</AccordionTrigger>
-            <AccordionContent>
-              <WorkingHoursForm tenantId="" />
-            </AccordionContent>
+            <AccordionContent>Pendiente</AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="config">

@@ -40,8 +40,8 @@ export function InviteForm({
     defaultValues: {
       name: '',
       email: '',
-      phone: '',
-      role: 'PROFESSIONAL',
+      phoneNumber: '',
+      role: 'STAFF',
       commissionType: 'PERCENTAGE',
       commissionAmount: 0,
       serviceIds: [],
@@ -81,14 +81,14 @@ export function InviteForm({
           <Input type="email" placeholder="juan@ejemplo.com" {...register('email')} />
         </FormField>
 
-        <FormField label="Teléfono" error={errors.phone?.message || errors.phoneCountryCode?.message}>
+        <FormField label="Teléfono" error={errors.phoneNumber?.message || errors.phoneCountryCode?.message}>
           <div className="flex gap-2">
             <PhoneCountryCode
               value={watch('phoneCountryCode') || '598'}
               onChange={(val) => setValue('phoneCountryCode', val, { shouldValidate: true })}
               disabled={isSubmitting}
             />
-            <Input placeholder="099 123 456" {...register('phone')} disabled={isSubmitting} fullWidth />
+            <Input placeholder="099 123 456" {...register('phoneNumber')} disabled={isSubmitting} fullWidth />
           </div>
         </FormField>
 
@@ -97,7 +97,7 @@ export function InviteForm({
             {...register('role')}
             options={[
               { label: 'Administrador', value: 'ADMIN' },
-              { label: 'Profesional', value: 'PROFESSIONAL' },
+              { label: 'Profesional', value: 'STAFF' },
             ]}
           />
         </FormField>

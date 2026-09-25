@@ -14,7 +14,7 @@ export const ProfessionalsCard = ({ professional }: Props) => {
     <div className="relative group flex flex-col items-center text-center rounded-2xl border border-gray-100 bg-white p-5">
       {/* Avatar */}
       <div className="relative">
-        <Avatar src={professional.avatarUrl} name={professional.displayName} className="size-16 text-lg border-2 border-white shadow-xs" />
+        <Avatar src={professional.avatarUrl} name={professional.name} className="size-16 text-lg border-2 border-white shadow-xs" />
         {professional.colorTheme && (
           <span
             className="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-white shadow-xs"
@@ -24,7 +24,7 @@ export const ProfessionalsCard = ({ professional }: Props) => {
       </div>
 
       {/* Name */}
-      <h3 className="mt-3 text-xl font-semibold text-gray-900 line-clamp-1">{professional.displayName}</h3>
+      <h3 className="mt-3 text-xl font-semibold text-gray-900 line-clamp-1">{professional.name} xxx</h3>
 
       {/* Email & Phone */}
       <div className="mt-2 flex flex-col gap-1.5 w-full text-sm text-gray-700">
@@ -34,10 +34,10 @@ export const ProfessionalsCard = ({ professional }: Props) => {
             <span className="truncate">{professional.email}</span>
           </div>
         )}
-        {professional.phone && (
+        {professional.phoneNumber && (
           <div className="flex items-center justify-center gap-1.5 truncate">
             <PhoneIcon className="size-4.5 text-gray-500 shrink-0" />
-            <span>{formatPhoneForDisplay(professional.phone, professional.phoneCountryCode)}</span>
+            <span>{formatPhoneForDisplay(professional.phoneNumber, professional.phoneCountryCode)}</span>
           </div>
         )}
       </div>
