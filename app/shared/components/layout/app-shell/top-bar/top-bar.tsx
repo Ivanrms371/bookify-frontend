@@ -28,7 +28,7 @@ export const TopBar = ({ onOpenSidebar }: Props) => {
   const title = pageTitles[currentPage] ?? `Hola ${getFirstName(session?.name)}`;
   return (
     <>
-      <header className="sticky top-0 mx-auto w-full z-10 flex items-center gap-4 bg-gray-50 py-8 px-2 sm:px-4 md:px-10 mb-0">
+      <header className="sticky top-0 mx-auto w-full z-40 flex items-center gap-4 bg-gray-50/80 backdrop-blur-md py-8 px-2 sm:px-4 md:px-10 mb-0">
         <div className="flex justify-between items-center w-full">
           <div className="flex-1">
             <Heading className="font-me">{title}</Heading>
