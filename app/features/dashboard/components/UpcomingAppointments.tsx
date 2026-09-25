@@ -66,7 +66,7 @@ export const UpcomingAppointments = () => {
                       </div>
                     </td>
                     <td className="hidden px-2 py-3 xl:table-cell">
-                      <span className="text-sm text-gray-600">{appt.professional.displayName}</span>
+                      <span className="text-sm text-gray-600">{appt.professional.name}</span>
                     </td>
                     <td className="hidden px-2 py-3 xl:table-cell">
                       <span className="text-sm text-gray-500">40 minutos</span>

@@ -31,26 +31,30 @@ export const TenantSettingsSection = () => {
 
   return (
     <>
-      <ul className="flex items-center gap-2  h-9">
-        {tabs.map(({ id, label }) => {
-          const isActive = currentTab === id;
-          return (
-            <li
-              className={cn(
-                'px-3 py-1.5 bg-gray-200 hover:bg-gray-300 transition-colors rounded-2xl cursor-pointer',
-                isActive && 'bg-gray-800 text-white hover:bg-gray-800',
-              )}
-              onClick={() => setCurrentTab(id)}
-            >
-              {label}
-            </li>
-          );
-        })}
-      </ul>
+      <div className="max-w-5xl w-full mx-auto">
+        <ul className="flex items-center gap-2  h-9">
+          {tabs.map(({ id, label }) => {
+            const isActive = currentTab === id;
+            return (
+              <li
+                className={cn(
+                  'px-3 py-1.5 bg-gray-200 hover:bg-gray-300 transition-colors rounded-2xl cursor-pointer',
+                  isActive && 'bg-gray-800 text-white hover:bg-gray-800',
+                )}
+                onClick={() => setCurrentTab(id)}
+              >
+                {label}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-      {currentTab === 'general' && <TenantGeneralSettings />}
-      {currentTab === 'booking' && <AppointmentSettings />}
-      {currentTab === 'schedule' && <ScheduleSettings />}
+      <div className="max-w-5xl w-full mx-auto">
+        {currentTab === 'general' && <TenantGeneralSettings />}
+        {currentTab === 'booking' && <AppointmentSettings />}
+        {currentTab === 'schedule' && <ScheduleSettings />}
+      </div>
     </>
   );
 };

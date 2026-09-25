@@ -42,8 +42,8 @@ export const AddressForm = ({ onSuccess, onBack, initialData, children }: Addres
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <FormField>
-        <Label htmlFor="phone">Teléfono</Label>
-        <Input id="phone" type="tel" {...register('phone')} placeholder="Ej. 099 123 456" />
+        <Label htmlFor="phoneNumber">Teléfono</Label>
+        <Input id="phoneNumber" type="tel" {...register('phoneNumber')} placeholder="Ej. 099 123 456" />
       </FormField>
 
       <FormField>

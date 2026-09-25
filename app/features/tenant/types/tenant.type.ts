@@ -17,7 +17,7 @@ export type Tenant = {
   description: string | null;
   logoUrl: string | null;
   coverUrl: string | null;
-  phone: string | null;
+  phoneNumber: string | null;
   addressLine1: string | null;
   addressLine2: string | null;
   province: string | null;
@@ -29,7 +29,7 @@ export type Tenant = {
 
 export type TenantOnboarding = Pick<
   Tenant,
-  'id' | 'name' | 'type' | 'description' | 'logoUrl' | 'coverUrl' | 'phone' | 'addressLine1' | 'addressLine2' | 'onboardingCompleted'
+  'id' | 'name' | 'type' | 'description' | 'logoUrl' | 'coverUrl' | 'phoneNumber' | 'addressLine1' | 'addressLine2' | 'onboardingCompleted'
 >;
 
-export type TenantAddressInput = Pick<Tenant, 'phone' | 'addressLine1' | 'addressLine2' | 'province' | 'city'>;
+export type TenantAddressInput = Pick<Tenant, 'phoneNumber' | 'addressLine1' | 'addressLine2' | 'province' | 'city'>;

@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/core/auth/useAuthStore';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { Heading, Text } from '@/shared/components/typography';
 
 const ReportsPage = () => {

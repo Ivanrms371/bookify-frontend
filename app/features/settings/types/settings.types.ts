@@ -5,7 +5,7 @@ export interface TenantSettingsResponse {
   logoPublicId: string | null;
   coverUrl: string | null;
   coverPublicId: string | null;
-  phone: string | null;
+  phoneNumber: string | null;
   addressLine1: string | null;
   addressLine2: string | null;
   city: string | null;
@@ -35,7 +35,7 @@ export interface UpdateGeneralSettingsPayload {
   name?: string;
   slug?: string;
   timeZone?: string;
-  phone?: string | null;
+  phoneNumber?: string | null;
   addressLine1?: string | null;
   addressLine2?: string | null;
   city?: string | null;

@@ -4,7 +4,7 @@ export const tenantGeneralSettingsSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
   slug: z.string().min(1, 'La URL es requerida'),
   timeZone: z.string().min(1, 'La zona horaria es requerida'),
-  phone: z.string().optional(),
+  phoneNumber: z.string().optional(),
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
   city: z.string().optional(),

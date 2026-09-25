@@ -3,7 +3,7 @@ export type AppointmentStatus = 'CONFIRMED' | 'PENDING' | 'CANCELLED' | 'COMPLET
 export interface AppointmentProfessional {
   id: string;
   avatarUrl: string | null;
-  displayName: string | null;
+  name: string | null;
   colorTheme: string | null;
 }
 

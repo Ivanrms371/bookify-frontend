@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuthStore } from '@/core/auth/useAuthStore';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { ScheduleForm } from '../../schedule/components/schedule-form';
 import { ScheduleExceptionsList } from '../../schedule/components/exceptions/schedule-exceptions-list';
 

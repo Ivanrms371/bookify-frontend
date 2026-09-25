@@ -5,7 +5,7 @@ import { Button } from '@/shared/components/ui/button';
 import { CameraIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import { Text } from '@/shared/components/typography';
-import { useAuthStore } from '@/core/auth/useAuthStore';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { useGetSettings } from '../hooks/use-get-settings';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -48,7 +48,7 @@ export const TenantGeneralSettings = () => {
       name: '',
       slug: '',
       timeZone: 'America/Montevideo',
-      phone: '',
+      phoneNumber: '',
       addressLine1: '',
       addressLine2: '',
       city: '',
@@ -63,7 +63,7 @@ export const TenantGeneralSettings = () => {
         name: data.name || activeTenant?.name || '',
         slug: data.slug || activeTenant?.slug || '',
         timeZone: data.settings?.timeZone || 'America/Montevideo',
-        phone: data.phone || '',
+        phoneNumber: data.phoneNumber || '',
         addressLine1: data.addressLine1 || '',
         addressLine2: data.addressLine2 || '',
         city: data.city || '',
@@ -128,7 +128,7 @@ export const TenantGeneralSettings = () => {
         name: values.name,
         slug: values.slug,
         timeZone: values.timeZone,
-        phone: values.phone,
+        phoneNumber: values.phoneNumber,
         addressLine1: values.addressLine1,
         addressLine2: values.addressLine2,
         city: values.city,
@@ -328,8 +328,8 @@ export const TenantGeneralSettings = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <FormField id="phone" label="Teléfono de contacto" error={errors.phone?.message}>
-              <Input {...register('phone')} placeholder="+598 99 123 456" />
+            <FormField id="phoneNumber" label="Teléfono de contacto" error={errors.phoneNumber?.message}>
+              <Input {...register('phoneNumber')} placeholder="+598 99 123 456" />
             </FormField>
             <div className="hidden md:block"></div> {/* Spacer */}
             <FormField id="addressLine1" label="Dirección Línea 1" error={errors.addressLine1?.message}>
