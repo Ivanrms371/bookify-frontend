@@ -72,7 +72,7 @@ export const AppointmentSettings = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
       {/* Configuration Section */}
       <div className="bg-white rounded-3xl shadow-md p-6 md:p-8">
         <div className="pb-6 border-b border-gray-100 mb-6">
@@ -80,7 +80,7 @@ export const AppointmentSettings = () => {
           <Text className="text-gray-500">Configura las reglas generales para la reserva de turnos en tu negocio.</Text>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <FormField id="slotIntervalMinutes" label="Intervalo de turnos (minutos)" error={errors.slotIntervalMinutes?.message}>
             <Input type="number" {...register('slotIntervalMinutes')} />
           </FormField>

@@ -288,7 +288,7 @@ export const TenantGeneralSettings = () => {
       <input type="file" ref={bannerInputRef} className="hidden" accept="image/*" onChange={handleBannerChange} />
 
       {/* Forms Sections */}
-      <div className="space-y-8">
+      <div className="space-y-12">
         {/* Info del Negocio */}
         <div className="bg-white rounded-3xl shadow-md p-6 md:p-8">
           <div className="pb-6 border-b border-gray-100 mb-6">
@@ -296,7 +296,7 @@ export const TenantGeneralSettings = () => {
             <Text className="text-gray-500">Configura la identidad y los datos principales de tu negocio.</Text>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <FormField id="name" label="Nombre de tu negocio" error={errors.name?.message}>
               <Input {...register('name')} placeholder="Ej. Barbería Central" />
             </FormField>
@@ -327,7 +327,7 @@ export const TenantGeneralSettings = () => {
             <Text className="text-gray-500">Agrega la dirección de tu negocio para que tus clientes sepan dónde encontrarte.</Text>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <FormField id="phoneNumber" label="Teléfono de contacto" error={errors.phoneNumber?.message}>
               <Input {...register('phoneNumber')} placeholder="+598 99 123 456" />
             </FormField>

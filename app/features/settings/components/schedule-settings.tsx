@@ -8,7 +8,7 @@ export const ScheduleSettings = () => {
   const { activeTenant } = session!;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <ScheduleForm tenantId={activeTenant!.id} />
       <ScheduleExceptionsList />
     </div>
