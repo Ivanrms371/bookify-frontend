@@ -13,5 +13,5 @@ export const usePlans = () => {
 
   const filteredPlans = plans.filter((plan) => plan.billingCycle === billingCycle || plan.billingCycle === null);
 
-  return { plans: filteredPlans, isLoading, billingCycle, setBillingCycle };
+  return { plans: filteredPlans.filter((p) => p.id === 'free' || p.id === 'pro_monthly'), isLoading, billingCycle, setBillingCycle };
 };

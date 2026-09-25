@@ -12,9 +12,9 @@ export const ToggleBillingCycle = ({ billingCycle, onChange }: ToggleBillingCycl
 
   return (
     <div className="flex items-center justify-center gap-4">
-      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Mensual</span>
+      <span className="text-sm font-medium text-gray-600">Mensual</span>
       <Switch checked={isAnnual} onCheckedChange={(value) => onChange(value ? 'ANNUAL' : 'MONTHLY')} />
-      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Anual</span>
+      <span className="text-sm font-medium text-gray-600">Anual</span>
     </div>
   );
 };
