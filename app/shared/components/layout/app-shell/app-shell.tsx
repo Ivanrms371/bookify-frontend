@@ -14,7 +14,7 @@ export const AppShell = () => {
       <div className="flex min-h-0 min-w-0 flex-col overflow-y-auto bg-gray-50">
         <TopBar onOpenSidebar={() => setSidebarOpen(true)} />
 
-        <main className="min-h-0 flex-1 flex flex-col px-2 sm:px-4 md:px-10">
+        <main className="min-h-0 flex-1 flex flex-col px-2 sm:px-4 md:px-10 pb-20">
           <Outlet />
         </main>
       </div>
