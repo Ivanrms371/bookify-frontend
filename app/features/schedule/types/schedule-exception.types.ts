@@ -9,7 +9,7 @@ export interface ScheduleExceptionBlock {
 
 export interface ScheduleExceptionProfessional {
   professionalId: string;
-  displayName: string | null;
+  name: string | null;
 }
 
 export interface ScheduleException {

@@ -60,13 +60,8 @@ function ServiceListItem({ service, index, onUpdate }: ServiceListItemProps) {
               id={`service-duration-${index}`}
               value={service.durationMinutes}
               onChange={(e) => update({ durationMinutes: Number(e.target.value) })}
-            >
-              {SERVICE_DURATION_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+              options={SERVICE_DURATION_OPTIONS}
+            />
           </div>
         </div>
       </div>

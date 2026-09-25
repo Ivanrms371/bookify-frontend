@@ -32,7 +32,7 @@ export const CustomerList = ({ customers, onSelect, selectedCustomer }: Props) =
                 {customer.name}
               </Text>
               <Text className="text-xs text-gray-500 font-medium mt-0.5 truncate">
-                {customer.phone} {customer.email ? `• ${customer.email}` : ''}
+                {customer.phoneNumber} {customer.email ? `• ${customer.email}` : ''}
               </Text>
             </div>
           </div>

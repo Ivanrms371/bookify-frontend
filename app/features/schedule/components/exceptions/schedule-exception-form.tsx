@@ -194,7 +194,7 @@ export const ScheduleExceptionForm = ({ initialData, onSubmit, onCancel, isSubmi
                     >
                       {isChecked && <CheckIcon className="size-4" />}
                     </div>
-                    <span className="text-sm text-gray-800">{prof.displayName}</span>
+                    <span className="text-sm text-gray-800">{prof.name}</span>
                   </label>
                 );
               })}

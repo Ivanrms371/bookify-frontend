@@ -176,7 +176,7 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
                     {isChecked && <CheckIcon className="size-4" />}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-800">{prof.displayName}</span>
+                    <span className="text-sm text-gray-800">{prof.name}</span>
                   </div>
                 </label>
               );

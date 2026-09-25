@@ -35,13 +35,13 @@ export const ProfessionalList = ({ professionals, onSelect, selectedProfessional
           ) : (
             // Reemplazo prolijo del PhotoIcon por Iniciales con estilo
             <div className="size-10 rounded-full bg-gray-50 border border-gray-200 text-gray-600 font-semibold text-sm flex justify-center items-center shrink-0 tracking-wider">
-              {getInitials(professional.displayName)}
+              {getInitials(professional.name)}
             </div>
           )}
 
           <div>
             <Text className="text-sm font-semibold text-gray-800 group-hover:text-gray-900 transition-colors truncate">
-              {professional.displayName}
+              {professional.name}
             </Text>
             <Text className="text-xs text-gray-500 font-medium mt-0.5">{professional.bio}</Text>
           </div>

@@ -1,31 +1,40 @@
+import { useFormContext } from 'react-hook-form';
+import { TrashIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
+
 import { Input } from '@/shared/components/form/input';
 import { Button } from '@/shared/components/ui';
-import { type Interval } from '@/shared/constants/week-days';
-import { TrashIcon } from '@heroicons/react/24/outline';
-import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
+import type { SaveWorkingHours } from '../schemas/schedule-form-schema';
 
 interface Props {
-  interval: Interval;
+  dayIndex: number;
+  intervalIndex: number;
   onRemove?: () => void;
-  onChange: (interval: Interval) => void;
 }
 
-export const TimeIntervalRow = ({ interval, onRemove, onChange }: Props) => {
+export const TimeIntervalRow = ({ dayIndex, intervalIndex, onRemove }: Props) => {
+  const { register } = useFormContext<SaveWorkingHours>();
+
   return (
     <div className="relative flex items-center gap-1">
       {onRemove && (
-        <Button variant="ghost" size="icon" onClick={() => onRemove()} className="text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={onRemove}
+          className="shrink-0 text-red-500 hover:bg-red-50 hover:text-red-600"
+        >
           <TrashIcon className="size-4" />
         </Button>
       )}
+
       <div className="relative w-full">
         <Input
-          className="w-full text-sm pl-14"
+          className="w-full pl-14 text-sm"
           type="time"
-          value={interval.opens}
           fullWidth={false}
-          leftIcon={<span className="text-sm font-medium text-gray-500 pointer-events-none">Desde</span>}
-          onChange={(e) => onChange({ ...interval, opens: e.target.value })}
+          leftIcon={<span className="pointer-events-none text-sm font-medium text-gray-500">Desde</span>}
+          {...register(`workingHours.${dayIndex}.intervals.${intervalIndex}.opensAt`)}
         />
       </div>
 
@@ -35,12 +44,11 @@ export const TimeIntervalRow = ({ interval, onRemove, onChange }: Props) => {
 
       <div className="relative w-full">
         <Input
-          className="w-full text-sm pl-14"
+          className="w-full pl-14 text-sm"
           type="time"
-          value={interval.closes}
           fullWidth={false}
-          leftIcon={<span className="text-sm font-medium text-gray-500 pointer-events-none">Hasta</span>}
-          onChange={(e) => onChange({ ...interval, closes: e.target.value })}
+          leftIcon={<span className="pointer-events-none text-sm font-medium text-gray-500">Hasta</span>}
+          {...register(`workingHours.${dayIndex}.intervals.${intervalIndex}.closesAt`)}
         />
       </div>
     </div>

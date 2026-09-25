@@ -74,9 +74,7 @@ export const ScheduleExceptionsList = () => {
                     )}
                   </div>
                   {exception.reason && <Text className="text-sm text-gray-500 mt-1">Mótivo: {exception.reason}</Text>}
-                  <Text className="text-sm text-gray-400 mt-1">
-                    Aplica a: {exception.professionals.map((p) => p.displayName).join(', ')}
-                  </Text>
+                  <Text className="text-sm text-gray-400 mt-1">Aplica a: {exception.professionals.map((p) => p.name).join(', ')}</Text>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Button

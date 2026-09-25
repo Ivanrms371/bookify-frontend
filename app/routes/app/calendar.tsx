@@ -8,20 +8,6 @@ const CalendarPage = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-2 md:flex-row justify-between md:items-center pb-4 border-b border-gray-200">
-        <div>
-          <Heading as="h1" className="text-3xl font-semibold">
-            Calendario
-          </Heading>
-          <Text className="text-gray-600">Gestiona las citas de hoy y visualiza el estado de cada turno de forma simple.</Text>
-        </div>
-        <div>
-          <Button variant="primary" onClick={() => open({})}>
-            + Nuevo Turno
-          </Button>
-        </div>
-      </div>
-
       <Appointments />
     </>
   );

@@ -1,15 +1,12 @@
 import type { DayOfWeek } from '@/shared/constants/week-days';
 
-type ScheduleInterval = {
-  opensAt: string;
-  closesAt: string;
+export type ScheduleInterval = {
+  opens: string;
+  closes: string;
 };
 
-type ScheduleWorkingHour = {
-  dayOfWeek: DayOfWeek;
+export type ScheduleWorkingHour = {
+  day: DayOfWeek;
+  isActive: boolean;
   intervals: ScheduleInterval[];
-};
-
-export type SaveWorkingHours = {
-  workingHours: ScheduleWorkingHour[];
 };

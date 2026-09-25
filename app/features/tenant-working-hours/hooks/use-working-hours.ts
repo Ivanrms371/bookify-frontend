@@ -1,130 +1,119 @@
-import { useState } from 'react';
-import {
-  DAYS_OF_WEEK,
-  DEFAULT_INTERVALS,
-  DEFAULT_SCHEDULE,
-  type DayOfWeek,
-  type DaySchedule,
-  type Interval,
-  type WeeklySchedule,
-} from '@/shared/constants/week-days';
+// use-working-hours-form.ts
 
-export const useWorkingHours = () => {
-  const [weeklySchedule, setWeeklySchedule] = useState<WeeklySchedule>(DEFAULT_SCHEDULE);
+import { useFormContext, useFieldArray } from 'react-hook-form';
 
-  const getFirstActiveDay = (): DaySchedule | null => {
-    for (const day of DAYS_OF_WEEK) {
-      const daySchedule = weeklySchedule[day];
-      if (daySchedule.isActive) {
-        return daySchedule;
-      }
-    }
-    return null;
-  };
+import { DEFAULT_INTERVALS, type DayOfWeek } from '@/shared/constants/week-days';
+import type {} from '../types/tenant-working-hours.types';
+import type { SaveWorkingHours } from '@/features/schedule/schemas/schedule-form-schema';
 
-  const copyToAll = (day: DayOfWeek) => {
-    const current = weeklySchedule[day];
+export const useWorkingHoursForm = () => {
+  const { control, getValues, setValue, watch } = useFormContext<SaveWorkingHours>();
 
-    const updated = Object.fromEntries(
-      DAYS_OF_WEEK.map((d) => {
-        const daySchedule = weeklySchedule[d];
+  const workingHours = watch('workingHours');
 
-        if (!daySchedule.isActive) {
-          return [d, daySchedule];
-        }
+  const getDayIndex = (day: DayOfWeek) => workingHours.findIndex((item) => item.day === day);
 
-        return [
-          d,
-          {
-            isActive: current.isActive,
-            intervals: current.intervals.map((i) => ({ ...i })),
-          },
-        ];
-      }),
-    ) as WeeklySchedule;
+  const getIntervalsFieldArray = (day: DayOfWeek) => {
+    const dayIndex = getDayIndex(day);
 
-    setWeeklySchedule(updated);
-  };
-
-  const onToggleDay = (day: DayOfWeek) => {
-    setWeeklySchedule((prev) => {
-      const firstActiveDay = getFirstActiveDay();
-      const intervals = firstActiveDay ? firstActiveDay.intervals : DEFAULT_INTERVALS;
-      return {
-        ...prev,
-        [day]: {
-          ...prev[day],
-          isActive: !prev[day].isActive,
-          intervals,
-        },
-      };
+    return useFieldArray({
+      control,
+      name: `workingHours.${dayIndex}.intervals`,
     });
   };
 
   const onActivateDay = (day: DayOfWeek) => {
-    setWeeklySchedule((prev) => {
-      const firstActiveDay = getFirstActiveDay();
-      const intervals = firstActiveDay ? firstActiveDay.intervals : DEFAULT_INTERVALS;
-      return {
-        ...prev,
-        [day]: {
-          ...prev[day],
-          isActive: true,
-          intervals,
-        },
-      };
-    });
+    const workingHours = getValues('workingHours');
+    const dayIndex = workingHours.findIndex((item) => item.day === day);
+
+    if (dayIndex === -1) return;
+
+    const firstActiveDay = workingHours.find((item) => item.isActive && item.day !== day);
+
+    setValue(
+      `workingHours.${dayIndex}`,
+      {
+        ...workingHours[dayIndex],
+        isActive: true,
+        intervals: firstActiveDay
+          ? firstActiveDay.intervals.map((interval) => ({
+              ...interval,
+            }))
+          : DEFAULT_INTERVALS.map((interval) => ({
+              ...interval,
+            })),
+      },
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
   };
 
   const onDeactivateDay = (day: DayOfWeek) => {
-    setWeeklySchedule((prev) => {
-      return {
-        ...prev,
-        [day]: { ...prev[day], isActive: false, intervals: [] },
-      };
-    });
+    const workingHours = getValues('workingHours');
+    const dayIndex = workingHours.findIndex((item) => item.day === day);
+
+    if (dayIndex === -1) return;
+
+    setValue(
+      `workingHours.${dayIndex}`,
+      {
+        ...workingHours[dayIndex],
+        isActive: false,
+        intervals: [],
+      },
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
   };
 
-  const onAddInterval = (day: DayOfWeek) => {
-    setWeeklySchedule((prev) => {
-      return {
-        ...prev,
-        [day]: {
-          ...prev[day],
-          intervals: [...prev[day].intervals, { opens: '', closes: '' }],
+  const onToggleDay = (day: DayOfWeek) => {
+    const workingHours = getValues('workingHours');
+    const daySchedule = workingHours.find((item) => item.day === day);
+
+    if (!daySchedule) return;
+
+    if (daySchedule.isActive) {
+      onDeactivateDay(day);
+    } else {
+      onActivateDay(day);
+    }
+  };
+
+  const copyToAll = (day: DayOfWeek) => {
+    const workingHours = getValues('workingHours');
+
+    const source = workingHours.find((item) => item.day === day);
+
+    if (!source) return;
+
+    workingHours.forEach((item, index) => {
+      if (!item.isActive || item.day === day) return;
+
+      setValue(
+        `workingHours.${index}.intervals`,
+        source.intervals.map((interval) => ({
+          ...interval,
+        })),
+        {
+          shouldDirty: true,
+          shouldValidate: true,
         },
-      };
-    });
-  };
-
-  const onRemoveInterval = (day: DayOfWeek, intervalIndex: number) => {
-    setWeeklySchedule((prev) => {
-      return {
-        ...prev,
-        [day]: {
-          ...prev[day],
-          intervals: prev[day].intervals.filter((_, i) => i !== intervalIndex),
-        },
-      };
-    });
-  };
-
-  const onIntervalChange = (day: DayOfWeek, intervalIndex: number, interval: Interval) => {
-    setWeeklySchedule((prev) => {
-      const updated = { ...prev };
-      updated[day].intervals[intervalIndex] = interval;
-      return updated;
+      );
     });
   };
 
   return {
-    weeklySchedule,
-    copyToAll,
+    control,
+    workingHours,
+    getDayIndex,
+    getIntervalsFieldArray,
     onToggleDay,
     onActivateDay,
     onDeactivateDay,
-    onAddInterval,
-    onRemoveInterval,
-    onIntervalChange,
+    copyToAll,
   };
 };
