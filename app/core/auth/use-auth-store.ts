@@ -9,6 +9,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   isRefetching: boolean;
+  isInitialized: boolean;
 
   setLoading: (loading: boolean) => void;
   setAuth: (session: UserSessionContext) => void;
@@ -23,6 +24,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: true,
       isRefetching: false,
+      isInitialized: false,
 
       setLoading: (loading) => set({ isLoading: loading }),
       setAuth: (session) => set({ session, isAuthenticated: true }),
@@ -40,7 +42,7 @@ export const useAuthStore = create<AuthState>()(
           set({ session: null, isAuthenticated: false });
           return null;
         } finally {
-          set({ isLoading: false, isRefetching: false });
+          set({ isLoading: false, isRefetching: false, isInitialized: true });
         }
       },
     }),

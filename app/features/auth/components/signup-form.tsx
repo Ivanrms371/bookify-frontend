@@ -45,8 +45,8 @@ export const SignupForm = () => {
       </FormField>
 
       <FormField>
-        <Label htmlFor="phone">Teléfono</Label>
-        <Input type="name" id="phone" placeholder="Tu teléfono" {...register('phone')} error={errors.phone?.message} />
+        <Label htmlFor="phoneNumber">Teléfono</Label>
+        <Input type="name" id="phoneNumber" placeholder="Tu teléfono" {...register('phoneNumber')} error={errors.phoneNumber?.message} />
       </FormField>
 
       <FormField>

@@ -74,7 +74,7 @@ export const LoginForm = () => {
         {errors.password?.message && <Alert message={errors.password.message} variant="error" />}
       </FormField>
 
-      <Button type="submit" loading={isPending} disabled={isPending} variant="primary" className="mt-2">
+      <Button type="submit" disabled={isPending} variant="primary" className="mt-2">
         Iniciar sesión
       </Button>
     </form>

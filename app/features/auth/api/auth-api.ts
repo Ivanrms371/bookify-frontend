@@ -3,19 +3,10 @@ import type { UserSessionContext } from '../types/auth.types';
 import type { LoginFormValues } from '../schemas/login.schema';
 import type { SignupFormValues } from '../schemas/signup.schema';
 
-export interface GoogleAuthResponse {
-  url: string;
-}
-
-export interface LoginResponse {
-  accessToken: string;
-  session: UserSessionContext;
-}
-
 export const authApi = {
-  signup: async (dto: SignupFormValues) => httpClient.post<LoginResponse>('/auth/signup', dto),
+  signup: async (dto: SignupFormValues) => httpClient.post('/auth/signup', dto),
 
-  login: async (dto: LoginFormValues) => httpClient.post<LoginResponse>('/auth/login', dto),
+  login: async (dto: LoginFormValues) => httpClient.post<UserSessionContext>('/auth/login', dto),
 
   logout: () => httpClient.post('/auth/logout'),
 

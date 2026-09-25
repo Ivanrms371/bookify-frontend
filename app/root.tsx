@@ -3,13 +3,10 @@ import type { Route } from './+types/root';
 import { Toaster } from 'sonner';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/core/query/queryClient';
-import { AuthProvider } from '@/core/auth/AuthProvider';
+import { AuthProvider } from '@/core/auth/auth-provider';
 import { ErrorBoundary as CustomErrorBoundary } from '@/core/error/ErrorBoundary';
 import '@/styles.css';
-import { useThemeStore } from './shared/store/useThemeStore';
-import { LoadingScreen } from './shared/components/ui';
 import { OverlayRenderer } from './shared/components/overlays';
-import { useLoadingScreen } from './shared/store/use-loading-screen';
 
 export const links: Route.LinksFunction = () => [];
 
@@ -32,18 +29,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { theme } = useThemeStore();
-  const { isLoading, message } = useLoadingScreen();
-
   return (
     <CustomErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          {isLoading && <LoadingScreen message={message || 'Cargando...'} fullScreen={true} className="rounded-3xl" />}
-
           <Outlet />
           <OverlayRenderer />
-          <Toaster position="top-center" expand visibleToasts={5} richColors theme={theme} />
+          <Toaster position="top-center" expand visibleToasts={5} richColors theme="light" />
         </AuthProvider>
       </QueryClientProvider>
     </CustomErrorBoundary>

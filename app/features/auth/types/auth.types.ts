@@ -35,4 +35,6 @@ type SubscriptionStatus = 'ACTIVE' | 'TRIAL' | 'PAST_DUE' | 'CANCELLED' | 'EXPIR
 export interface Subscription {
   status: SubscriptionStatus;
   planName: string;
+  trialEndsAt: string | null;
+  currentPeriodEnd: string | null;
 }
