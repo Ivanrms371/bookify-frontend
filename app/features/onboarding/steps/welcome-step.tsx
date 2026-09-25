@@ -55,7 +55,7 @@ export const WelcomeStep = () => {
                 disabled={isPending}
                 aria-pressed={isSelected}
                 className={cn(
-                  'relative flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-4 text-left shadow-sm transition-colors duration-300',
+                  'relative flex cursor-pointer flex-col gap-2 rounded-lg border bg-white p-4 text-left shadow-sm transition-colors duration-300',
                   isSelected ? 'border-indigo-500 hover:bg-white' : 'border-gray-200 hover:bg-gray-100',
                   isPending && 'pointer-events-none opacity-60',
                 )}

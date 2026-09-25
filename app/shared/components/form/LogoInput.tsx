@@ -97,7 +97,7 @@ export const LogoInput = ({ value = null, onChange, previewClassName, errorMessa
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          'group flex w-full items-center gap-3 rounded-xl border border-dashed p-3 transition-all duration-300 ease-out',
+          'group flex w-full items-center gap-3 rounded-lg border border-dashed p-3 transition-all duration-300 ease-out',
           'bg-gray-50/80 dark:bg-gray-950/40',
           !hasImage &&
             'cursor-pointer border-gray-300 hover:border-gray-500 hover:bg-gray-100/80 dark:hover:border-gray-600 dark:hover:bg-gray-900/50',

@@ -6,7 +6,7 @@ export const CustomerList = ({ customers }: { customers: CustomerBasic[] }) => {
   return (
     <ul className="flex flex-col gap-4">
       {customers.map((customer) => (
-        <li className="flex flex-col gap-1  p-4 border border-gray-200 bg-white rounded-2xl">
+        <li className="flex flex-col gap-1  p-4 border border-gray-200 bg-white rounded-lg">
           <div className="flex justify-between items-center">
             <div className="text-lg text-gray-900">{customer.name}</div>
             <div>

@@ -12,7 +12,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
   const hasDiscount = discountPercentage > 0 || discountFixed > 0;
 
   return (
-    <div className="border border-gray-100 relative w-full max-w-sm overflow-hidden rounded-2xl bg-white hover:bg-gray-100 group cursor-pointer">
+    <div className="border border-gray-100 relative w-full max-w-sm overflow-hidden rounded-lg bg-white hover:bg-gray-100 group cursor-pointer">
       {/* Image */}
       <div className="relative h-48 w-full pt-2 px-2">
         {imageUrl && <img src={imageUrl} alt="Service" className="h-full w-full object-cover rounded-lg transition duration-300" />}

@@ -38,7 +38,7 @@ export const TenantSettingsSection = () => {
             return (
               <li
                 className={cn(
-                  'px-3 py-1.5 bg-gray-200 hover:bg-gray-300 transition-colors rounded-2xl cursor-pointer',
+                  'px-3 py-1.5 bg-gray-200 hover:bg-gray-300 transition-colors rounded-lg cursor-pointer',
                   isActive && 'bg-gray-800 text-white hover:bg-gray-800',
                 )}
                 onClick={() => setCurrentTab(id)}

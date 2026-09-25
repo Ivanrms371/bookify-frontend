@@ -37,7 +37,7 @@ export const TeamStep = () => {
             type="text"
             readOnly
             value={INVITE_LINK}
-            className="flex-1 rounded-xl border bg-white border-gray-200 px-4 py-3 text-sm text-gray-700 outline-none"
+            className="flex-1 rounded-lg border bg-white border-gray-200 px-4 py-3 text-sm text-gray-700 outline-none"
           />
           <Button variant="primary" type="button" onClick={() => navigator.clipboard.writeText(INVITE_LINK)} className="button-secondary">
             <ClipboardDocumentIcon className="size-4" />

@@ -81,7 +81,7 @@ export function ThemeCard({ theme, isSelected, onSelect }: ThemeCardProps) {
       onClick={onSelect}
       aria-pressed={isSelected}
       className={cn(
-        'group relative flex w-full flex-col rounded-2xl border-2 bg-white p-3 text-left shadow transition-all duration-200',
+        'group relative flex w-full flex-col rounded-lg border-2 bg-white p-3 text-left shadow transition-all duration-200',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         isSelected
           ? cn('border-transparent shadow-md ring-2 ring-offset-2', theme.ring, 'focus-visible:ring-offset-white')

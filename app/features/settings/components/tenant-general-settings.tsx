@@ -180,7 +180,7 @@ export const TenantGeneralSettings = () => {
             }
           }}
           className={cn(
-            'h-56 md:h-72 w-full  bg-white rounded-2xl overflow-hidden relative group transition-colors duration-300',
+            'h-56 md:h-72 w-full  bg-white rounded-lg overflow-hidden relative group transition-colors duration-300',
             bannerPreview ? 'shadow-md' : 'border border-dashed cursor-pointer border-gray-300 hover:border-indigo-600',
           )}
         >

@@ -18,7 +18,7 @@ export function SidebarTrialCard({ subscription, onUpgrade }: SidebarTrialCardPr
   return (
     <div
       className={cn(
-        'mb-4 bg-linear-to-br from-indigo-50 to-indigo-200 shadow-sm p-4 rounded-2xl transition-colors duration-300',
+        'mb-4 bg-linear-to-br from-indigo-50 to-indigo-200 shadow-sm p-4 rounded-lg transition-colors duration-300',
         isUrgent && 'from-amber-50 to-amber-200',
       )}
     >

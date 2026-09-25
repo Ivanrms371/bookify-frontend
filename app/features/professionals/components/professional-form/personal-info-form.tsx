@@ -28,7 +28,7 @@ export const ProfessionalInfoForm = ({ canEditContactData = true }: Props) => {
     <div className="space-y-5 pt-2 px-1">
       <FormField label="Imagen" id="image" error={errors.avatarUrl?.message}>
         <div className="flex gap-2">
-          {previewImage && <img src={previewImage} className=" object-cover size-10 rounded-xl" alt="Preview" />}
+          {previewImage && <img src={previewImage} className=" object-cover size-10 rounded-lg" alt="Preview" />}
           <Input
             id="image"
             type="file"

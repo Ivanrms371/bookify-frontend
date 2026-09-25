@@ -28,7 +28,7 @@ export const AppointmentItem = ({ appointment }: Props) => {
   const { customerName, customerPhone, serviceName, price, startsAt, endsAt, status, professionalName, notes } = appointment;
 
   return (
-    <li className="bg-white rounded-2xl p-5 shadow">
+    <li className="bg-white rounded-lg p-5 shadow">
       <div className="flex items-center justify-between mb-2">
         <div className="flex flex-col gap-1">
           <Text className="text-sm font-semibold text-gray-800">{customerName}</Text>

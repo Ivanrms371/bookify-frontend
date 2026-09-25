@@ -25,7 +25,7 @@ function ServiceListItem({ service, index, onUpdate }: ServiceListItemProps) {
   const update = (patch: Partial<ServiceFormData>) => onUpdate(index, { ...service, ...patch });
 
   return (
-    <li className="rounded-2xl border border-gray-200 bg-white p-3.5 transition-all duration-200 hover:border-gray-300 hover:shadow-md md:p-4">
+    <li className="rounded-lg border border-gray-200 bg-white p-3.5 transition-all duration-200 hover:border-gray-300 hover:shadow-md md:p-4">
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:items-start lg:gap-4">
         <div className="flex flex-col gap-3 min-w-0 md:flex-row md:items-start md:gap-3.5 lg:col-span-2">
           <ImageInput

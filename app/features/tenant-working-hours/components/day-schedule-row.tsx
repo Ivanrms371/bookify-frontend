@@ -40,7 +40,7 @@ export const DayScheduleRow = ({
   };
 
   return (
-    <div className={cn('space-y-4 rounded-2xl border border-gray-200 p-4 sm:p-5 bg-white', !isActive && 'border-gray-200/50')}>
+    <div className={cn('space-y-4 rounded-lg border border-gray-200 p-4 sm:p-5 bg-white', !isActive && 'border-gray-200/50')}>
       <div className="flex justify-between items-end">
         <div className={cn(!isActive && 'opacity-50')}>
           <Text className="text-gray-800">{DAY_LABELS[day].full}</Text>

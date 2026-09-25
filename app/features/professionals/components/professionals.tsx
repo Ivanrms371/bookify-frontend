@@ -25,7 +25,7 @@ export const Professionals = () => {
 
   if (isError) {
     return (
-      <div className="rounded-xl bg-red-50 p-4 text-center text-sm text-red-600">
+      <div className="rounded-lg bg-red-50 p-4 text-center text-sm text-red-600">
         Ocurrió un error al cargar los profesionales. Por favor, intenta de nuevo.
       </div>
     );

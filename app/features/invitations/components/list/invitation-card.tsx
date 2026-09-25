@@ -21,7 +21,7 @@ export const InvitationCard = ({ invitation }: Props) => {
   const { name, email, phoneNumber, phoneCountryCode } = invitation;
 
   return (
-    <div className="relative group flex flex-col items-center text-center rounded-2xl border border-gray-100 bg-white p-5">
+    <div className="relative group flex flex-col items-center text-center rounded-lg border border-gray-100 bg-white p-5">
       <span className="absolute left-3 top-3 px-2 py-0.5 text-xs font-medium rounded-full bg-amber-50 text-amber-600">Invitado</span>
 
       <div className="relative">

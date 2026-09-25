@@ -90,7 +90,7 @@ export const Modal = ({
         className={cn(
           'relative z-10 flex w-full max-h-[85vh] transition-all duration-300 ease-out flex-col overflow-hidden',
           modalSizeClasses[size],
-          'rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-100/80',
+          'rounded-lg bg-white p-6 shadow-lg ring-1 ring-gray-100/80',
           isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-[0.97] opacity-0 translate-y-2',
           className,
         )}

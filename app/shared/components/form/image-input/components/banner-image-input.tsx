@@ -35,7 +35,7 @@ export const BannerImageInput = (props: ImageInputProps) => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          'group relative flex w-full items-center justify-center rounded-xl border transition-all duration-300 ease-out aspect-3/1 select-none outline-none p-3 overflow-hidden cursor-pointer',
+          'group relative flex w-full items-center justify-center rounded-lg border transition-all duration-300 ease-out aspect-3/1 select-none outline-none p-3 overflow-hidden cursor-pointer',
           'bg-white',
           !hasImage && 'cursor-pointer border-dashed border-gray-300 hover:border-gray-500 hover:bg-gray-100/50',
           hasImage && 'border-solid border-gray-200 bg-white',

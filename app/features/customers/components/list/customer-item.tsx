@@ -11,7 +11,7 @@ interface Props {
 
 export const CustomerCard = ({ customer }: Props) => {
   return (
-    <div className="flex flex-col rounded-xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="flex flex-col rounded-lg border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-lg font-medium text-gray-900">{customer.name}</h3>
         {customer.blockedAt && <Badge variant="red">Bloqueado</Badge>}

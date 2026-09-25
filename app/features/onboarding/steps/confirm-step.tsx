@@ -41,7 +41,7 @@ export const ConfirmStep = () => {
         </div>
       </div>
 
-      <ul className="divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-200 bg-white mb-6">
+      <ul className="divide-y divide-gray-100 overflow-hidden rounded-lg border border-gray-200 bg-white mb-6">
         {READY_ITEMS.map((item) => {
           const Icon = item.icon;
 
@@ -50,7 +50,7 @@ export const ConfirmStep = () => {
               key={item.label}
               className="flex items-center cursor-pointer gap-4 px-5 py-4 transition-colors hover:bg-indigo-50/40 md:px-6"
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-400 ring-1 ring-indigo-100">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-400 ring-1 ring-indigo-100">
                 <Icon className="size-5" strokeWidth={1.75} aria-hidden />
               </span>
               <div className="min-w-0 flex-1 pt-0.5">
@@ -65,7 +65,7 @@ export const ConfirmStep = () => {
         })}
       </ul>
 
-      <div className={cn('mb-2 rounded-2xl border border-indigo-100/80 bg-indigo-50 px-5 py-4')}>
+      <div className={cn('mb-2 rounded-lg border border-indigo-100/80 bg-indigo-50 px-5 py-4')}>
         <p className="text-sm font-medium text-indigo-900">
           Al confirmar, activás tu página pública con la identidad visual <span className="font-semibold text-indigo-700">Bookify</span> y
           podés compartir el link de reservas con tus clientes.

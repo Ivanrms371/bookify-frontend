@@ -131,7 +131,7 @@ export const ScheduleExceptionForm = ({ initialData, onSubmit, onCancel, isSubmi
               type="button"
               onClick={() => setValue('isClosed', false)}
               className={cn(
-                'flex-1 px-3 py-1.5 rounded-2xl text-sm font-medium transition-colors',
+                'flex-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
                 !isClosed ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
               )}
             >
@@ -141,7 +141,7 @@ export const ScheduleExceptionForm = ({ initialData, onSubmit, onCancel, isSubmi
               type="button"
               onClick={() => setValue('isClosed', true)}
               className={cn(
-                'flex-1 px-3 py-1.5 rounded-2xl text-sm font-medium transition-colors',
+                'flex-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
                 isClosed ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
               )}
             >
@@ -183,7 +183,7 @@ export const ScheduleExceptionForm = ({ initialData, onSubmit, onCancel, isSubmi
                 return (
                   <label
                     key={prof.id}
-                    className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => toggleProfessional(prof.id)}
                   >
                     <div

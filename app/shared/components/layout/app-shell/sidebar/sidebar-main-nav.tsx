@@ -59,7 +59,7 @@ export const SidebarMainNav = () => {
             <Link
               to={item.href}
               className={cn(
-                'flex items-center gap-2 rounded-xl px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white',
+                'flex items-center gap-2 rounded-lg px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white',
                 isActive ? 'bg-indigo-500 text-white' : '',
               )}
             >

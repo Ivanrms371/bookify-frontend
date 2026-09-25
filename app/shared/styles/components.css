@@ -1,6 +1,6 @@
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 font-medium transition cursor-pointer rounded-xl;
+    @apply inline-flex items-center justify-center gap-2 font-medium transition cursor-pointer rounded-lg;
   }
 
   .btn-primary {

@@ -38,7 +38,7 @@ export const ServicesSelector = () => {
         return (
           <label
             key={service.id}
-            className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
           >
             <input type="checkbox" className="hidden" checked={isChecked} onChange={() => toggleService(service.id)} />
             <div

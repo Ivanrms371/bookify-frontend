@@ -94,7 +94,7 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
 
         <FormField label="Imagen" id="image" error={errors.image?.message as string}>
           <div className="flex gap-2">
-            {previewImage && <img src={previewImage} className=" object-cover size-10 rounded-xl" alt="Preview" />}
+            {previewImage && <img src={previewImage} className=" object-cover size-10 rounded-lg" alt="Preview" />}
             <Input
               id="image"
               type="file"
@@ -164,7 +164,7 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
               return (
                 <label
                   key={prof.id}
-                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
                 >
                   <input type="checkbox" className="hidden" checked={isChecked} onChange={() => toggleProfessional(prof.id)} />
                   <div

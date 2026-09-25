@@ -10,7 +10,7 @@ export interface TableProps extends HTMLAttributes<HTMLTableElement> {
 }
 
 export const Table = forwardRef<HTMLTableElement, TableProps>(({ className, containerClassName, ...props }, ref) => (
-  <div className={cn('w-full max-w-full overflow-x-auto rounded-xl bg-white border border-gray-200', containerClassName)}>
+  <div className={cn('w-full max-w-full overflow-x-auto rounded-lg bg-white border border-gray-200', containerClassName)}>
     <table ref={ref} className={cn('w-full text-sm border-separate border-spacing-0', className)} {...props} />
   </div>
 ));

@@ -11,7 +11,7 @@ interface Props {
 
 export const ProfessionalsCard = ({ professional }: Props) => {
   return (
-    <div className="relative group flex flex-col items-center text-center rounded-2xl border border-gray-100 bg-white p-5">
+    <div className="relative group flex flex-col items-center text-center rounded-lg border border-gray-100 bg-white p-5">
       {/* Avatar */}
       <div className="relative">
         <Avatar src={professional.avatarUrl} name={professional.name} className="size-16 text-lg border-2 border-white shadow-xs" />

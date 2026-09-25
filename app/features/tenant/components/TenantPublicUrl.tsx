@@ -23,7 +23,7 @@ export function TenantPublicUrl() {
   return (
     <div
       className={cn(
-        'hidden h-10 items-center justify-between gap-2 rounded-xl px-3 py-2.5 md:flex',
+        'hidden h-10 items-center justify-between gap-2 rounded-lg px-3 py-2.5 md:flex',
         'text-xs font-medium sm:text-sm',
         'w-full max-w-sm cursor-pointer border transition-all duration-300',
         copied

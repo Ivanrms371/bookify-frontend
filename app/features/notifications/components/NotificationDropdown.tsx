@@ -33,7 +33,7 @@ export function NotificationDropdown({ onClose, isVisible }: Props) {
   return (
     <div
       className={cn(
-        'z-50 w-80 overflow-hidden rounded-2xl p-0 md:w-96 lg:w-120',
+        'z-50 w-80 overflow-hidden rounded-lg p-0 md:w-96 lg:w-120',
         'border border-gray-200 ',
         'bg-gray-50 shadow-sm ',
         'absolute top-14 right-0',

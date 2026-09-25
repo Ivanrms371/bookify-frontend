@@ -16,15 +16,15 @@ export const ServiceList = ({ services, onSelect, selectedServiceId }: Props) =>
       {services.map((service) => (
         <li
           className={cn(
-            'group flex gap-3 border border-gray-200 p-2 rounded-2xl cursor-pointer transition-all duration-300',
+            'group flex gap-3 border border-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-300',
             selectedServiceId === service.id ? 'border-indigo-600  ring-4 ring-indigo-100' : 'hover:bg-gray-100/50 hover:boder-gray-300',
           )}
           onClick={() => onSelect(service.id)}
         >
           {service.image ? (
-            <img src={service.image} alt={service.name} className="size-12 rounded-xl object-cover border border-gray-200 s shrink-0" />
+            <img src={service.image} alt={service.name} className="size-12 rounded-lg object-cover border border-gray-200 s shrink-0" />
           ) : (
-            <div className="size-12 rounded-xl border border-gray-200  shrink-0 bg-gray-50 flex justify-center items-center">
+            <div className="size-12 rounded-lg border border-gray-200  shrink-0 bg-gray-50 flex justify-center items-center">
               <PhotoIcon className="size-6 text-gray-400" />
             </div>
           )}

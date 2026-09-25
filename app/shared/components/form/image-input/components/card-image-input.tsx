@@ -33,7 +33,7 @@ export const CardImageInput = (props: ImageInputProps) => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          'group flex w-full items-center gap-3 rounded-xl border border-dashed p-3 transition-all duration-300 ease-out',
+          'group flex w-full items-center gap-3 rounded-lg border border-dashed p-3 transition-all duration-300 ease-out',
           'bg-gray-50/80 ',
           !hasImage && 'cursor-pointer border-gray-300 hover:border-gray-500 hover:bg-gray-100/80',
           hasImage && 'border-solid border-gray-200 bg-white ',

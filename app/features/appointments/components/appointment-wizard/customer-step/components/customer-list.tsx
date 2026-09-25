@@ -18,7 +18,7 @@ export const CustomerList = ({ customers, onSelect, selectedCustomer }: Props) =
           key={customer.id}
           onClick={() => onSelect(customer.id)}
           className={cn(
-            'group flex justify-between items-center gap-3 border border-gray-200 p-2 rounded-2xl cursor-pointer transition-all duration-300',
+            'group flex justify-between items-center gap-3 border border-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-300',
             selectedCustomer === customer.id ? 'border-indigo-600  ring-4 ring-indigo-100' : 'hover:bg-gray-100/50 hover:boder-gray-300',
           )}
         >

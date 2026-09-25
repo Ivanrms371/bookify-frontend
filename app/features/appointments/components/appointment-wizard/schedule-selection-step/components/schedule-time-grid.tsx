@@ -49,7 +49,7 @@ export const ScheduleTimeGrid = ({ slots, nextAvailableDate, date, onSelectSlot,
               disabled={isLoading}
               onClick={() => onSelectSlot(slot)}
               className={cn(
-                'px-3 py-1.5 text-sm border border-gray-200 hover:bg-gray-100/50 hover:border-gray-300 rounded-xl transition-colors cursor-pointer',
+                'px-3 py-1.5 text-sm border border-gray-200 hover:bg-gray-100/50 hover:border-gray-300 rounded-lg transition-colors cursor-pointer',
                 isSelected && 'border-indigo-600 text-indigo-600 hover:border-indigo-600 hover:bg-white',
               )}
               key={slot}

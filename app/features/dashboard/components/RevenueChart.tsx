@@ -11,7 +11,7 @@ export const RevenueChart = () => {
 
   const totalRevenue = data?.chart?.reduce((acc, curr) => acc + curr.revenue, 0) ?? 0;
 
-  if (isLoading) return <div className="h-full min-h-0 w-full flex-1 animate-pulse rounded-xl border border-slate-100 bg-slate-100/50" />;
+  if (isLoading) return <div className="h-full min-h-0 w-full flex-1 animate-pulse rounded-lg border border-slate-100 bg-slate-100/50" />;
 
   if (isError)
     return (

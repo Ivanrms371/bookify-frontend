@@ -27,7 +27,7 @@ export const PhoneCountryCode = ({ value, onChange, disabled }: PhoneCountryCode
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           align="start"
-          className="z-50 min-w-48 max-h-[300px] overflow-y-auto rounded-xl border border-gray-100 bg-white p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
+          className="z-50 min-w-48 max-h-[300px] overflow-y-auto rounded-lg border border-gray-100 bg-white p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
         >
           {COUNTRIES.map((c) => (
             <DropdownMenu.Item

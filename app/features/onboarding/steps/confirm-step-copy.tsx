@@ -42,7 +42,7 @@ export const ConfirmStep = () => {
           </div>
 
           <div
-            className="flex size-20 shrink-0 items-center justify-center self-start rounded-2xl bg-white/15 ring-1 ring-white/25 backdrop-blur-sm md:self-center"
+            className="flex size-20 shrink-0 items-center justify-center self-start rounded-lg bg-white/15 ring-1 ring-white/25 backdrop-blur-sm md:self-center"
             aria-hidden
           >
             <CheckCircleIcon className="size-11 text-white" strokeWidth={1.5} />
@@ -64,7 +64,7 @@ export const ConfirmStep = () => {
 
             return (
               <li key={item.label} className="flex items-start gap-4 px-5 py-4 transition-colors hover:bg-indigo-50/40 md:px-6">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
                   <Icon className="size-5" strokeWidth={1.75} aria-hidden />
                 </span>
                 <div className="min-w-0 flex-1 pt-0.5">
@@ -78,7 +78,7 @@ export const ConfirmStep = () => {
         </ul>
       </Card>
 
-      <div className={cn('mb-2 rounded-2xl border border-indigo-100 bg-indigo-50/80 px-5 py-4', 'ring-1 ring-indigo-100/80')}>
+      <div className={cn('mb-2 rounded-lg border border-indigo-100 bg-indigo-50/80 px-5 py-4', 'ring-1 ring-indigo-100/80')}>
         <p className="text-sm font-medium text-indigo-900">
           Al confirmar, activás tu página pública con la identidad visual <span className="font-semibold text-indigo-700">Bookify</span> y
           podés compartir el link de reservas con tus clientes.

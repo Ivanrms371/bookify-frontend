@@ -19,7 +19,7 @@ export const CompactImageInput = (props: ImageInputProps) => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          'flex items-center gap-3 rounded-xl border bg-white p-3 transition-[border-color,box-shadow,background-color] duration-300 ease-out',
+          'flex items-center gap-3 rounded-lg border bg-white p-3 transition-[border-color,box-shadow,background-color] duration-300 ease-out',
           'border-gray-200 border-dashed dark:border-gray-800 dark:bg-gray-950/50 dark:hover:bg-gray-900/50',
           isDragging && 'border-gray-400 bg-gray-50 dark:border-gray-600 dark:bg-gray-900/60',
           className,

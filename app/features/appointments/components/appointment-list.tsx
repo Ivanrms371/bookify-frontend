@@ -23,7 +23,7 @@ export const AppointmentList = ({ appointments, selectedDate, onNext, onPrevious
   return (
     <ul className="space-y-4">
       {appointments.map((appt) => (
-        <li key={appt.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <li key={appt.id} className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between">
             <div>
               <h3 className="font-semibold text-gray-900">{appt.customerName}</h3>

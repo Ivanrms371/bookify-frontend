@@ -84,7 +84,7 @@ export const ScheduleDayPicker = ({ onSelectDate }: Props) => {
                   type="button"
                   onClick={() => onSelectDate(item.date)}
                   className={cn(
-                    'flex flex-col items-center justify-center p-1 border border-gray-200 hover:bg-gray-100/50 hover:border-gray-300 rounded-xl w-12 h-14 transition-colors cursor-pointer',
+                    'flex flex-col items-center justify-center p-1 border border-gray-200 hover:bg-gray-100/50 hover:border-gray-300 rounded-lg w-12 h-14 transition-colors cursor-pointer',
                     isSelected && 'border-indigo-600 hover:border-indigo-600 hover:bg-white',
                   )}
                 >

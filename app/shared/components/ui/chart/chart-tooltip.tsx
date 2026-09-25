@@ -12,7 +12,7 @@ interface ChartTooltipProps extends TooltipProps<ValueType, NameType> {
 export const ChartTooltip = ({ active, payload, label, valueFormatter, labelFormatterCustom }: ChartTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <Card className="min-w-32 rounded-xl border-gray-200 bg-white px-0 py-2 shadow">
+      <Card className="min-w-32 rounded-lg border-gray-200 bg-white px-0 py-2 shadow">
         <div className="mb-2 border-b border-gray-200 px-2 pb-2 text-xs font-medium tracking-tighter text-gray-600 ">
           {labelFormatterCustom ? labelFormatterCustom(label) : label}
         </div>

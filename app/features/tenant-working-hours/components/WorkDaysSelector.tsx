@@ -18,7 +18,7 @@ export const WorkDaysSelector = ({ onDayToggle, weeklySchedule }: Props) => {
             type="button"
             key={day}
             className={cn(
-              'w-11 h-10 cursor-pointer rounded-2xl bg-gray-200 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-300 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800',
+              'w-11 h-10 cursor-pointer rounded-lg bg-gray-200 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-300 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800',
               weeklySchedule[day].isActive &&
                 'bg-indigo-500 text-gray-50 hover:bg-indigo-600 dark:bg-indigo-600 dark:text-gray-50 hover:dark:bg-indigo-500',
             )}

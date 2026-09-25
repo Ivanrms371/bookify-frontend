@@ -45,7 +45,7 @@ export const ScheduleExceptionsList = () => {
             return (
               <div
                 key={exception.id}
-                className="flex items-center justify-between p-4 rounded-xl border border-gray-200 gap-4 transition-all hover:border-gray-300"
+                className="flex items-center justify-between p-4 rounded-lg border border-gray-200 gap-4 transition-all hover:border-gray-300"
               >
                 <div>
                   <div className="flex items-center gap-2 mb-1">
