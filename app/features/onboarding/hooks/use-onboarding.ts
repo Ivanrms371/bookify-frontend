@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@/core/auth/useAuthStore';
-import { authApi } from '@/features/auth/api/auth-api';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { OnboardingContext, ONBOARDING_STATUS_QUERY_KEY } from '../context/onboarding-context';
 import { onboardingApi } from '../api/onboarding-api';
 import { useLoadingScreen } from '@/shared/store/use-loading-screen';
@@ -13,6 +12,8 @@ export const useOnboardingInitializer = () => {
   const { show, hide } = useLoadingScreen();
   const initStarted = useRef(false);
 
+  console.log('yo');
+
   useEffect(() => {
     if (isAuthLoading || !isAuthenticated) return;
     if (session?.activeTenant?.onboardingStatus) return;
@@ -23,11 +24,8 @@ export const useOnboardingInitializer = () => {
     const initialize = async () => {
       try {
         show('Preparando tu experiencia...');
-        await onboardingApi.init();
-        const session = await authApi.getMe();
-        setAuth(session);
+        const status = await onboardingApi.init();
 
-        const status = await onboardingApi.getStatus();
         queryClient.setQueryData(ONBOARDING_STATUS_QUERY_KEY, status);
       } catch (error) {
         initStarted.current = false;

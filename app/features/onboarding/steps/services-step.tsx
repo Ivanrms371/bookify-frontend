@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type SubmitEvent } from 'react';
 import { toast } from 'sonner';
-import { ServicesList, getDefaultServicesForTenantType, type CreateServicePayload } from '@/features/services';
+import { ServicesList, getDefaultServicesForTenantType } from '@/features/services';
 import { Heading, Text } from '@/shared/components/typography';
 import { BackButton, NextButton, StepNavigation } from '../components/step-navigation';
 import { useOnboarding } from '../hooks/use-onboarding';
@@ -8,6 +8,7 @@ import { useSaveServices } from '../hooks/use-save-services';
 import { mapServicesToDto } from '../utils/map-services-to-dto';
 
 import type { OnboardingSavedData } from '../schemas/onboarding-status.schema';
+import type { CreateServicePayload } from '@/features/services/types/services.types';
 
 function mapSavedServicesToForm(services: OnboardingSavedData['services']): CreateServicePayload[] {
   return services.map((service) => ({
@@ -38,7 +39,7 @@ export const ServicesStep = () => {
     setServices(suggestedServices);
   }, [suggestedServices]);
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (services.length === 0) {

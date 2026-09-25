@@ -1,6 +1,8 @@
 import z from 'zod';
 import { TENANT_TYPE_VALUES } from '@/shared/constants/tenant-type';
 import { WORKSPACE_TYPE_VALUES } from '@/shared/constants/workspace-type';
+import { DAYS_OF_WEEK } from '@/shared/constants/week-days';
+import { intervalSchema, workingHoursSchema } from '@/features/schedule/schemas/schedule-form-schema';
 
 export const onboardingStepStatusSchema = z.object({
   id: z.string(),
@@ -16,13 +18,7 @@ export const onboardingSavedDataSchema = z.object({
   logoUrl: z.string().nullable(),
   coverUrl: z.string().nullable(),
   colorTheme: z.string().nullable(),
-  workingHours: z.array(
-    z.object({
-      dayOfWeek: z.number(),
-      opensAt: z.number(),
-      closesAt: z.number(),
-    }),
-  ),
+  workingHours: workingHoursSchema,
   services: z.array(
     z.object({
       id: z.string(),

@@ -27,7 +27,6 @@ export const WelcomeStep = () => {
 
   const handleChangeWorkspaceType = (workspaceType: WorkspaceType) => {
     setSelectedWorkspaceType(workspaceType);
-
     next(() => selectWorkspace({ workspaceType }));
   };
 

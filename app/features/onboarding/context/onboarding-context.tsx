@@ -5,7 +5,7 @@ import { ONBOARDING_STATUS_TO_ROUTE } from '@/shared/constants/onboarding';
 import { getOnboardingStepIdFromPathname } from '@/shared/utils/onboarding-steps';
 import { onboardingApi } from '../api/onboarding-api';
 import { useOnboardingInitializer } from '../hooks/use-onboarding';
-import { useAuthStore } from '@/core/auth/useAuthStore';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import type { OnboardingStatusResponse, OnboardingStepStatus, OnboardingSavedData } from '../schemas/onboarding-status.schema';
 
 export const ONBOARDING_STATUS_QUERY_KEY = ['onboarding-status'] as const;
@@ -52,13 +52,13 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     queryClient.setQueryData(ONBOARDING_STATUS_QUERY_KEY, data);
   };
 
-  useEffect(() => {
-    if (!onboardingData) return;
-    const route = STATUS_TO_ROUTE[onboardingData.onboardingStatus];
-    if (route) {
-      navigate(route);
-    }
-  }, [onboardingData, navigate]);
+  // useEffect(() => {
+  //   if (!onboardingData) return;
+  //   const route = STATUS_TO_ROUTE[onboardingData.onboardingStatus];
+  //   if (route) {
+  //     navigate(route);
+  //   }
+  // }, [onboardingData]);
 
   const back = () => {
     const currentStepId = getOnboardingStepIdFromPathname(window.location.pathname);

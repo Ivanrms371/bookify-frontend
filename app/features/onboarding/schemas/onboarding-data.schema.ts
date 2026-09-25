@@ -6,7 +6,7 @@ export const onboardingTenantSchema = z.object({
   slug: z.string(),
   type: z.string(),
   onboardingCompleted: z.boolean().optional(),
-  phone: z.string().nullable(),
+  phoneNumber: z.string().nullable(),
   addressLine1: z.string().nullable(),
   addressLine2: z.string().nullable(),
   city: z.string().nullable(),

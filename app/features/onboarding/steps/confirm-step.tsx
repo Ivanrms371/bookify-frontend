@@ -7,7 +7,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { Heading, Text } from '@/shared/components/typography';
-import { Card } from '@/shared/components/ui/card';
 import { cn } from '@/shared/utils/cn';
 import { BackButton, NextButton, StepNavigation } from '../components/step-navigation';
 import { useConfirmStep } from '../hooks/use-confirm-step';
@@ -58,8 +57,8 @@ export const ConfirmStep = () => {
                 <p className="text-sm font-semibold text-gray-900">{item.label}</p>
                 <p className="text-sm text-gray-500">{item.description}</p>
               </div>
-              <div className={cn('shrink-0 rounded-full p-1 bg-indigo-50 ring-1 ring-indigo-100')}>
-                <CheckIcon className={cn('size-4 text-indigo-400')} />
+              <div className={cn('shrink-0 rounded-full p-1.5 bg-indigo-50')}>
+                <CheckIcon className={cn('size-4 text-indigo-600')} />
               </div>
             </li>
           );

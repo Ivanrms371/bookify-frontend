@@ -1,24 +1,21 @@
-import React from 'react';
 import { Heading, Text } from '@/shared/components/typography';
-import { mapScheduleToDTO, useWorkingHours, WorkingHoursFields } from '@/features/tenant-working-hours';
 import { BackButton, NextButton, StepNavigation } from '../components/step-navigation';
 import { useOnboarding } from '../hooks/use-onboarding';
 import { useSaveWorkingHours } from '../hooks/use-save-working-hours';
 import { toast } from 'sonner';
+import { ScheduleForm } from '@/features/schedule/components/schedule-form';
+import type { SaveWorkingHours } from '@/features/schedule/schemas/schedule-form-schema';
 
 export const ScheduleStep = () => {
-  const { next, back } = useOnboarding();
-  const scheduleState = useWorkingHours();
-
+  const { next, back, onboardingData } = useOnboarding();
   const { mutateAsync: saveWorkingHours, isPending } = useSaveWorkingHours();
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const workingHours = onboardingData?.savedData?.workingHours ?? null;
 
-    const workingHoursDto = mapScheduleToDTO(scheduleState.weeklySchedule);
-
+  const handleSave = async (data: SaveWorkingHours): Promise<void> => {
     try {
-      next(() => saveWorkingHours(workingHoursDto));
+      console.log(data);
+      next(() => saveWorkingHours(data));
     } catch (error) {
       toast.error('Error al guardar los horarios de trabajo', {
         description: error instanceof Error ? error.message : 'Error desconocido',
@@ -35,13 +32,12 @@ export const ScheduleStep = () => {
         Establecé las horas que tenés disponibles cada semana para mantener tu agenda organizada automáticamente.
       </Text>
 
-      <form onSubmit={onSubmit}>
-        <WorkingHoursFields useWorkingHours={scheduleState} />
-        <StepNavigation>
-          <BackButton onBack={back} />
-          <NextButton isNextDisabled={false} type="submit" />
-        </StepNavigation>
-      </form>
+      <ScheduleForm id="onboarding-schedule-form" onSubmit={handleSave} defaultValues={workingHours} />
+
+      <StepNavigation>
+        <BackButton onBack={back} />
+        <NextButton form="onboarding-schedule-form" isNextDisabled={isPending} type="submit" />
+      </StepNavigation>
     </>
   );
 };
