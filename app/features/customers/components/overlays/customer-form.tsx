@@ -10,6 +10,7 @@ import type { ApiError } from '@/core/error/api-error';
 import { useApiFormError } from '@/shared/hooks/use-api-form-error';
 import { PhoneCountryCode } from '@/shared/components/form/phone-country-code';
 import { DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
+import { ModalBody, ModalFooter } from '@/shared/components/ui/modal';
 
 interface Props {
   defaultValues?: Partial<CustomerFormData>;
@@ -24,7 +25,7 @@ const initialValues: CustomerFormData = {
   name: '',
   email: '',
   phoneCountryCode: '598',
-  phone: '',
+  phoneNumber: '',
   notes: '',
 };
 
@@ -49,7 +50,7 @@ export const CustomerForm = ({ defaultValues, onSubmit, onCancel, submitLabel, i
 
   return (
     <form className="flex flex-col h-full" onSubmit={handleSubmit(onSubmit)}>
-      <DrawerBody>
+      <ModalBody>
         <FormField label="Nombre completo" id="name" error={errors.name?.message}>
           <Input {...register('name')} id="name" placeholder="Ej. Juan Pérez" />
         </FormField>
@@ -58,7 +59,7 @@ export const CustomerForm = ({ defaultValues, onSubmit, onCancel, submitLabel, i
           <Input type="email" {...register('email')} id="email" placeholder="juan@ejemplo.com" />
         </FormField>
 
-        <FormField label="Teléfono" id="phone" error={errors.phone?.message || errors.phoneCountryCode?.message}>
+        <FormField label="Teléfono" id="phoneNumber" error={errors.phoneNumber?.message || errors.phoneCountryCode?.message}>
           <div className="flex gap-2">
             <PhoneCountryCode
               value={selectedCountryCode}
@@ -66,23 +67,23 @@ export const CustomerForm = ({ defaultValues, onSubmit, onCancel, submitLabel, i
               disabled={isSubmitting}
             />
 
-            <Input type="tel" {...register('phone')} id="phone" placeholder="099 123 456" fullWidth disabled={isSubmitting} />
+            <Input type="tel" {...register('phoneNumber')} id="phoneNumber" placeholder="099 123 456" fullWidth disabled={isSubmitting} />
           </div>
         </FormField>
 
         <FormField label="Notas (Opcional)" id="notes" error={errors.notes?.message}>
           <Textarea {...register('notes')} id="notes" placeholder="Información adicional sobre el cliente..." />
         </FormField>
-      </DrawerBody>
+      </ModalBody>
 
-      <DrawerFooter>
-        <Button variant="secondary" type="button" className="flex-1" onClick={onCancel} disabled={isSubmitting}>
+      <ModalFooter>
+        <Button variant="secondary" type="button" onClick={onCancel} disabled={isSubmitting}>
           Cancelar
         </Button>
-        <Button variant="primary" type="submit" className="flex-1" loading={isSubmitting} disabled={isSubmitting}>
+        <Button variant="primary" type="submit" disabled={isSubmitting}>
           {submitLabel}
         </Button>
-      </DrawerFooter>
+      </ModalFooter>
     </form>
   );
 };

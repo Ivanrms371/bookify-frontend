@@ -1,4 +1,4 @@
-import { Drawer } from '@/shared/components/ui';
+import { Drawer, Modal } from '@/shared/components/ui';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { useUpdateCustomer } from '@/features/customers/hooks/use-update-customer';
 import { CustomerForm } from '@/features/customers/components/overlays/customer-form';
@@ -6,7 +6,7 @@ import type { CustomerFormData } from '@/features/customers/schemas/customer-for
 import type { OverlayKey } from '@/shared/components/overlays/overlay-registry';
 import type { CustomerBasic } from '@/features/customers/types/customer-types';
 
-const OVERLAY_KEY: OverlayKey = 'update-customer-drawer';
+const OVERLAY_KEY: OverlayKey = 'update-customer-modal';
 
 interface Props {
   customer: CustomerBasic;
@@ -19,7 +19,7 @@ export const UpdateCustomerModal = ({ customer }: Props) => {
   const defaultValues: CustomerFormData = {
     name: customer.name,
     phoneCountryCode: customer.phoneCountryCode,
-    phone: customer.phone,
+    phoneNumber: customer.phoneNumber,
     email: customer.email,
     notes: customer.notes ?? '',
   };
@@ -36,7 +36,7 @@ export const UpdateCustomerModal = ({ customer }: Props) => {
   };
 
   return (
-    <Drawer overlayKey={OVERLAY_KEY} title="Editar Cliente" size="xl">
+    <Modal overlayKey={OVERLAY_KEY} title="Editar Cliente" size="xl">
       <CustomerForm
         onSubmit={onSubmit}
         submitLabel="Actualizar Cliente"
@@ -45,6 +45,6 @@ export const UpdateCustomerModal = ({ customer }: Props) => {
         onCancel={close}
         defaultValues={defaultValues}
       />
-    </Drawer>
+    </Modal>
   );
 };

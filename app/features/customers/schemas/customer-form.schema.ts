@@ -17,11 +17,11 @@ export const customerFormSchema = z.object({
       message: 'El prefijo es inválido',
     }),
 
-  phone: z
+  phoneNumber: z
     .string()
     .trim()
     .transform(normalizePhone)
-    .refine((phone) => /^\d{8,14}$/.test(phone), {
+    .refine((phoneNumber) => /^\d{8,14}$/.test(phoneNumber), {
       message: 'El teléfono es inválido',
     }),
 

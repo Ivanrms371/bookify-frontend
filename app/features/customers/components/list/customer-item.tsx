@@ -17,18 +17,12 @@ export const CustomerCard = ({ customer }: Props) => {
         {customer.blockedAt && <Badge variant="red">Bloqueado</Badge>}
       </div>
       <p className="text-sm text-gray-600 mb-1">{customer.email}</p>
+      <p className="text-sm text-gray-600 mb-1">{formatPhoneForDisplay(customer.phoneNumber, customer.phoneCountryCode)}</p>
       <p className="text-sm text-gray-600 mb-1">
-        {formatPhoneForDisplay(customer.phone, customer.phoneCountryCode)}
+        {customer.firstAppointmentAt ? `Primera cita: ${formatDateDMY(customer.firstAppointmentAt)}` : 'Sin primera cita'}
       </p>
       <p className="text-sm text-gray-600 mb-1">
-        {customer.firstAppointmentAt
-          ? `Primera cita: ${formatDateDMY(customer.firstAppointmentAt)}`
-          : 'Sin primera cita'}
-      </p>
-      <p className="text-sm text-gray-600 mb-1">
-        {customer.lastAppointmentAt
-          ? `Última cita: ${formatDateDMY(customer.lastAppointmentAt)}`
-          : 'Sin última cita'}
+        {customer.lastAppointmentAt ? `Última cita: ${formatDateDMY(customer.lastAppointmentAt)}` : 'Sin última cita'}
       </p>
       <p className="text-sm font-medium text-gray-900 mb-3">
         Total gastado: {customer.totalSpent ? formatCurrency(customer.totalSpent) : formatCurrency(0)}

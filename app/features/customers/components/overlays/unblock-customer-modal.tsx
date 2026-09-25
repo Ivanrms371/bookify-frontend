@@ -1,4 +1,4 @@
-import { Modal } from '@/shared/components/ui/modal';
+import { Modal, ModalFooter } from '@/shared/components/ui/modal';
 import { Button } from '@/shared/components/ui';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import type { OverlayKey } from '@/shared/components/overlays/overlay-registry';
@@ -21,24 +21,21 @@ export const UnblockCustomerModal = ({ customer }: { customer: CustomerBasic }) 
   };
 
   return (
-    <Modal overlayKey={OVERLAY_KEY} size="md">
-      <div className="flex flex-col items-center text-center">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">¿Estás seguro de desbloquear?</h3>
+    <Modal overlayKey={OVERLAY_KEY} size="lg" title="¿Estás seguro de desbloquear?">
+      <Text size="base" className=" text-gray-500">
+        Al desbloquear a <span className="text-gray-800 font-semibold ">{customer.name}</span>, el cliente podrá volver a agendar citas de
+        forma normal en el portal de reservas.
+      </Text>
 
-        <Text className=" text-gray-500 mb-6">
-          Al desbloquear a <span className="text-gray-800 font-semibold ">{customer.name}</span>, el cliente podrá volver a agendar citas de forma normal en el portal de reservas.
-        </Text>
+      <ModalFooter>
+        <Button type="button" variant="secondary" onClick={close} disabled={isPending}>
+          Cancelar
+        </Button>
 
-        <div className="flex w-full gap-3">
-          <Button type="button" variant="secondary" onClick={close} disabled={isPending}>
-            Cancelar
-          </Button>
-
-          <Button type="button" variant="primary" onClick={handleUnblock} className="flex-1" loading={isPending} disabled={isPending}>
-            Desbloquear
-          </Button>
-        </div>
-      </div>
+        <Button type="button" variant="primary" onClick={handleUnblock} isSubmitting={isPending} disabled={isPending}>
+          Desbloquear cliente
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };

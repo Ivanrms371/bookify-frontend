@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const CustomerActions = ({ customer }: Props) => {
-  const { open: openUpdateCustomer } = useOverlay('update-customer-drawer');
+  const { open: openUpdateCustomer } = useOverlay('update-customer-modal');
   const { open: openViewCustomer } = useOverlay('view-customer-drawer');
   const { open: openBlockCustomer } = useOverlay('block-customer-modal');
   const { open: openUnblockCustomer } = useOverlay('unblock-customer-modal');

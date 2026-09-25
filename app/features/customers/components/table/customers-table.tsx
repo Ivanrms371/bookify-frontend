@@ -37,7 +37,7 @@ export const CustomersTable = ({ customers }: Props) => {
               <div className="text-gray-800">{customer.email}</div>
             </Td>
             <Td>
-              <div className="text-gray-800">{formatPhoneForDisplay(customer.phone, customer.phoneCountryCode)}</div>
+              <div className="text-gray-800">{formatPhoneForDisplay(customer.phoneNumber, customer.phoneCountryCode)}</div>
             </Td>
             <Td>
               <div className="text-gray-800">

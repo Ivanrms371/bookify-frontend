@@ -1,7 +1,7 @@
 export type Customer = {
   id: string;
   name: string;
-  phone: string;
+  phoneNumber: string;
   phoneCountryCode: string;
   email: string;
   notes: string | null;
@@ -19,7 +19,7 @@ export type Customer = {
 export type CustomerBasic = {
   id: string;
   name: string;
-  phone: string;
+  phoneNumber: string;
   phoneCountryCode: string;
   email: string;
   preferredLanguage: string;
@@ -49,5 +49,5 @@ export interface GetAllCustomersParams {
 
 export type GetCustomerByIdResponse = Customer;
 
-export type CustomerSearchItem = Pick<Customer, 'id' | 'name' | 'phone' | 'email'>;
+export type CustomerSearchItem = Pick<Customer, 'id' | 'name' | 'phoneNumber' | 'email'>;
 export type GetCustomersSearchResponse = CustomerSearchItem[];
