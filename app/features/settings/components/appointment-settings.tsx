@@ -9,6 +9,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { appointmentSettingsSchema, type AppointmentSettingsFormValues } from '../schemas/tenant-settings-schema';
 import { FormField } from '@/shared/components/form/form-field';
+import { FloatingSaveBar } from '@/shared/components/form/floating-save-bar';
 import { SettingsService } from '../api/settings.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -163,37 +164,7 @@ export const AppointmentSettings = () => {
         </div>
       </div>
 
-      {/* Floating Action Bar */}
-      <div
-        className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-out-expo ${
-          isDirty ? 'translate-y-0 opacity-100 visible' : 'translate-y-10 opacity-0 invisible'
-        }`}
-      >
-        <div className="bg-gray-950 backdrop-blur-md text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-6">
-          <Text className="text-sm font-medium text-gray-300">Tienes cambios sin guardar</Text>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              className="rounded-full text-gray-300 hover:text-white hover:bg-gray-800"
-              onClick={() => reset()}
-              disabled={isSubmitting}
-            >
-              Descartar
-            </Button>
-            <Button type="submit" variant="primary" disabled={isSubmitting} className="rounded-full">
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Guardando...
-                </>
-              ) : (
-                'Guardar cambios'
-              )}
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FloatingSaveBar isDirty={isDirty} isSubmitting={isSubmitting} onReset={() => reset()} />
     </form>
   );
 };

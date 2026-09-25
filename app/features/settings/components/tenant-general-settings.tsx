@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { tenantGeneralSettingsSchema, type TenantGeneralSettingsFormValues } from '../schemas/tenant-settings-schema';
 import { FormField } from '@/shared/components/form/form-field';
+import { FloatingSaveBar } from '@/shared/components/form/floating-save-bar';
 import { useMediaDelete, useMediaUpload } from '@/shared/media';
 import { SettingsService } from '../api/settings.service';
 import { useQueryClient } from '@tanstack/react-query';
@@ -351,29 +352,7 @@ export const TenantGeneralSettings = () => {
         </div>
       </div>
 
-      {/* Floating Action Bar */}
-      <div
-        className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-out-expo ${
-          isDirty ? 'translate-y-0 opacity-100 visible' : 'translate-y-10 opacity-0 invisible'
-        }`}
-      >
-        <div className="bg-gray-900  text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-6">
-          <Text className="text-sm font-medium text-gray-300">Tienes cambios sin guardar</Text>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              className="rounded-full text-gray-300 hover:text-white hover:bg-gray-800"
-              onClick={() => reset()}
-            >
-              Descartar
-            </Button>
-            <Button type="submit" variant="primary" isSubmitting={isSubmitting} className="rounded-full">
-              Guardar Cambios
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FloatingSaveBar isDirty={isDirty} isSubmitting={isSubmitting} onReset={() => reset()} />
     </form>
   );
 };
