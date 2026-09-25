@@ -1,5 +1,5 @@
-export function normalizePhone(phone: string): string {
-  const digits = phone.replace(/\D/g, '');
+export function normalizePhone(phoneNumber: string): string {
+  const digits = phoneNumber.replace(/\D/g, '');
 
   if (digits.length > 1 && digits.startsWith('0')) {
     return digits.slice(1);
@@ -8,9 +8,9 @@ export function normalizePhone(phone: string): string {
   return digits;
 }
 
-export const formatPhoneForDisplay = (phone: string, countryCode: string): string => {
+export const formatPhoneForDisplay = (phoneNumber: string, countryCode: string): string => {
   const code = countryCode.replace(/\D/g, '');
-  let number = phone.replace(/\D/g, '');
+  let number = phoneNumber.replace(/\D/g, '');
 
   // Si el número incluye el código de país al inicio, se lo quitamos
   if (number.startsWith(code)) {

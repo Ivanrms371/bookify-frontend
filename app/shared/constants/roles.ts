@@ -8,7 +8,7 @@ export interface RoleOption {
 
 export const ROLE_OPTIONS: RoleOption[] = [
   { value: 'OWNER', label: 'Dueño', description: 'Dueño del negocio' },
-  { value: 'PROFESSIONAL', label: 'Profesional', description: 'Gestiona sus propios turnos' },
+  { value: 'STAFF', label: 'Profesional', description: 'Gestiona sus propios turnos' },
   { value: 'ADMIN', label: 'Administrador', description: 'Acceso total al negocio' },
 ];
 

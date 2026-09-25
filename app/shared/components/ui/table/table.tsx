@@ -10,11 +10,11 @@ export interface TableProps extends HTMLAttributes<HTMLTableElement> {
 }
 
 export const Table = forwardRef<HTMLTableElement, TableProps>(({ className, containerClassName, ...props }, ref) => (
-  <div className={cn('w-full max-w-full overflow-x-auto rounded-xl bg-white border border-gray-100', containerClassName)}>
+  <div className={cn('w-full max-w-full overflow-x-auto rounded-xl bg-white border border-gray-200', containerClassName)}>
     <table ref={ref} className={cn('w-full text-sm border-separate border-spacing-0', className)} {...props} />
   </div>
 ));
-Table.displayName = 'Table';
+Table.name = 'Table';
 
 /* ─────────────────────────────────────────────
  * Thead
@@ -23,7 +23,7 @@ Table.displayName = 'Table';
 export const Thead = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(({ className, ...props }, ref) => (
   <thead ref={ref} className={cn('', className)} {...props} />
 ));
-Thead.displayName = 'Thead';
+Thead.name = 'Thead';
 
 /* ─────────────────────────────────────────────
  * Tbody
@@ -36,7 +36,7 @@ export const Tbody = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTabl
     </tbody>
   ),
 );
-Tbody.displayName = 'Tbody';
+Tbody.name = 'Tbody';
 
 /* ─────────────────────────────────────────────
  * Tr
@@ -45,7 +45,7 @@ Tbody.displayName = 'Tbody';
 export const Tr = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(({ className, ...props }, ref) => (
   <tr ref={ref} className={cn('', className)} {...props} />
 ));
-Tr.displayName = 'Tr';
+Tr.name = 'Tr';
 
 /* ─────────────────────────────────────────────
  * Th
@@ -54,13 +54,13 @@ Tr.displayName = 'Tr';
 export const Th = forwardRef<HTMLTableCellElement, ThHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
   <th ref={ref} className={cn('px-4 py-3 text-left text-sm font-medium text-gray-500 whitespace-nowrap', className)} {...props} />
 ));
-Th.displayName = 'Th';
+Th.name = 'Th';
 
 /* ─────────────────────────────────────────────
  * Td
  * ───────────────────────────────────────────── */
 
 export const Td = forwardRef<HTMLTableCellElement, TdHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
-  <td ref={ref} className={cn('px-4 py-3 text-gray-700 border-b border-gray-100 whitespace-nowrap', className)} {...props} />
+  <td ref={ref} className={cn('px-4 py-3 text-gray-700 border-b border-gray-200 whitespace-nowrap', className)} {...props} />
 ));
-Td.displayName = 'Td';
+Td.name = 'Td';

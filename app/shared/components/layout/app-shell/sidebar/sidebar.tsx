@@ -5,49 +5,52 @@ import { Heading } from '@/shared/components/typography';
 
 import { cn } from '@/shared/utils/cn';
 import { useParams } from 'react-router';
+import { SidebarTrialCard } from '@/features/billing';
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
-
 export const Sidebar = ({ open, onClose }: Props) => {
   return (
     <>
-      {/* Mobile backdrop overlay */}
+      {/* Mobile backdrop */}
       <div
         className={cn(
-          'fixed inset-0 z-40 bg-gray-950/40 backdrop-blur-xs transition-opacity duration-300 xl:hidden',
-          open ? 'opacity-100 visible' : 'opacity-0 invisible',
+          'fixed inset-0 z-40 bg-gray-950/40 backdrop-blur-xs',
+          'transition-opacity duration-300 lg:hidden',
+          open ? 'visible opacity-100' : 'invisible opacity-0',
         )}
         onClick={onClose}
       />
-      <div
+
+      <aside
         className={cn(
-          'fixed xl:sticky xl:left-0 z-50 top-0 left-0 xl:z-auto h-screen w-72 flex flex-col justify-between bg-white p-4 pt-4  transition-all duration-500 ease-in-out',
-          open ? 'translate-x-0 opacity-100' : '-translate-x-full xl:translate-x-0 opacity-0 xl:opacity-100',
+          // Base
+          'z-50 flex h-dvh w-72 flex-col bg-white p-4',
+
+          // Mobile drawer
+          'fixed inset-y-0 left-0',
+          'transition-transform duration-300 ease-in-out',
+
+          open ? 'translate-x-0' : '-translate-x-full',
+
+          // Desktop: Grid item
+          'lg:static lg:z-auto lg:translate-x-0',
+          'lg:transition-none',
         )}
       >
-        <Heading className="ml-4 mt-2 mb-4 text-4xl font-semibold tracking-tighter">
-          Book
-          <span className="font-bold text-indigo-600 ">ify</span>
+        <Heading className="ml-4 mb-4 mt-2 text-4xl font-semibold tracking-tighter">
+          Book<span className="font-bold text-indigo-600">ify</span>
         </Heading>
-        <SidebarMainNav />
 
-        <div className="flex-1" />
-        <div className={`mb-4 bg-linear-to-br from-indigo-50 to-indigo-200 shadow-sm p-4 rounded-2xl transition-colors duration-300`}>
-          <h3 className="text-xl text-gray-900 font-semibold mb-1">Activa tu plan</h3>
-          <p className="text-gray-700 mb-2 text-sm font-medium">
-            Tu prueba gratuita está activa. Conecta MercadoPago para mantener el acceso.
-          </p>
-
-          <Button variant="primary" size="sm" fullWidth>
-            Conectar Mercadopago
-          </Button>
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <SidebarMainNav />
         </div>
 
+        <SidebarTrialCard />
         <SidebarSecondaryNav />
-      </div>
+      </aside>
     </>
   );
 };

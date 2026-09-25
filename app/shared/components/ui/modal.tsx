@@ -34,6 +34,7 @@ type ModalProps = {
   className?: string;
   closeOnBackdrop?: boolean;
   showCloseButton?: boolean;
+  footer?: ReactNode;
 };
 
 export const Modal = ({
@@ -44,6 +45,7 @@ export const Modal = ({
   className,
   closeOnBackdrop = true,
   showCloseButton = true,
+  footer,
 }: ModalProps) => {
   const { close, isVisible, shouldRender } = useOverlay(overlayKey);
 
@@ -86,7 +88,7 @@ export const Modal = ({
       <div
         role="dialog"
         className={cn(
-          'relative z-10 flex w-full max-h-[90vh] transition-all duration-300 ease-out flex-col overflow-hidden',
+          'relative z-10 flex w-full max-h-[85vh] transition-all duration-300 ease-out flex-col overflow-hidden',
           modalSizeClasses[size],
           'rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-100/80',
           isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-[0.97] opacity-0 translate-y-2',
@@ -94,10 +96,12 @@ export const Modal = ({
         )}
       >
         <ModalHeader onClose={showCloseButton ? close : undefined}>
-          <DrawerTitle>{title}</DrawerTitle>
+          <ModalTitle>{title}</ModalTitle>
         </ModalHeader>
 
-        <div className="min-h-0 flex-1">{children}</div>
+        <div className="min-h-0 flex-1 overflow-auto">{children}</div>
+
+        {footer && <ModalFooter>{footer}</ModalFooter>}
       </div>
     </div>,
     document.body,
@@ -111,7 +115,7 @@ interface ModalHeaderProps {
 
 export const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between mb-2">
       {children}
       {onClose && (
         <Button type="button" onClick={onClose} aria-label="Cerrar" size="icon-md" variant="ghost" className="">
@@ -125,15 +129,15 @@ export const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
 export const ModalTitle = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="w-full">
-      <Heading className="text-xl font-bold">{children}</Heading>
+      <Heading className="text-xl md:text-2xl  font-bold">{children}</Heading>
     </div>
   );
 };
 
 export const ModalBody = ({ children }: { children: React.ReactNode }) => {
-  return <div className="overflow-y-auto px-2 space-y-5 flex-1">{children}</div>;
+  return <div className="space-y-5 flex-1">{children}</div>;
 };
 
-export const ModalFooter = ({ children }: { children: React.ReactNode }) => {
-  return <div className="pt-6 flex justify-end gap-2">{children}</div>;
+export const ModalFooter = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+  return <div className={cn('pt-6 flex justify-end gap-2', className)}>{children}</div>;
 };

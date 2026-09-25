@@ -24,10 +24,7 @@ export const OnboardingShell = () => {
   return (
     <div className="min-h-[calc(100vh-80px)] bg-gray-50">
       <OnboardingSteps />
-      <div className="m-auto px-4 pt-10 max-w-4xl relative">
-        <Outlet />
-      </div>
-
+      <div className="m-auto px-4 pt-10 max-w-4xl relative">{<Outlet />}</div>
       <div className="h-28 w-full" />
     </div>
   );

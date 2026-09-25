@@ -32,8 +32,8 @@ const getSidebarItems = (slug: string) => [
     icon: <UserGroupIcon className="size-5" />,
   },
   {
-    label: 'Equipo',
-    href: `/${slug}/team`,
+    label: 'Profesionales',
+    href: `/${slug}/professionals`,
     icon: <UsersIcon className="size-5" />,
   },
   {

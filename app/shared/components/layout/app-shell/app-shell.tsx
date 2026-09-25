@@ -1,19 +1,22 @@
 import { Outlet } from 'react-router';
+import { useState } from 'react';
+
 import { TopBar } from './top-bar';
 import { Sidebar } from './sidebar/sidebar';
-import { useState } from 'react';
 
 export const AppShell = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-dvh min-h-0 overflow-hidden">
+    <div className="grid h-dvh min-h-0 grid-cols-1 lg:grid-cols-[18rem_1fr]">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="relative flex min-h-0 flex-1 flex-col px-2 sm:px-4 md:px-10">
+
+      <div className="flex min-h-0 min-w-0 flex-col">
         <TopBar onOpenSidebar={() => setSidebarOpen(true)} />
-        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
+
+        <main className="min-h-0 flex-1 flex flex-col px-2 sm:px-4 md:px-10">
           <Outlet />
-        </div>
+        </main>
       </div>
     </div>
   );

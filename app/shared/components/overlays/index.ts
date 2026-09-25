@@ -1,2 +1,2 @@
 export { OverlayRenderer } from './overlay-renderer';
-export { overlayRegistry, type OverlayComponentProps, type OverlayRegistry } from './overlay-registry';
+export { overlayRegistry, type OverlayKey, type OverlayPropsMap } from './overlay-registry';

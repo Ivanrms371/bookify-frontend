@@ -68,7 +68,7 @@ export const Callout = ({ type = 'info', icon, title, children, className = '' }
   return (
     <div className={cn('flex items-start gap-2 px-4 py-3 rounded-xl', colorClass.container, className)} role="status">
       <IconComponent className={cn('mt-0.5 size-5 shrink-0', colorClass.icon)} />
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-0.5 mt-0.5">
         {title && <p className={cn('text-sm font-medium', colorClass.title)}>{title}</p>}
         <p className={cn('text-sm', colorClass.paragraph)}>{children}</p>
       </div>

@@ -28,7 +28,7 @@
   }
 
   .btn-ghost:hover {
-    @apply bg-gray-200;
+    @apply bg-gray-100;
   }
 
   .btn-dashed {
@@ -52,12 +52,12 @@
   }
 
   .input {
-    @apply w-full h-10 bg-white rounded-xl border border-gray-200
+    @apply w-full h-10 bg-white rounded-lg border border-gray-300
     px-3 py-2 text-sm font-medium text-gray-800 outline-none transition;
   }
 
   .input:focus {
-    @apply border-0 ring ring-2 ring-indigo-600;
+    @apply border-indigo-500;
   }
 
   .input:-webkit-autofill,
@@ -86,7 +86,7 @@
   }
 
   .label {
-    @apply block text-sm font-medium text-gray-700;
+    @apply block  font-semibold text-gray-600;
   }
 
   .card {

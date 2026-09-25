@@ -1,7 +1,6 @@
 // overlay-registry.ts
 import { AppointmentWizardModal } from '@/features/appointments/components/appointment-wizard/appointment-wizard-modal';
-import { CreateCustomerDrawer } from '@/features/customers/components/overlays/create-customer-drawer';
-import { UpdateCustomerModal } from '@/features/customers/components/overlays/update-customer-drawer';
+import { UpdateCustomerModal } from '@/features/customers/components/overlays/update-customer-modal';
 import { DeleteCustomerModal } from '@/features/customers/components/overlays/delete-customer-modal';
 import { BlockCustomerModal } from '@/features/customers/components/overlays/block-customer-modal';
 import { UnblockCustomerModal } from '@/features/customers/components/overlays/unblock-customer-modal';
@@ -19,6 +18,8 @@ import { CancelInvitationModal } from '@/features/invitations/components/overlay
 import { AddExceptionModal } from '@/features/schedule/components/exceptions/add-exception-modal';
 import { UpdateExceptionModal } from '@/features/schedule/components/exceptions/update-exception-modal';
 import { DeleteExceptionModal } from '@/features/schedule/components/exceptions/delete-exception-modal';
+import { CreateCustomerModal } from '@/features/customers/components/overlays/create-customer-modal';
+import { CreateProfessionalModal } from '@/features/professionals/components/overlays/create-professional-modal';
 
 export const overlayRegistry = {
   'new-appointment-modal': AppointmentWizardModal,
@@ -30,8 +31,8 @@ export const overlayRegistry = {
   'delete-service-modal': DeleteServiceModal,
 
   // Customers
-  'create-customer-drawer': CreateCustomerDrawer,
-  'update-customer-drawer': UpdateCustomerModal,
+  'create-customer-modal': CreateCustomerModal,
+  'update-customer-modal': UpdateCustomerModal,
   'view-customer-drawer': ViewCustomerDrawer,
   'block-customer-modal': BlockCustomerModal,
   'unblock-customer-modal': UnblockCustomerModal,
@@ -43,6 +44,7 @@ export const overlayRegistry = {
   'cancel-invitation-modal': CancelInvitationModal,
 
   // Professionals
+  'create-professional-modal': CreateProfessionalModal,
   'update-professional-drawer': UpdateProfessionalDrawer,
   'delete-professional-modal': DeleteProfessionalModal,
 

@@ -17,11 +17,11 @@ export const PhoneCountryCode = ({ value, onChange, disabled }: PhoneCountryCode
         <button
           type="button"
           disabled={disabled}
-          className="flex shrink-0 items-center gap-2 h-10 w-28 bg-white rounded-xl border border-gray-200 px-3 text-sm font-medium text-gray-800 outline-none transition hover:bg-gray-50 focus:border-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:text-gray-500 disabled:hover:bg-gray-100"
+          className="flex shrink-0 items-center gap-2 h-10 w-28 bg-white rounded-lg border border-gray-300 px-3 text-sm font-medium text-gray-800 outline-none transition hover:bg-gray-50 focus:border-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:text-gray-500 disabled:hover:bg-gray-100"
         >
-          <img src={selectedCountry.flagUrl} alt={selectedCountry.name} className="w-5 h-auto rounded-xs shadow-sm object-cover" />
+          <img src={selectedCountry.flagUrl} alt={selectedCountry.name} className="w-4 h-auto rounded-xs shadow-sm object-cover" />
           <span>+{selectedCountry.dialCode}</span>
-          <ChevronDownIcon className="size-4 text-gray-400" />
+          <ChevronDownIcon className="size-4 text-gray-500" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -35,7 +35,7 @@ export const PhoneCountryCode = ({ value, onChange, disabled }: PhoneCountryCode
               onClick={() => onChange(c.dialCode)}
               className="flex cursor-pointer select-none items-center gap-3 rounded-lg px-2 py-2 text-sm outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
             >
-              <img src={c.flagUrl} alt={c.name} className="w-5 h-auto rounded-xs shadow-sm object-cover" />
+              <img src={c.flagUrl} alt={c.name} className="w-4 h-auto rounded-xs shadow-sm object-cover" />
               <span className="text-gray-800">{c.name}</span>
               <span className="text-gray-800 ml-auto">+{c.dialCode}</span>
             </DropdownMenu.Item>
