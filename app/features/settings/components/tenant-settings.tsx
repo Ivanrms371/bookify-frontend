@@ -50,7 +50,7 @@ export const TenantSettingsSection = () => {
         </ul>
       </div>
 
-      <div className="max-w-5xl w-full mx-auto">
+      <div className="max-w-5xl w-full mx-auto mt-10">
         {currentTab === 'general' && <TenantGeneralSettings />}
         {currentTab === 'booking' && <AppointmentSettings />}
         {currentTab === 'schedule' && <ScheduleSettings />}
