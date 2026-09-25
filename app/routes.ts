@@ -24,6 +24,7 @@ export default [
         route('professionals', 'routes/app/professionals.tsx'),
         route('reports', 'routes/app/reports.tsx'),
         route('settings', 'routes/app/settings.tsx'),
+        route('profile', 'routes/app/profile.tsx'),
       ]),
 
       route('billing', 'routes/app/billing.tsx'),
