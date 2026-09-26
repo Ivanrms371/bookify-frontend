@@ -10,9 +10,7 @@ import { Loader2 } from 'lucide-react';
 
 export const ProfessionalProfile = () => {
   const { data, isLoading } = useGetProfile();
-  // If the user doesn't have a professional profile, maybe we show a message.
-  // But let's build the form first.
-  const { register, handleSubmit, reset, formState: { errors, isDirty, isSubmitting } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors, isDirty, isSubmitting } } = useForm();
 
   useEffect(() => {
     if (data?.user?.professional) {
@@ -32,8 +30,7 @@ export const ProfessionalProfile = () => {
     );
   }
 
-  // DUMMY TO REPLACE, reset, formState: { errors, isDirty, isSubmitting } } = useForm();
-
+  
   const onSubmit = async (data: any) => {
     console.log(data);
     reset(data);

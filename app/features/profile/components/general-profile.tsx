@@ -22,8 +22,7 @@ export const GeneralProfile = () => {
     return <div className="py-20 flex justify-center"><Loader2 className="animate-spin text-gray-400" /></div>;
   }
 
-  // DUMMY TO REPLACE, reset, formState: { errors, isDirty, isSubmitting } } = useForm();
-
+  
   const onSubmit = async (data: any) => {
     // TODO: Connect API
     console.log(data);

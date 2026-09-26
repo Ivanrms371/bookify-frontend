@@ -1,4 +1,4 @@
-import { httpClient } from '@/core/api/httpClient';
+import { httpClient } from '@/core/http/httpClient';
 
 export interface ProfileResponse {
   user: {
