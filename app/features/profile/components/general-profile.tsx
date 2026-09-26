@@ -37,7 +37,7 @@ export const GeneralProfile = () => {
           <Text className="text-gray-500">Configura tus datos básicos como usuario de Turnify.</Text>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 gap-10 max-w-2xl">
           <FormField id="name" label="Nombre completo" error={errors.name?.message as string}>
             <Input {...register('name')} placeholder="Ej. Juan Pérez" />
           </FormField>
@@ -50,9 +50,7 @@ export const GeneralProfile = () => {
             <Input {...register('phone')} placeholder="+598 99 123 456" />
           </FormField>
 
-          <FormField id="bio" label="Biografía" error={errors.bio?.message as string}>
-            <Textarea {...register('bio')} placeholder="Cuéntanos un poco sobre ti..." rows={3} />
-          </FormField>
+          
         </div>
       </div>
 
