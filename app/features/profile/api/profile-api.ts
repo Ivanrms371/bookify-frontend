@@ -19,6 +19,8 @@ export interface ProfileResponse {
       avatarUrl: string | null;
       colorTheme: string | null;
       slotIntervalMinutes: number;
+      maxAdvancedDays: number;
+      minAdvancedMinutes: number;
     } | null;
   };
 }

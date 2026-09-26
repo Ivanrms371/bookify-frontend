@@ -27,19 +27,19 @@ export const SecurityProfile = () => {
 
           <div className="grid grid-cols-1 gap-6 max-w-md">
             <FormField id="currentPassword" label="Contraseña actual" error={errors.currentPassword?.message as string}>
-              <Input type="password" {...register('currentPassword')} />
+              <Input type="password" {...register('currentPassword')} fullWidth />
             </FormField>
             
             <FormField id="newPassword" label="Nueva contraseña" error={errors.newPassword?.message as string}>
-              <Input type="password" {...register('newPassword')} />
+              <Input type="password" {...register('newPassword')} fullWidth />
             </FormField>
           </div>
         </div>
       </form>
 
-      <div className="bg-white rounded-3xl border border-red-100 shadow-sm p-6 md:p-8">
+      <div className="bg-white rounded-3xl shadow-sm p-6 md:p-8">
         <div className="pb-6 border-b border-gray-100 mb-6">
-          <Text className="text-xl font-bold text-red-600">Zona de Peligro</Text>
+          <Text className="text-xl font-bold text-gray-800">Zona de Peligro</Text>
           <Text className="text-gray-500">Acciones destructivas e irreversibles.</Text>
         </div>
 
@@ -48,7 +48,7 @@ export const SecurityProfile = () => {
             <Text className="font-semibold text-gray-800">Eliminar cuenta</Text>
             <Text className="text-sm text-gray-500">Una vez que elimines tu cuenta, no hay vuelta atrás.</Text>
           </div>
-          <Button type="button" className="bg-red-50 text-red-600 hover:bg-red-100 font-semibold shrink-0">
+          <Button type="button" variant="secondary" className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-semibold shrink-0">
             Eliminar mi cuenta
           </Button>
         </div>
