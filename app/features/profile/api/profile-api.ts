@@ -25,7 +25,7 @@ export interface ProfileResponse {
 
 export class ProfileService {
   static async getProfile(): Promise<ProfileResponse> {
-    const { data } = await httpClient.get<ProfileResponse>('/users/me/profile');
+    const data = await httpClient.get<ProfileResponse>('/users/me/profile');
     return data;
   }
 }
