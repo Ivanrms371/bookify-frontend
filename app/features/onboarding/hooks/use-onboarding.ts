@@ -1,42 +1,27 @@
-import { useContext, useEffect, useRef } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useContext } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { OnboardingContext, ONBOARDING_STATUS_QUERY_KEY } from '../context/onboarding-context';
 import { onboardingApi } from '../api/onboarding-api';
-import { useLoadingScreen } from '@/shared/store/use-loading-screen';
 
-/** Crea el tenant inicial cuando el usuario está autenticado pero aún no tiene onboarding. */
+/**
+ * Fuente única de verdad para el onboarding.
+ * - Si el tenant activo aún no tiene onboarding, inicializa uno con POST /onboarding/init.
+ * - Si ya existe, lee el estado con GET /onboarding/status.
+ * Devuelve `{ data, isLoading, isError }` para que el contexto lo consuma directamente.
+ */
 export const useOnboardingInitializer = () => {
-  const queryClient = useQueryClient();
-  const { isAuthenticated, isLoading: isAuthLoading, session, setAuth } = useAuthStore();
-  const { show, hide } = useLoadingScreen();
-  const initStarted = useRef(false);
+  const { isAuthenticated, isLoading: isAuthLoading, session } = useAuthStore();
 
-  console.log('yo');
+  const hasOnboarding = !!session?.activeTenant?.onboardingStatus;
 
-  useEffect(() => {
-    if (isAuthLoading || !isAuthenticated) return;
-    if (session?.activeTenant?.onboardingStatus) return;
-    if (initStarted.current) return;
-
-    initStarted.current = true;
-
-    const initialize = async () => {
-      try {
-        show('Preparando tu experiencia...');
-        const status = await onboardingApi.init();
-
-        queryClient.setQueryData(ONBOARDING_STATUS_QUERY_KEY, status);
-      } catch (error) {
-        initStarted.current = false;
-        console.error('Error al inicializar onboarding:', error);
-      } finally {
-        hide();
-      }
-    };
-
-    initialize();
-  }, [isAuthLoading, isAuthenticated, session?.activeTenant?.onboardingStatus, setAuth, queryClient]);
+  return useQuery({
+    queryKey: ONBOARDING_STATUS_QUERY_KEY,
+    queryFn: () => (hasOnboarding ? onboardingApi.getStatus() : onboardingApi.init()),
+    enabled: isAuthenticated && !isAuthLoading,
+    retry: false,
+    staleTime: Infinity,
+  });
 };
 
 export const useOnboarding = () => {

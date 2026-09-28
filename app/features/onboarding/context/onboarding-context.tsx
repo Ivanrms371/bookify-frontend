@@ -1,11 +1,9 @@
 import { createContext, useEffect, useMemo, type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { ONBOARDING_STATUS_TO_ROUTE } from '@/shared/constants/onboarding';
 import { getOnboardingStepIdFromPathname } from '@/shared/utils/onboarding-steps';
-import { onboardingApi } from '../api/onboarding-api';
 import { useOnboardingInitializer } from '../hooks/use-onboarding';
-import { useAuthStore } from '@/core/auth/use-auth-store';
 import type { OnboardingStatusResponse, OnboardingStepStatus, OnboardingSavedData } from '../schemas/onboarding-status.schema';
 
 export const ONBOARDING_STATUS_QUERY_KEY = ['onboarding-status'] as const;
@@ -31,34 +29,15 @@ export const OnboardingContext = createContext<OnboardingContextType | undefined
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { isAuthenticated, isLoading: isAuthLoading, session } = useAuthStore();
 
-  useOnboardingInitializer();
+  const { data: onboardingData, isLoading, isError } = useOnboardingInitializer();
 
-  const {
-    data: onboardingData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ONBOARDING_STATUS_QUERY_KEY,
-    queryFn: () => onboardingApi.getStatus(),
-    enabled: isAuthenticated && !isAuthLoading && !!session?.activeTenant,
-  });
-
-  const totalSteps = useMemo(() => onboardingData?.steps.length ?? 0, [onboardingData]);
+  const totalSteps = useMemo(() => onboardingData?.steps?.length ?? 0, [onboardingData]);
   const currentStep = useMemo(() => getOnboardingStepIdFromPathname(window.location.pathname), [onboardingData]);
 
   const setOnboardingData = (data: OnboardingStatusResponse) => {
     queryClient.setQueryData(ONBOARDING_STATUS_QUERY_KEY, data);
   };
-
-  // useEffect(() => {
-  //   if (!onboardingData) return;
-  //   const route = STATUS_TO_ROUTE[onboardingData.onboardingStatus];
-  //   if (route) {
-  //     navigate(route);
-  //   }
-  // }, [onboardingData]);
 
   const back = () => {
     const currentStepId = getOnboardingStepIdFromPathname(window.location.pathname);

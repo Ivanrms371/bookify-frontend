@@ -8,9 +8,8 @@ export const useSignup = () => {
     return useMutation({
         mutationFn: authApi.signup,
         onSuccess: (_, variables) => {
-            navigate('/auth/verify-email', {
-                state: { email: variables.email }
-            })
+            const search = new URLSearchParams({ email: variables.email }).toString()
+            navigate(`/auth/verify-email?${search}`)
         }
     })
 
