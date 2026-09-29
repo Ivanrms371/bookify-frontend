@@ -29,8 +29,16 @@ export const ScheduleSelectionStep = () => {
   };
 
   const handleCreateAppointment = () => {
-    if (!state.data.time || !state.data.date) return;
-    const parsed = createAppointmentSchema.parse(state.data);
+    const { customerId, serviceId, professionalId, date, time } = state.data;
+    if (!serviceId || !professionalId || !time || !date) return;
+
+    const parsed = createAppointmentSchema.parse({
+      serviceId,
+      professionalId,
+      startsAt: new Date(`${date}T${time}:00`).toISOString(),
+      ...(customerId ? { customerId } : {}),
+    });
+
     createAppointment(parsed);
   };
 

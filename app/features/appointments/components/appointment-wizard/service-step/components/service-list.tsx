@@ -21,8 +21,8 @@ export const ServiceList = ({ services, onSelect, selectedServiceId }: Props) =>
           )}
           onClick={() => onSelect(service.id)}
         >
-          {service.image ? (
-            <img src={service.image} alt={service.name} className="size-12 rounded-lg object-cover border border-gray-200 s shrink-0" />
+          {service.imageUrl ? (
+            <img src={service.imageUrl} alt={service.name} className="size-12 rounded-lg object-cover border border-gray-200 s shrink-0" />
           ) : (
             <div className="size-12 rounded-lg border border-gray-200  shrink-0 bg-gray-50 flex justify-center items-center">
               <PhotoIcon className="size-6 text-gray-400" />

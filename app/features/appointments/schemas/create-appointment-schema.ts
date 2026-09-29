@@ -1,11 +1,10 @@
 import { z } from 'zod';
 
 export const createAppointmentSchema = z.object({
-  customerId: z.string(),
-  serviceId: z.string(),
-  professionalId: z.string(),
-  date: z.string(),
-  time: z.string(),
+  serviceId: z.string().uuid(),
+  professionalId: z.string().uuid(),
+  startsAt: z.string().datetime(),
+  customerId: z.string().uuid().optional(),
 });
 
 export type CreateAppointmentInput = z.infer<typeof createAppointmentSchema>;

@@ -1,5 +1,6 @@
 // overlay-registry.ts
 import { AppointmentWizardModal } from '@/features/appointments/components/appointment-wizard/appointment-wizard-modal';
+import { CreateAppointmentDrawer } from '@/features/appointments/components/overlays/create-appointment-drawer';
 import { UpdateCustomerModal } from '@/features/customers/components/overlays/update-customer-modal';
 import { DeleteCustomerModal } from '@/features/customers/components/overlays/delete-customer-modal';
 import { BlockCustomerModal } from '@/features/customers/components/overlays/block-customer-modal';
@@ -23,6 +24,7 @@ import { CreateProfessionalModal } from '@/features/professionals/components/ove
 
 export const overlayRegistry = {
   'new-appointment-modal': AppointmentWizardModal,
+  'create-appointment-drawer': CreateAppointmentDrawer,
 
   // Services
   'create-service-drawer': CreateServiceDrawer,

@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const ScheduleHeader = ({ selectedDate, onNext, onPrevious, onToday }: Props) => {
-  const { open } = useOverlay('new-appointment-modal');
+  const { open } = useOverlay('create-appointment-drawer');
 
   return (
     <div className="flex gap-2 justify-between items-center">
@@ -32,7 +32,7 @@ export const ScheduleHeader = ({ selectedDate, onNext, onPrevious, onToday }: Pr
       </div>
 
       <div>
-        <Button variant="primary" onClick={() => open({})}>
+        <Button variant="primary" onClick={() => open({ defaultDate: selectedDate.toISOString().split('T')[0] })}>
           <PlusIcon className="size-5" /> Nueva Reserva
         </Button>
       </div>

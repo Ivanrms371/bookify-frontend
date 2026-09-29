@@ -1,11 +1,12 @@
 import { ServiceEmptyState } from './service-empty-state';
+import { ServiceList } from './service-list';
 import { ServiceLoadingState } from './service-loading-state';
-import { ServiceListResults } from './service-list-results';
+import type { Service } from '@/features/services';
 
 interface Props {
   query: string;
   isLoading: boolean;
-  services: any[];
+  services: Service[];
 }
 
 export const ServiceSearchResults = ({ query, isLoading, services }: Props) => {
@@ -13,5 +14,5 @@ export const ServiceSearchResults = ({ query, isLoading, services }: Props) => {
   if (isLoading) return <ServiceLoadingState />;
   if (!services.length) return <ServiceEmptyState />;
 
-  return <ServiceListResults services={services} />;
+  return <ServiceList services={services} selectedServiceId={null} onSelect={() => {}} />;
 };

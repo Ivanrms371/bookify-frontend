@@ -2,7 +2,7 @@ import { Avatar } from '@/shared/components/ui/avatar';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Text } from '@/shared/components/typography';
 import { getInitials } from '@/shared/utils/string';
-import type { ProfessionalBasic } from '@/features/professional/types/professional.types';
+import type { ProfessionalBasic } from '@/features/professionals/types/professional.types';
 import { cn } from '@/shared/utils/cn';
 
 interface Props {
