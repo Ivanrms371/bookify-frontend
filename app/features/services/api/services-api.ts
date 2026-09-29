@@ -1,6 +1,6 @@
 import { httpClient } from '@/core/http/httpClient';
 import type { GetAllServicesParams, GetAllServicesResponse, Service, CreateServicePayload } from '../types/services.types';
-import type { ProfessionalBasic } from '@/features/professional/types/professional.types';
+import type { ProfessionalBasic } from '@/features/professionals/types/professional.types';
 
 export const servicesApi = {
   getAll: (params?: GetAllServicesParams) => httpClient.get<GetAllServicesResponse>(`/services`, { params }),
@@ -15,7 +15,7 @@ export const servicesApi = {
 
   delete: (id: string) => httpClient.delete(`/services/${id}`),
 
-  getAllProfessionals: (id: string) => httpClient.get<ProfessionalBasic[]>(`services/${id}/professionals`),
+  getAllProfessionals: (id: string) => httpClient.get<ProfessionalBasic[]>(`/services/${id}/professionals`),
 
   createMany: async (services: CreateServicePayload[]) => {
     for (const service of services) {

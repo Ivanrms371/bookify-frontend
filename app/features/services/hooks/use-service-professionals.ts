@@ -3,7 +3,7 @@ import { servicesApi } from '../api/services-api';
 
 export const useServiceProfessionals = (serviceId: string | null) => {
   return useQuery({
-    queryKey: ['service', serviceId, 'professionals'],
+    queryKey: ['services', serviceId, 'professionals'],
     queryFn: () => servicesApi.getAllProfessionals(serviceId!),
     enabled: !!serviceId,
   });

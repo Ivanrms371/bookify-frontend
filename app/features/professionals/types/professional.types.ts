@@ -1,5 +1,3 @@
-import type { WeeklySchedule } from '@/shared/constants/week-days';
-
 type CommissionType = 'PERCENTAGE' | 'FIXED';
 
 export type Professional = {
@@ -22,13 +20,13 @@ export type Professional = {
 
 export type ProfessionalBasic = {
   id: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   name: string;
-  colorTheme: string;
-  bio: string;
-  email: string;
-  phoneNumber: string;
-  phoneCountryCode: string;
+  colorTheme: string | null;
+  bio: string | null;
+  email?: string;
+  phoneNumber?: string;
+  phoneCountryCode?: string;
 };
 
 import type { Role } from '@/shared/types';
