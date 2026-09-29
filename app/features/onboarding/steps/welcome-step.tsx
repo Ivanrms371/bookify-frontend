@@ -32,7 +32,7 @@ export const WelcomeStep = () => {
 
   return (
     <>
-      <Heading as="h2" className="text-xl md:text-2xl mb-1 font-semibold">
+      <Heading as="h2" className="text-xl md:text-3xl mb-1 font-medium">
         Bienvenido Iván! 👋, ¿Cómo usarás Bookify?
       </Heading>
       <Text className="max-w-xl mb-4">
@@ -62,7 +62,7 @@ export const WelcomeStep = () => {
                 onClick={() => handleChangeWorkspaceType(option.value)}
               >
                 <Icon className={cn('size-6 text-gray-500', isSelected && 'text-indigo-500')} />
-                <Heading className="text-xl font-medium" as="h3">
+                <Heading className="text-lg md:text-xl font-medium " as="h3">
                   {option.label}
                 </Heading>
                 <Text className="text-sm text-gray-500">{option.description}</Text>

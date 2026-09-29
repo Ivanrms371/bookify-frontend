@@ -115,10 +115,10 @@ interface ModalHeaderProps {
 
 export const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
   return (
-    <div className="flex items-center justify-between mb-2">
+    <div className="flex items-center justify-between mb-4">
       {children}
       {onClose && (
-        <Button type="button" onClick={onClose} aria-label="Cerrar" size="icon-md" variant="ghost" className="">
+        <Button type="button" onClick={onClose} aria-label="Cerrar" size="icon-sm" variant="ghost" className="">
           <XMarkIcon className="size-7" />
         </Button>
       )}

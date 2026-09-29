@@ -28,6 +28,8 @@ axiosInstance.interceptors.request.use((config) => {
     }
   }
 
+  const session = useAuthStore.getState().session;
+
   if (urlSlug) {
     config.headers['x-tenant-slug'] = urlSlug;
 
@@ -36,6 +38,8 @@ axiosInstance.interceptors.request.use((config) => {
     if (session?.activeTenant?.slug === urlSlug) {
       config.headers['x-tenant-id'] = session.activeTenant.id;
     }
+  } else if (session?.activeTenant?.id) {
+    config.headers['x-tenant-id'] = session.activeTenant.id;
   }
 
   console.group(`🚀 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
@@ -57,8 +61,6 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    console.log('ERROR AQUI -->', error);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

@@ -5,7 +5,12 @@ export interface ProfileResponse {
     id: string;
     name: string;
     email: string;
+    emailVerifiedAt: string | null;
     avatarUrl: string | null;
+    phoneVerifiedAt: string | null;
+    hasPassword: boolean;
+    hasGoogle: boolean;
+    createdAt: string;
     phoneCountryCode: string | null;
     phoneNumber: string | null;
     birthDate: string | null;
@@ -14,6 +19,9 @@ export interface ProfileResponse {
       id: string;
       name: string;
       email: string;
+      phoneCountryCode: string;
+      phoneNumber: string;
+      isActive: boolean;
       profession: string | null;
       bio: string | null;
       avatarUrl: string | null;
@@ -21,6 +29,8 @@ export interface ProfileResponse {
       slotIntervalMinutes: number;
       maxAdvancedDays: number;
       minAdvancedMinutes: number;
+      usesTenantSchedule?: boolean;
+      workingHours?: { dayOfWeek: number; opensAt: number; closesAt: number }[];
     } | null;
   };
 }

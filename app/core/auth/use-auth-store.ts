@@ -36,6 +36,7 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           const session = await authApi.getMe();
+          console.log(session);
           set({ session, isAuthenticated: true });
           return session;
         } catch {

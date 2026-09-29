@@ -7,42 +7,58 @@ import { Text } from '@/shared/components/typography';
 import { useForm, Controller } from 'react-hook-form';
 import { useGetProfile } from '../hooks/use-get-profile';
 import { useAuthStore } from '@/core/auth/use-auth-store';
-import { useEffect, useRef, useState } from 'react';
+import { PhoneCountryCode } from '@/shared/components/form/phone-country-code';
+import { Badge } from '@/shared/components/ui/badge';
+import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { CameraIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { cn } from '@/shared/utils';
-
-const getInitials = (name: string) => {
-  return name.substring(0, 2).toUpperCase();
-};
+import { UserCircleIcon } from '@heroicons/react/24/outline';
+import { ProfileAvatar } from './profile-avatar';
+import { ScheduleForm } from '@/features/schedule/components/schedule-form';
+import { mapWorkingHoursToForm } from '../utils/map-working-hours';
+import { Card } from '@/shared/components/ui';
 
 export const ProfessionalProfile = () => {
   const { data, isLoading } = useGetProfile();
   const session = useAuthStore((state) => state.session);
   const tenantName = session?.activeTenant?.name || 'este negocio';
 
+  const professional = data?.user?.professional;
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const avatarInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, reset, control, formState: { errors, isDirty, isSubmitting } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm();
 
   useEffect(() => {
-    if (data?.user?.professional) {
-      reset(data.user.professional);
-      if (data.user.professional.avatarUrl) setAvatarPreview(data.user.professional.avatarUrl);
+    if (professional) {
+      reset(professional);
+      setAvatarPreview(professional.avatarUrl);
     }
-  }, [data, reset]);
+  }, [professional, reset]);
 
   if (isLoading) {
-    return <div className="py-20 flex justify-center"><Loader2 className="animate-spin text-gray-400" /></div>;
+    return (
+      <div className="py-20 flex justify-center">
+        <Loader2 className="animate-spin text-gray-400" />
+      </div>
+    );
   }
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setAvatarPreview(URL.createObjectURL(file));
-    }
-  };
+  if (!professional) {
+    return (
+      <div className="bg-white rounded-3xl shadow-sm p-10 flex flex-col items-center text-center gap-3">
+        <UserCircleIcon className="size-12 text-gray-300" />
+        <Text className="text-lg font-bold text-gray-800">No eres profesional en {tenantName}</Text>
+        <Text className="text-gray-500 max-w-md">
+          Cuando un administrador te agregue como profesional, aquí podrás editar lo que ven tus clientes al reservar.
+        </Text>
+      </div>
+    );
+  }
 
   const onSubmit = async (formData: any) => {
     console.log(formData);
@@ -50,130 +66,136 @@ export const ProfessionalProfile = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
-      <div className="bg-white rounded-3xl shadow-sm p-6 md:p-8">
-        <div className="pb-6 border-b border-gray-100 mb-8">
-          <Text className="text-xl font-bold text-gray-800">Perfil Profesional en {tenantName}</Text>
-          <Text className="text-gray-500">Esto verán tus clientes al reservar.</Text>
-        </div>
+    <div className="space-y-12">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
+        <Card className="p-6 md:p-8">
+          <div className="pb-6 border-b border-gray-100 mb-8">
+            <div className="flex items-center gap-3">
+              <Text className="text-xl font-bold text-gray-800">Perfil Profesional en {tenantName}</Text>
+              {professional.isActive ? <Badge variant="green">Activo</Badge> : <Badge variant="red">Inactivo</Badge>}
+            </div>
+            <Text className="text-gray-500">Esto verán tus clientes al reservar.</Text>
+          </div>
 
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col md:flex-row gap-6 md:items-center">
-            
-            <div
-              className={cn(
-                'size-24 md:size-28 shrink-0 rounded-full border-4 border-white bg-white shadow-md overflow-hidden relative group/logo',
-                !avatarPreview && 'cursor-pointer hover:shadow-lg transition-all',
-              )}
-              onClick={() => {
-                if (!avatarPreview) avatarInputRef.current?.click();
-              }}
-            >
-              {avatarPreview ? (
-                <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gray-50 flex items-center justify-center">
-                  <div className="text-2xl text-gray-800 font-bold group-hover/logo:opacity-0 transition-opacity duration-300">
-                    {getInitials(data?.user?.professional?.name ?? 'P')}
-                  </div>
-                </div>
-              )}
+          <div className="flex flex-col gap-10">
+            <div className="flex flex-col md:flex-row gap-6 md:items-center">
+              <ProfileAvatar
+                name={professional?.name ?? 'P'}
+                preview={avatarPreview}
+                onChange={(file) => setAvatarPreview(URL.createObjectURL(file))}
+                onRemove={() => setAvatarPreview(null)}
+              />
 
-              <div className="absolute inset-0 opacity-0 group-hover/logo:opacity-100 transition-all duration-300 flex items-center justify-center">
-                {!avatarPreview ? (
-                  <div className="flex flex-col items-center justify-center text-gray-800 bg-white/60 w-full h-full">
-                    <CameraIcon className="size-6" />
-                  </div>
-                ) : (
-                  <div className="flex gap-2 items-center bg-black/40 w-full h-full justify-center">
-                    <button
-                      type="button"
-                      className="p-2 bg-white/90 rounded-full hover:bg-white text-gray-800 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        avatarInputRef.current?.click();
-                      }}
-                      title="Cambiar"
-                    >
-                      <CameraIcon className="size-4" />
-                    </button>
-                    <button
-                      type="button"
-                      className="p-2 bg-white/90 rounded-full hover:bg-red-50 text-red-600 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setAvatarPreview(null);
-                      }}
-                      title="Eliminar"
-                    >
-                      <TrashIcon className="size-4" />
-                    </button>
-                  </div>
-                )}
+              <div className="w-full">
+                <FormField id="name" label="Nombre a mostrar" error={errors.name?.message as string}>
+                  <Input {...register('name')} placeholder="Ej. Juan Pérez" fullWidth />
+                </FormField>
               </div>
             </div>
-            
-            <input type="file" ref={avatarInputRef} className="hidden" accept="image/*" onChange={handleAvatarChange} />
 
-            <div className="w-full">
-              <FormField id="name" label="Nombre a mostrar" error={errors.name?.message as string}>
-                <Input {...register('name')} placeholder="Ej. Juan Pérez" fullWidth />
-              </FormField>
+            <div className="flex flex-col md:flex-row gap-10">
+              <div className="w-full">
+                <FormField id="professionalEmail" label="Correo de contacto" error={errors.email?.message as string}>
+                  <Input type="email" {...register('email')} placeholder="juan@ejemplo.com" fullWidth />
+                </FormField>
+              </div>
+
+              <div className="w-full">
+                <FormField id="professionalPhone" label="Teléfono de contacto" error={errors.phoneNumber?.message as string}>
+                  <div className="flex gap-2 w-full">
+                    <Controller
+                      name="phoneCountryCode"
+                      control={control}
+                      render={({ field }) => <PhoneCountryCode value={field.value} onChange={field.onChange} />}
+                    />
+                    <Input {...register('phoneNumber')} placeholder="99 123 456" className="w-full flex-1" fullWidth />
+                  </div>
+                </FormField>
+              </div>
             </div>
+
+            <div className="flex flex-col md:flex-row gap-10">
+              <div className="w-full">
+                <FormField id="profession" label="Profesión o Cargo" error={errors.profession?.message as string}>
+                  <Input {...register('profession')} placeholder="Ej. Barbero Senior" fullWidth />
+                </FormField>
+              </div>
+
+              <div className="w-full">
+                <FormField
+                  id="colorTheme"
+                  label="Color de agenda"
+                  description="Identifica tus turnos en la agenda"
+                  error={errors.colorTheme?.message as string}
+                >
+                  <Controller
+                    name="colorTheme"
+                    control={control}
+                    render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
+                  />
+                </FormField>
+              </div>
+            </div>
+
+            <FormField id="bio" label="Biografía Profesional" error={errors.bio?.message as string}>
+              <Textarea {...register('bio')} placeholder="Describe tu experiencia profesional y lo que te destaca..." rows={4} />
+            </FormField>
+          </div>
+        </Card>
+
+        <Card className="p-6 md:p-8">
+          <div className="pb-6 border-b border-gray-100 mb-8">
+            <Text className="text-xl font-bold text-gray-800">Preferencias de Agenda</Text>
+            <Text className="text-gray-500">Configuraciones específicas para tu agenda personal.</Text>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-10">
-            <div className="w-full">
-              <FormField id="profession" label="Profesión o Cargo" error={errors.profession?.message as string}>
-                <Input {...register('profession')} placeholder="Ej. Barbero Senior" fullWidth />
-              </FormField>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <FormField
+              id="slotIntervalMinutes"
+              label="Intervalo de turnos"
+              description="En minutos"
+              error={errors.slotIntervalMinutes?.message as string}
+            >
+              <Input type="number" {...register('slotIntervalMinutes')} placeholder="30" fullWidth />
+            </FormField>
 
-            <div className="w-full">
-              <FormField id="colorTheme" label="Color de perfil" error={errors.colorTheme?.message as string}>
-                <Controller
-                  name="colorTheme"
-                  control={control}
-                  render={({ field }) => (
-                    <ColorPicker value={field.value} onChange={field.onChange} />
-                  )}
-                />
-              </FormField>
-            </div>
+            <FormField
+              id="minAdvancedMinutes"
+              label="Anticipación mínima"
+              description="En minutos antes del turno"
+              error={errors.minAdvancedMinutes?.message as string}
+            >
+              <Input type="number" {...register('minAdvancedMinutes')} placeholder="30" fullWidth />
+            </FormField>
+
+            <FormField
+              id="maxAdvancedDays"
+              label="Anticipación máxima"
+              description="Días disponibles a futuro"
+              error={errors.maxAdvancedDays?.message as string}
+            >
+              <Input type="number" {...register('maxAdvancedDays')} placeholder="30" fullWidth />
+            </FormField>
           </div>
+        </Card>
 
-          <FormField id="bio" label="Biografía Profesional" error={errors.bio?.message as string}>
-            <Textarea {...register('bio')} placeholder="Describe tu experiencia profesional y lo que te destaca..." rows={4} />
-          </FormField>
+        <FloatingSaveBar isDirty={isDirty} isSubmitting={isSubmitting} onReset={() => reset()} />
+      </form>
+
+      <Card className="p-6 md:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <div className="pb-6 border-b border-gray-100 mb-8">
+            <Text className="text-xl font-bold text-gray-800">Tus Horarios</Text>
+            <Text className="text-gray-500">Por el momento usamos horarios del negocio, puedes cambiarlos y tener los tuyos propios.</Text>
+          </div>
         </div>
-      </div>
 
-      <div className="bg-white rounded-3xl shadow-sm p-6 md:p-8">
-        <div className="pb-6 border-b border-gray-100 mb-8">
-          <Text className="text-xl font-bold text-gray-800">Preferencias de Agenda</Text>
-          <Text className="text-gray-500">Configuraciones específicas para tu agenda personal.</Text>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          <FormField id="slotIntervalMinutes" label="Intervalo de turnos" description="En minutos" error={errors.slotIntervalMinutes?.message as string}>
-            <Input type="number" {...register('slotIntervalMinutes')} placeholder="30" fullWidth />
-          </FormField>
-          
-          <FormField id="minAdvancedMinutes" label="Anticipación mínima" description="En minutos antes del turno" error={errors.minAdvancedMinutes?.message as string}>
-            <Input type="number" {...register('minAdvancedMinutes')} placeholder="30" fullWidth />
-          </FormField>
-
-          <FormField id="maxAdvancedDays" label="Anticipación máxima" description="Días disponibles a futuro" error={errors.maxAdvancedDays?.message as string}>
-            <Input type="number" {...register('maxAdvancedDays')} placeholder="30" fullWidth />
-          </FormField>
-        </div>
-      </div>
-
-      <FloatingSaveBar 
-        isDirty={isDirty} 
-        isSubmitting={isSubmitting} 
-        onReset={() => reset()} 
-      />
-    </form>
+        <ScheduleForm
+          id="professional-schedule-form"
+          defaultValues={mapWorkingHoursToForm(professional.workingHours)}
+          onSubmit={(values) => console.log(values)}
+        />
+      </Card>
+    </div>
   );
 };

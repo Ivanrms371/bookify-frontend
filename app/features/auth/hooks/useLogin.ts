@@ -14,8 +14,6 @@ export const useLogin = () => {
 
       const tenant = data?.activeTenant;
 
-      console.log(tenant);
-
       if (!tenant) {
         navigate('/onboarding/welcome');
       } else {

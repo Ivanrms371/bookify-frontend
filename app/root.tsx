@@ -6,9 +6,10 @@ import { queryClient } from '@/core/query/queryClient';
 import { AuthProvider } from '@/core/auth/auth-provider';
 import { ErrorBoundary as CustomErrorBoundary } from '@/core/error/ErrorBoundary';
 import '@/styles.css';
+import '@fontsource/geist-sans/400.css';
+import '@fontsource/geist-sans/500.css';
+import '@fontsource/geist-sans/600.css';
 import { OverlayRenderer } from './shared/components/overlays';
-
-export const links: Route.LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

@@ -6,6 +6,8 @@ export default function RouteGuard() {
   const { isAuthenticated, session } = useAuthStore();
   const location = useLocation();
 
+  console.log(session);
+
   if (!isAuthenticated) {
     if (location.pathname.startsWith('/auth')) {
       return <Outlet />;
@@ -17,6 +19,9 @@ export default function RouteGuard() {
   const tenant = session?.activeTenant;
 
   if (!tenant) {
+    if (location.pathname.startsWith('/onboarding')) {
+      return <Outlet />;
+    }
     return <Navigate to="/onboarding/welcome" replace />;
   }
 

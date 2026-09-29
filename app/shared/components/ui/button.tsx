@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant: 'primary' | 'secondary' | 'ghost' | 'danger' | 'dashed';
-  size?: 'sm' | 'md' | 'lg' | 'icon' | 'icon-md';
+  size?: 'sm' | 'md' | 'lg' | 'icon' | 'icon-md' | 'icon-sm';
   isSubmitting?: boolean;
   fullWidth?: boolean;
 
@@ -38,6 +38,7 @@ export const Button = ({
 
     icon: 'p-1.5',
     'icon-md': 'size-10',
+    'icon-sm': 'size-8',
   };
 
   return (

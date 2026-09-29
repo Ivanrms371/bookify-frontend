@@ -30,12 +30,10 @@ export const ScheduleForm = ({ id = 'schedule-form', defaultValues, onSubmit, ch
   return (
     <FormProvider {...methods}>
       <form id={id} onSubmit={methods.handleSubmit(onSubmit)} className="relative">
-        <div className="bg-white rounded-3xl shadow-md p-6 md:p-8">
-          <div className="@container pl-0.5 pr-2 space-y-5 overflow-x-hidden custom-scrollbar">
-            {fields.map((field, index) => (
-              <DayScheduleRow key={field.id} dayIndex={index} />
-            ))}
-          </div>
+        <div className="@container pl-0.5 pr-2 space-y-5 overflow-x-hidden custom-scrollbar">
+          {fields.map((field, index) => (
+            <DayScheduleRow key={field.id} dayIndex={index} />
+          ))}
         </div>
         {children}
       </form>

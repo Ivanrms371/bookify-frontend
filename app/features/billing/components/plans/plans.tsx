@@ -8,7 +8,7 @@ export const Plans = () => {
 
   return (
     <>
-      <Heading className="font-semibold text-center mb-6">Selecciona un plan</Heading>
+      <Heading className="font-semibold text-4xl md:text-5xl text-center mb-6">Selecciona un plan</Heading>
       <div className="relative mb-8 flex w-72 gap-4 rounded-full border border-gray-100 bg-white p-1 mx-auto">
         <button
           onClick={() => setIsAnnual(false)}

@@ -51,9 +51,11 @@ export const PlanCard = ({ plan, isAnnual }: Props): React.JSX.Element => {
             <>
               {hasDiscount ? (
                 <div className="relative flex w-fit items-center gap-1 h-8">
-                  <span className={cn('text-sm text-gray-400', isPopular && 'text-gray-500')}>$</span>
+                  <span className={cn('text-sm font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>$</span>
 
-                  <span className={cn('text-lg font-semibold text-gray-400', isPopular && 'text-gray-500')}>{comparePrice / 12}</span>
+                  <span className={cn('text-lg font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>
+                    {comparePrice / 12}
+                  </span>
 
                   <span className={cn('text-xs text-gray-400', isPopular && 'text-gray-500')}>/mes</span>
 
@@ -66,11 +68,13 @@ export const PlanCard = ({ plan, isAnnual }: Props): React.JSX.Element => {
           )}
 
           <div className="mb-2 flex items-end gap-1">
-            <span className={cn('text-2xl font-medium text-gray-800', isPopular && 'text-gray-100')}>$</span>
+            <span className={cn('text-2xl font-display font-medium text-gray-800', isPopular && 'text-gray-100')}>$</span>
 
-            <span className={cn('text-6xl leading-none font-semibold text-gray-800', isPopular && 'text-gray-100')}>{displayPrice}</span>
+            <span className={cn('text-6xl font-display leading-12 font-bold text-gray-800', isPopular && 'text-gray-100')}>
+              {displayPrice}
+            </span>
 
-            <span className={cn('text-base text-gray-600', isPopular && 'text-gray-300')}>/mes</span>
+            <span className={cn('text-base font-medium text-gray-600', isPopular && 'text-gray-300')}>/mes</span>
           </div>
 
           <p className={cn('text-left text-sm text-gray-600', isPopular && 'text-gray-300')}>{description}</p>

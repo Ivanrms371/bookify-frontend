@@ -31,7 +31,7 @@ export const TopBar = ({ onOpenSidebar }: Props) => {
       <header className="sticky top-0 mx-auto w-full z-40 flex items-center gap-4 bg-gray-50/80 backdrop-blur-md py-8 px-2 sm:px-4 md:px-10 mb-0">
         <div className="flex justify-between items-center w-full">
           <div className="flex-1">
-            <Heading className="font-me">{title}</Heading>
+            <Heading>{title}</Heading>
           </div>
           <div className="flex justify-end items-center">
             <div className="flex items-center gap-4">

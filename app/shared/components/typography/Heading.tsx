@@ -6,7 +6,7 @@ type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> & {
 
 export const Heading = ({ as: Tag = 'h2', className = '', children, ...rest }: HeadingProps) => {
   return (
-    <Tag className={cn('font-medium text-2xl md:text-3xl', 'text-gray-800', className)} {...rest}>
+    <Tag className={cn('font-medium font-display text-2xl md:text-4xl', 'text-gray-800', className)} {...rest}>
       {children}
     </Tag>
   );

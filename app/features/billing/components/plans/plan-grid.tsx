@@ -11,7 +11,7 @@ interface Props {
 
 export const PlanGrid = ({ isAnnual }: Props) => {
   return (
-    <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-4">
+    <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {PLANS.map((plan) => {
         return <PlanCard plan={plan} isAnnual={isAnnual} />;
       })}

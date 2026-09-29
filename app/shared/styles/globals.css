@@ -1,22 +1,7 @@
 @theme {
-  /* --color-primary: #2b4c7e;
-  --color-primary-hover: #1f3a5f;
-  --color-primary-active: #162a45;
-
-  --color-text: #0f172a;
-  --color-muted: #64748b;
-
-  --color-bg: #f8fafc;
-  --color-surface: #ffffff;
-
-  --color-border: #e2e8f0;
-
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444; */
-
   /* Modificamos los fallbacks para que use los del sistema en lugar de Times New Roman */
-  --font-sans: 'Satoshi', 'Times New Roman', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Cabinet Grotesk', ui-sans-serif, system-ui, sans-serif;
 
   /* Shadcn UI Colors (Gray theme) */
   --color-background: #ffffff;
@@ -40,10 +25,10 @@
   --color-border: #e4e4e7;
   --color-input: #e4e4e7;
   --color-ring: #18181b;
-  
+
   --color-popover: #ffffff;
   --color-popover-foreground: #09090b;
-  
+
   --color-card: #ffffff;
   --color-card-foreground: #09090b;
 
