@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { format, parseISO } from 'date-fns';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { addDays, differenceInCalendarDays, format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/shared/components/ui';
@@ -30,65 +30,77 @@ export function AppointmentDayPicker({
 }: Props) {
   const strip = useRef<HTMLDivElement>(null);
   const selected = useRef<HTMLButtonElement>(null);
-  const previousPositions = useRef<number[]>([]);
-  const pageDirection = useRef<-1 | 1 | null>(null);
-  const [atStart, setAtStart] = useState(true);
+  const [range, setRange] = useState(() => ({
+    start: format(addDays(parseISO(days[0].date), -42), 'yyyy-MM-dd'),
+    end: format(addDays(parseISO(days[days.length - 1].date), 42), 'yyyy-MM-dd'),
+  }));
+  const pendingScroll = useRef<{ anchor: string; target: string } | null>(null);
+  const initialized = useRef(false);
+  const renderedDays = Array.from(
+    { length: differenceInCalendarDays(parseISO(range.end), parseISO(range.start)) + 1 },
+    (_, index) => {
+      const date = addDays(parseISO(range.start), index);
+      return { date: format(date, 'yyyy-MM-dd'), dayNumber: format(date, 'd'), label: format(date, 'EEE', { locale: es }).replace('.', '') };
+    },
+  );
+  const scrollBehavior = (): ScrollBehavior =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
 
   const moveDays = (direction: -1 | 1) => {
     const container = strip.current;
     if (!container) return;
     const cards = Array.from(container.querySelectorAll<HTMLButtonElement>('button'));
-    if (!cards.length) return;
-    const firstLeft = cards[0].offsetLeft;
-    const stride = cards[1] ? cards[1].offsetLeft - firstLeft : cards[0].offsetWidth;
-    const visibleCount = Math.max(1, Math.floor((container.clientWidth - firstLeft * 2 + stride - cards[0].offsetWidth) / stride));
-    const currentIndex = Math.round(container.scrollLeft / stride);
-    const nextIndex = currentIndex + direction * visibleCount;
-    if (direction < 0 && previousPositions.current.length > 0) {
-      const left = previousPositions.current.pop()!;
-      setAtStart(left <= 1);
-      container.scrollTo({ left, behavior: 'smooth' });
-      return;
+    const stride = cards[1].offsetLeft - cards[0].offsetLeft;
+    const visibleCount = Math.max(1, Math.floor((container.clientWidth - 8 + stride - cards[0].offsetWidth) / stride));
+    const index = Math.round(container.scrollLeft / stride);
+    const anchor = renderedDays[index].date;
+    const target = format(addDays(parseISO(anchor), direction * visibleCount), 'yyyy-MM-dd');
+    if (target < range.start || target > format(addDays(parseISO(range.end), -visibleCount), 'yyyy-MM-dd')) {
+      pendingScroll.current = { anchor, target };
+      setRange({
+        start: target < range.start ? format(addDays(parseISO(target), -42), 'yyyy-MM-dd') : range.start,
+        end: target > format(addDays(parseISO(range.end), -visibleCount), 'yyyy-MM-dd')
+          ? format(addDays(parseISO(target), 42), 'yyyy-MM-dd') : range.end,
+      });
+    } else {
+      container.scrollTo({ left: differenceInCalendarDays(parseISO(target), parseISO(range.start)) * stride, behavior: scrollBehavior() });
     }
-    if (direction < 0 && container.scrollLeft <= 1) {
-      if (onPrevious) pageDirection.current = -1;
-      onPrevious?.(visibleCount);
-      return;
-    }
-    if (direction > 0 && container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
-      if (onNext) pageDirection.current = 1;
-      onNext?.(days.length);
-      return;
-    }
-    const target = cards[Math.max(0, Math.min(cards.length - 1, nextIndex))];
-    const left = Math.min(target.offsetLeft - firstLeft, container.scrollWidth - container.clientWidth);
-    if (direction > 0) previousPositions.current.push(container.scrollLeft);
-    setAtStart(left <= 1);
-    container.scrollTo({ left, behavior: 'smooth' });
+    if (direction < 0) onPrevious?.(visibleCount);
+    else onNext?.(visibleCount);
   };
 
-  useEffect(() => {
-    previousPositions.current = [];
-    strip.current?.scrollTo({ left: 0 });
-    setAtStart(true);
-    const direction = pageDirection.current;
-    pageDirection.current = null;
-    const content = strip.current?.firstElementChild;
-    if (direction && content && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      content.animate(
-        [{ transform: `translateX(${direction * 40}px)`, opacity: 0 }, { transform: 'translateX(0)', opacity: 1 }],
-        { duration: 250, easing: 'ease-out' },
-      );
+  useLayoutEffect(() => {
+    const container = strip.current;
+    if (!container) return;
+    const cards = container.querySelectorAll<HTMLButtonElement>('button');
+    const stride = cards[1].offsetLeft - cards[0].offsetLeft;
+    const alignInitialDay = () => {
+      const button = selected.current;
+      if (initialized.current || !button || !container.clientWidth || !button.offsetWidth) return;
+      container.scrollTo({ left: button.offsetLeft - cards[0].offsetLeft, behavior: 'instant' });
+      initialized.current = true;
+    };
+    alignInitialDay();
+    const observer = new ResizeObserver(alignInitialDay);
+    observer.observe(container);
+    const pending = pendingScroll.current;
+    if (pending) {
+      pendingScroll.current = null;
+      container.scrollTo({ left: differenceInCalendarDays(parseISO(pending.anchor), parseISO(range.start)) * stride, behavior: 'instant' });
+      container.scrollTo({ left: differenceInCalendarDays(parseISO(pending.target), parseISO(range.start)) * stride, behavior: scrollBehavior() });
     }
-  }, [days[0]?.date]);
+    return () => observer.disconnect();
+  }, [range]);
 
   useEffect(() => {
     const container = strip.current;
     const button = selected.current;
-    if (!container || !button) return;
-    const left = button.offsetLeft - container.offsetLeft;
+    if (!container || !button || !initialized.current) return;
+    const first = container.querySelector<HTMLButtonElement>('button');
+    if (!first) return;
+    const left = button.offsetLeft - first.offsetLeft;
     if (left < container.scrollLeft || left + button.offsetWidth > container.scrollLeft + container.clientWidth) {
-      container.scrollTo({ left: Math.max(0, left - container.clientWidth / 2 + button.offsetWidth / 2), behavior: 'smooth' });
+      container.scrollTo({ left, behavior: scrollBehavior() });
     }
   }, [selectedDate]);
 
@@ -102,7 +114,7 @@ export function AppointmentDayPicker({
             variant="ghost"
             size="icon-sm"
             aria-label="Ver días anteriores"
-            disabled={disabled || (previousDisabled && atStart)}
+            disabled={disabled || previousDisabled}
             onClick={() => moveDays(-1)}
           >
             <ChevronLeftIcon className="size-5" />
@@ -119,9 +131,9 @@ export function AppointmentDayPicker({
           </Button>
         </div>
       </div>
-      <div ref={strip} onScroll={() => setAtStart((strip.current?.scrollLeft ?? 0) <= 1)} className="relative -mx-1 overflow-x-auto px-1 py-1">
+      <div ref={strip} className="relative -mx-1 overflow-x-auto px-1 py-1 [overflow-anchor:none]">
         <div className="flex gap-3">
-          {days.map((day) => {
+          {renderedDays.map((day) => {
             const isSelected = day.date === selectedDate;
             return (
               <button

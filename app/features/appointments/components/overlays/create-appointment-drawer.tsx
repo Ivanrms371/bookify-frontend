@@ -86,12 +86,7 @@ export const CreateAppointmentDrawer = ({
     }),
     [pageStart],
   );
-  const changePage = (offset: number) => {
-    const date = format(addDays(parseISO(pageStart), offset), 'yyyy-MM-dd');
-    setPageStart(date);
-    setSelectedDate(date);
-    setSelectedSlot(null);
-  };
+
   const availabilityParams = useMemo(
     () => ({
       serviceId: selectedServiceId,
@@ -131,6 +126,7 @@ export const CreateAppointmentDrawer = ({
   };
 
   const handleSelectDate = (date: string) => {
+    if (date < days[0].date || date > days[days.length - 1].date) setPageStart(date);
     setSelectedDate(date);
     setSelectedSlot(null);
   };
@@ -240,8 +236,6 @@ export const CreateAppointmentDrawer = ({
           <section className="space-y-3">
             <AppointmentDrawerScheduleSection
               title="Elegir horario"
-              onPreviousPage={(count) => changePage(-count)}
-              onNextPage={(count) => changePage(count)}
               days={days}
               slots={selectedDateSlots}
               availabilityDays={appointmentAvailability?.days}

@@ -104,16 +104,12 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
   }, [selectedSlot, validSlot, availability.isFetching, setValue]);
 
   const selectDate = (date: string) => {
+    if (date < pageStart || date > shiftDate(pageStart, 20)) setPageStart(date);
     setSelectedDate(date);
     setSelectedSlot(null);
     setValue('startsAt', '');
   };
-  const changePage = (offset: number) => {
-    const next = shiftDate(pageStart, offset);
-    const start = next;
-    setPageStart(start);
-    selectDate(start);
-  };
+
   const submit = handleSubmit(async (input) => {
     if (!canSubmit || submissionLock.current) return;
     submissionLock.current = true;
@@ -174,8 +170,6 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
                 </div>
               ) : (
                 <AppointmentDrawerScheduleSection
-                  onPreviousPage={(count) => changePage(-count)}
-                  onNextPage={(count) => changePage(count)}
                   days={days}
                   slots={slots}
                   availabilityDays={availability.data?.days}
