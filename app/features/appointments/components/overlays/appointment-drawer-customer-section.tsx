@@ -76,11 +76,11 @@ export const AppointmentDrawerCustomerSection = ({
                       <button
                         type="button"
                         onClick={() => onSelectCustomer(customer)}
-                        className="flex w-full cursor-pointer items-center justify-between gap-3 p-3 text-left transition-colors hover:bg-gray-50"
+                        className="flex w-full cursor-pointer items-center justify-between gap-3 p-3 text-left transition-colors hover:bg-gray-100"
                       >
                         <div className="min-w-0">
-                          <Text className="truncate text-sm font-semibold text-gray-800">{customer.name}</Text>
-                          <Text className="truncate text-xs font-medium text-gray-500">
+                          <Text className="truncate text-base font-semibold text-gray-800">{customer.name}</Text>
+                          <Text className="truncate text-sm font-medium text-gray-500">
                             {[customer.email, customer.phoneNumber].filter(Boolean).join(' · ')}
                           </Text>
                         </div>
@@ -90,12 +90,12 @@ export const AppointmentDrawerCustomerSection = ({
                   ))}
                 </ul>
               ) : (
-                <Text className="p-3 text-sm text-gray-500">No encontramos clientes con esa búsqueda.</Text>
+                <Text className="p-3 text-base text-gray-500">No encontramos clientes con esa búsqueda.</Text>
               )}
             </div>
           )}
 
-          <Button type="button" variant="dashed" fullWidth onClick={onCreateCustomer}>
+          <Button type="button" variant="dashed" fullWidth className="hover:bg-gray-100" onClick={onCreateCustomer}>
             Agregar nuevo cliente
           </Button>
         </div>
@@ -106,13 +106,14 @@ export const AppointmentDrawerCustomerSection = ({
 
 const SelectedCustomer = ({ customer, onClear }: { customer: CustomerSearchItem; onClear: () => void }) => (
   <div className="flex items-center justify-between gap-3 rounded-lg border border-indigo-200 bg-indigo-50 p-3">
-    <div className="min-w-0">
-      <Text className="truncate text-sm font-semibold text-gray-800">{customer.name}</Text>
-      <Text className="truncate text-xs font-medium text-gray-500">
+    <CheckCircleIcon className="size-6 shrink-0 text-indigo-600" aria-hidden="true" />
+    <div className="min-w-0 flex-1">
+      <Text className="truncate text-base font-semibold text-gray-800">{customer.name}</Text>
+      <Text className="truncate text-sm font-medium text-gray-500">
         {[customer.email, customer.phoneNumber].filter(Boolean).join(' · ') || 'Cliente precargado'}
       </Text>
     </div>
-    <Button type="button" variant="ghost" size="sm" onClick={onClear}>
+    <Button type="button" variant="secondary" size="sm" className="shrink-0 bg-white" onClick={onClear}>
       Cambiar
     </Button>
   </div>
@@ -132,12 +133,14 @@ const CustomerModeOption = ({
   <button
     type="button"
     onClick={onSelect}
+    aria-pressed={isSelected}
     className={cn(
-      'cursor-pointer rounded-lg border border-gray-200 p-3 text-left transition-colors hover:bg-gray-50',
-      isSelected && 'border-indigo-600 ring-4 ring-indigo-100',
+      'cursor-pointer rounded-lg border border-gray-200 p-3 text-left transition-colors',
+      !isSelected && 'hover:bg-gray-100',
+      isSelected && 'border-indigo-600',
     )}
   >
-    <Text className="text-sm font-semibold text-gray-800">{title}</Text>
-    <Text className="text-xs font-medium text-gray-500">{description}</Text>
+    <Text className="text-base font-semibold text-gray-800">{title}</Text>
+    <Text className="text-sm font-medium text-gray-500">{description}</Text>
   </button>
 );

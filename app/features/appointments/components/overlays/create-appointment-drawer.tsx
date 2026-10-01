@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { addDays, format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { PhotoIcon, UserIcon } from '@heroicons/react/24/outline';
-import { Text } from '@/shared/components/typography';
 import { Button, Drawer } from '@/shared/components/ui';
 import { DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
 import { Spinner } from '@/shared/components/ui/spinner';
@@ -10,12 +11,12 @@ import { useCustomerSearch } from '@/features/customers/hooks/use-customer-searc
 import type { CustomerSearchItem } from '@/features/customers/types/customer-types';
 import { useCreateAppointment } from '@/features/appointments/hooks/use-create-appointment';
 import { createAppointmentSchema } from '@/features/appointments/schemas/create-appointment-schema';
-import { getStaffBookingDays } from '@/features/appointments/utils/date-helpers';
 import { useServiceProfessionals, useServices } from '@/features/services';
 import { useAppointmentAvailability } from '@/features/availability';
 import type { AppointmentAvailabilitySlot } from '@/features/availability';
 import type { OverlayKey } from '@/shared/components/overlays/overlay-registry';
 import { AppointmentDrawerCustomerSection, type CustomerMode } from './appointment-drawer-customer-section';
+import { AppointmentSelectionSummary } from './appointment-selection-summary';
 import { AppointmentDrawerScheduleSection } from './appointment-drawer-schedule-section';
 import { EmptyInline, ProfessionalOption, SectionHeader, ServiceOption } from './appointment-drawer-options';
 
@@ -32,8 +33,8 @@ type CreateAppointmentDrawerProps = {
 
 function getInitialDate(defaultDate?: string, startsAt?: string) {
   if (defaultDate) return defaultDate;
-  if (!startsAt) return new Date().toISOString().split('T')[0];
-  return new Date(startsAt).toISOString().split('T')[0];
+  if (!startsAt) return format(new Date(), 'yyyy-MM-dd');
+  return format(new Date(startsAt), 'yyyy-MM-dd');
 }
 
 function getInitialTime(startsAt?: string) {
@@ -77,7 +78,20 @@ export const CreateAppointmentDrawer = ({
       : null,
   );
 
-  const days = useMemo(() => getStaffBookingDays(), []);
+  const [pageStart, setPageStart] = useState(() => getInitialDate(defaultDate, defaultStartsAt));
+  const days = useMemo(
+    () => Array.from({ length: 21 }, (_, index) => {
+      const date = addDays(parseISO(pageStart), index);
+      return { date: format(date, 'yyyy-MM-dd'), dayNumber: format(date, 'd'), label: format(date, 'EEE', { locale: es }).replace('.', '') };
+    }),
+    [pageStart],
+  );
+  const changePage = (offset: number) => {
+    const date = format(addDays(parseISO(pageStart), offset), 'yyyy-MM-dd');
+    setPageStart(date);
+    setSelectedDate(date);
+    setSelectedSlot(null);
+  };
   const availabilityParams = useMemo(
     () => ({
       serviceId: selectedServiceId,
@@ -224,17 +238,18 @@ export const CreateAppointmentDrawer = ({
           </section>
 
           <section className="space-y-3">
-            <SectionHeader
-              title="Agenda"
-              description="Vista rápida para staff. Por ahora muestra horarios generados y no aplica reglas estrictas."
-            />
             <AppointmentDrawerScheduleSection
+              title="Elegir horario"
+              onPreviousPage={(count) => changePage(-count)}
+              onNextPage={(count) => changePage(count)}
               days={days}
               slots={selectedDateSlots}
+              availabilityDays={appointmentAvailability?.days}
               selectedDate={selectedDate}
               selectedStartsAt={selectedSlot?.startsAt ?? null}
               isLoading={isLoadingAvailability}
               isDisabled={!selectedServiceId || !selectedProfessionalId}
+              missingSelection={!selectedServiceId ? 'service' : 'professional'}
               onSelectDate={handleSelectDate}
               onSelectSlot={setSelectedSlot}
             />
@@ -242,14 +257,12 @@ export const CreateAppointmentDrawer = ({
         </DrawerBody>
 
         <DrawerFooter>
-          <div className="mr-auto hidden min-w-0 flex-col sm:flex">
-            <Text className="truncate text-sm font-semibold text-gray-800">
-              {selectedService?.name ?? 'Sin servicio'} {selectedProfessional ? `con ${selectedProfessional.name}` : ''}
-            </Text>
-            <Text className="text-xs font-medium text-gray-500">
-              {selectedDate} {selectedSlot ? `· ${selectedSlot.time}` : ''}
-            </Text>
-          </div>
+          <AppointmentSelectionSummary
+            serviceName={selectedService?.name}
+            professionalName={selectedProfessional?.name}
+            date={selectedDate}
+            time={selectedSlot?.time}
+          />
           <Button type="button" variant="secondary" onClick={close}>
             Cancelar
           </Button>

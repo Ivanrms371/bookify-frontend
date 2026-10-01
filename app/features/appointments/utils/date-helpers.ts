@@ -40,7 +40,7 @@ export function getStaffBookingDays(daysBefore: number = 7, daysAfter: number = 
     const cleanShortDay = rawShortDay.replace('.', '');
 
     return {
-      date: date.toISOString().split('T')[0],
+      date: format(date, 'yyyy-MM-dd'),
       dayNumber: format(date, 'd'),
       label: cleanShortDay,
     };

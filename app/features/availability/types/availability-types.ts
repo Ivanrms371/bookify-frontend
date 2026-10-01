@@ -27,6 +27,7 @@ export interface AppointmentAvailabilityDay {
 }
 
 export interface GetAppointmentAvailabilityParams {
+  excludeAppointmentId?: string;
   serviceId: string | null;
   professionalId: string | null;
   startDate: string;

@@ -1,5 +1,7 @@
 import { httpClient } from '@/core/http/httpClient';
 import type { CreateAppointmentInput } from '../schemas/create-appointment-schema';
+import type { RescheduleAppointmentInput } from '../schemas/reschedule-appointment-schema';
+import type { Appointment } from '../types/appointments-types';
 import type { GetAllAppointmentsResponse, GetAllAppointmentsParams } from '../types/appointments-types';
 
 export const appointmentsApi = {
@@ -9,7 +11,7 @@ export const appointmentsApi = {
 
   create: (input: CreateAppointmentInput) => httpClient.post('/appointments', input),
 
-  reschedule: () => {},
+  reschedule: (id: string, input: RescheduleAppointmentInput) => httpClient.patch<Appointment>(`/appointments/${id}/reschedule`, input),
 
   cancel: () => {},
 };

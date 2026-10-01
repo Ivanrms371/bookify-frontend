@@ -34,6 +34,7 @@ type DrawerProps = {
   position?: DrawerPosition;
   className?: string;
   closeOnBackdrop?: boolean;
+  isDismissible?: boolean;
 };
 
 export const Drawer = ({
@@ -44,6 +45,7 @@ export const Drawer = ({
   position = 'right',
   className,
   closeOnBackdrop = true,
+  isDismissible = true,
 }: DrawerProps) => {
   const { close, isVisible, shouldRender } = useOverlay(overlayKey);
 
@@ -68,7 +70,7 @@ export const Drawer = ({
           'absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-500 ease-out',
           isVisible ? 'opacity-100' : 'opacity-0',
         )}
-        onClick={closeOnBackdrop ? close : undefined}
+        onClick={closeOnBackdrop && isDismissible ? close : undefined}
         aria-hidden="true"
       />
 
@@ -81,7 +83,7 @@ export const Drawer = ({
           className,
         )}
       >
-        <DrawerHeader onClose={close}>
+        <DrawerHeader onClose={isDismissible ? close : undefined}>
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
         <div className="min-h-0 flex-1">{children}</div>

@@ -26,7 +26,7 @@ export interface ActiveTenant {
   logo: string | null;
   role: Role;
   onboardingStatus: OnboardingStatus;
-  professionalid: string | null;
+  professionalId: string | null;
   subscription: Subscription | null;
 }
 
