@@ -1,36 +1,40 @@
-# AGENTS.md
+# Dashboard agent guidance
 
-This file provides guidance to Codex and other coding agents when working in the frontend app.
+This independent Git repository is the React Router 7 dashboard. Run pnpm commands here. When available, consult [parent guidance](../AGENTS.md), [architecture](../docs/architecture.md), and [cross-app workflow](../docs/cross-app-changes.md); these local instructions also support opening the app alone.
 
-React Router v7 framework-mode app for **Turnify**. Uses Tailwind v4, TanStack Query, Zustand, shadcn-style Radix UI, FullCalendar/Schedule-X, and `pnpm`.
+## Runtime and organization
 
-## Commands
+`react-router.config.ts` sets `ssr: false`. Routes are explicitly declared in `app/routes.ts`, not inferred from filenames. `routes/_guard.tsx` wraps auth, onboarding and the tenant app; `/:slug` uses `routes/app/_slug.tsx`, with the dashboard layout nested inside it and billing outside that inner layout. Inspect route/guard behavior before adding navigation.
 
-- `pnpm dev` — React Router dev server with `--host`.
-- `pnpm build` — `react-router build`, outputting `build/`.
-- `pnpm start` — serve the built app via `@react-router/serve`.
-- `pnpm typecheck` — `react-router typegen && tsc`. Run after editing `app/routes.ts` or route module signatures so generated route types stay in sync.
+- `app/features/<domain>` owns domain API calls, components, hooks, schemas, types and utilities. Keep route modules thin.
+- `app/core` owns auth, tenant, HTTP, query and error infrastructure.
+- `app/shared` owns reusable UI, hooks, providers, stores and utilities.
 
-## Architecture
+The `@/*` alias maps to `app/*` in `tsconfig.json`. The tenant-aware axios client is `app/core/http/httpClient.ts`: `VITE_API_URL`, credentials, URL-derived `x-tenant-slug`, and `x-tenant-id` when the session tenant matches (or when no URL slug exists). Backend ID precedence makes header consistency important. Reuse the client and existing auth/tenant helpers; do not bypass tenant selection or cookie/refresh handling with ad hoc requests.
 
-Routes are declared in `app/routes.ts`; this app is not filesystem-routed.
+Use TanStack Query for server state and follow existing query keys/invalidation. Zustand and some Preact signals handle UI state. Reuse established Radix/shadcn-style shared components, React Hook Form/Zod validation and overlay registry/drawer patterns. Tailwind 4 is configured through Vite. Multiple icon and calendar libraries exist; follow the affected component's implementation rather than asserting one uniform convention. Use local [build-ui](.agents/skills/build-ui/SKILL.md) for UI implementation and [run-frontend](.agents/skills/run-frontend/SKILL.md) for development-server lifecycle; inspect current code/configuration before acting.
 
-- `_guard.tsx` — top-level auth/tenant guard.
-- `auth/_layout.tsx` — login/signup.
-- `onboarding/_layout.tsx` — onboarding flow: welcome, business, schedule, services, team, customize, confirm, completed.
-- `/:slug` (`app/_slug.tsx`) — tenant-scoped app shell. Nested `app/_layout.tsx` renders the authenticated dashboard: calendar, services, customers, professionals, reports, settings, and profile. `billing` sits outside that inner layout.
-- Tenant slug comes from the URL; use `params.slug` or existing tenant helpers to know which tenant the frontend is acting for.
+## Commands and validation
 
-Keep these top-level trees distinct:
+| Command | Behavior |
+| --- | --- |
+| `pnpm dev` | Starts `react-router dev --host`, exposing the dev server beyond loopback. |
+| `pnpm build` | Runs `react-router build`; writes build/generated artifacts. |
+| `pnpm start` | Manifest runs `react-router-serve ./build/server/index.js`; verify actual output before assuming it works with SSR disabled. |
+| `pnpm typecheck` | Runs `react-router typegen && tsc`; regenerates route types and may write incremental metadata. |
+| `pnpm exec tsc --noEmit --incremental false` | Checks existing generated route types without regenerating them; not equivalent to full `pnpm typecheck`. |
 
-- `app/features/<domain>/` — domain feature code: `api/`, `components/`, `hooks/`, `schemas/`, `types/`, `constants/`, and `utils/`. Route files should stay thin and delegate here.
-- `app/core/` — cross-cutting infrastructure: `auth/`, `tenant/`, `http/`, `query/`, and `error/`.
-- `app/shared/` — generic UI, hooks, providers, stores, and utils. shadcn/Radix components live under `shared/components`.
+The supplied earlier non-emitting check failed with duplicate generated route declarations and application errors. It did not regenerate routes and was not the full typecheck script; distinguish existing failures from regressions and report exact commands/results. No automated test suite or repository CI workflows were found. Type checks alone do not verify interaction behavior; perform focused UI checks when authorized and relevant.
 
-## UI & State
+For API changes trace backend DTOs/mappers/permissions, feature calls/types/Zod schemas, and query/UI effects; also inspect `../web` for public consumers. When sibling repositories are unavailable, report needed coordination. API base URLs must match the backend `/api` prefix; environment templates have known mismatches and are not authoritative.
 
-Use TanStack Query for server state. Use Zustand, and existing `@preact/signals` usage where already established, for local/UI state. Styling is Tailwind v4 via `@tailwindcss/vite`; `tw-animate-css` handles animations; `prettier-plugin-tailwindcss` sorts classes.
+Preserve pre-existing dirty changes and this repository's Git root. Do not run generation/autofix, start servers, change dependencies/environment or mutate databases as incidental documentation work. Current session sandbox/approval restrictions apply. Historical deleted dependency rules are pending reconciliation, not automatically active policy.
 
-Prefer existing shared components and feature-local patterns before adding new abstractions. For UI implementation, also consult the repo-local skills in `../.codex/skills/`, especially `build-ui` and `design`.
+## Documentation and evidence
 
-The backend (`../backend`) exposes `/api/*`. When changing an API contract, update matching Zod schemas under `app/features/<domain>/schemas` and axios calls under `app/features/<domain>/api`.
+Documentation provides architectural/domain context, but relevant code and tests remain the evidence of actual behavior. When documentation conflicts with implementation:
+
+- Do not silently choose one.
+- Report the inconsistency.
+- Determine actual behavior from relevant implementation/tests.
+- Update documentation when the current task changes documented behavior.
