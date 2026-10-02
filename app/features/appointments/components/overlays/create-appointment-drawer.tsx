@@ -153,6 +153,8 @@ export const CreateAppointmentDrawer = ({
     if (!selectedServiceId || !selectedProfessionalId || !selectedSlot) return;
     if (!canSubmit) return;
 
+    console.log(selectedSlot.startsAt);
+
     const result = createAppointmentSchema.safeParse({
       serviceId: selectedServiceId,
       professionalId: selectedProfessionalId,
@@ -161,7 +163,14 @@ export const CreateAppointmentDrawer = ({
     });
 
     if (!result.success) {
-      toast.error('Revisá los datos de la reserva antes de continuar');
+      const fieldLabels: Record<string, string> = {
+        serviceId: 'el servicio',
+        professionalId: 'el profesional',
+        startsAt: 'la fecha y hora',
+        customerId: 'el cliente',
+      };
+      const field = fieldLabels[String(result.error.issues[0]?.path[0])];
+      toast.error(field ? `Revisá ${field} de la reserva antes de continuar` : 'Revisá los datos de la reserva antes de continuar');
       return;
     }
 
