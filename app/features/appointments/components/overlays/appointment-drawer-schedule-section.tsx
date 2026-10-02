@@ -43,6 +43,14 @@ export function AppointmentDrawerScheduleSection({
   onSelectDate,
   onSelectSlot,
 }: Props) {
+  if (days.length === 0) {
+    return (
+      <p role="alert" className="text-sm text-gray-500">
+        No se pudo obtener la zona horaria del negocio. Revisá la configuración del negocio.
+      </p>
+    );
+  }
+
   const isSelectable = (slot: AppointmentAvailabilitySlot) => slot.status !== 'busy';
   const isPastTime = Boolean(selectedStartsAt && new Date(selectedStartsAt).getTime() < Date.now());
   const nextAvailableDay = availabilityDays

@@ -19,7 +19,7 @@ export function AppointmentSelectionSummary({
         {serviceName ?? 'Sin servicio'} {professionalName ? `con ${professionalName}` : ''}
       </Text>
       <Text className="text-sm font-medium text-gray-500">
-        {format(parseISO(date), "d 'de' MMMM", { locale: es })} {time ? `· ${time}` : '· Elegí un horario'}
+        {date ? format(parseISO(date), "d 'de' MMMM", { locale: es }) : 'Elegí una fecha'} {time ? `· ${time}` : '· Elegí un horario'}
       </Text>
     </div>
   );

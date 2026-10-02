@@ -18,10 +18,7 @@ export function CancelAppointmentModal({ appointment }: { appointment: Appointme
   const [reason, setReason] = useState('');
   const [error, setError] = useState<string | null>(null);
   const submitting = useRef(false);
-  const timeZone = appointment.timeZone ?? 'America/Montevideo';
-  const startsAt = new Date(appointment.startsAt);
-  const date = new Intl.DateTimeFormat('es-UY', { timeZone, day: 'numeric', month: 'long', year: 'numeric' }).format(startsAt);
-  const time = new Intl.DateTimeFormat('es-UY', { timeZone, hour: '2-digit', minute: '2-digit', hour12: false }).format(startsAt);
+  const formattedStartsAt = appointment.formattedStartsAt;
   const hasCustomer = Boolean(appointment.customerId);
   const allowed = canCancel(appointment, tenant);
 
@@ -45,7 +42,14 @@ export function CancelAppointmentModal({ appointment }: { appointment: Appointme
     <Modal overlayKey={OVERLAY_KEY} title="¿Estás seguro de cancelar este turno?" size="xl" closeDisabled={isPending} manageFocus>
       <div className="space-y-5">
         <p className="text-sm text-gray-600">
-          Al cancelar la cita con <strong>{appointment.customerName}</strong> del día <strong>{date}</strong> a las <strong>{time}</strong>,{' '}
+          Al cancelar la cita con <strong>{appointment.customerName}</strong>
+          {formattedStartsAt && (
+            <>
+              {' '}
+              del día <strong>{formattedStartsAt.date}</strong> a las <strong>{formattedStartsAt.time}</strong>
+            </>
+          )}
+          ,{' '}
           {hasCustomer
             ? 'se cancelarán sus notificaciones pendientes y se le avisará de la cancelación.'
             : 'el horario quedará disponible para nuevas reservas.'}{' '}

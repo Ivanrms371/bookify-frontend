@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { addDays, format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { PhotoIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Button, Drawer } from '@/shared/components/ui';
 import { DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
@@ -12,8 +10,7 @@ import type { CustomerSearchItem } from '@/features/customers/types/customer-typ
 import { useCreateAppointment } from '@/features/appointments/hooks/use-create-appointment';
 import { createAppointmentSchema } from '@/features/appointments/schemas/create-appointment-schema';
 import { useServiceProfessionals, useServices } from '@/features/services';
-import { useAppointmentAvailability } from '@/features/availability';
-import type { AppointmentAvailabilitySlot } from '@/features/availability';
+import { useAppointmentDrawerSchedule } from '../../hooks/use-appointment-drawer-schedule';
 import type { OverlayKey } from '@/shared/components/overlays/overlay-registry';
 import { AppointmentDrawerCustomerSection, type CustomerMode } from './appointment-drawer-customer-section';
 import { AppointmentSelectionSummary } from './appointment-selection-summary';
@@ -30,17 +27,6 @@ type CreateAppointmentDrawerProps = {
   defaultDate?: string;
   defaultStartsAt?: string;
 };
-
-function getInitialDate(defaultDate?: string, startsAt?: string) {
-  if (defaultDate) return defaultDate;
-  if (!startsAt) return format(new Date(), 'yyyy-MM-dd');
-  return format(new Date(startsAt), 'yyyy-MM-dd');
-}
-
-function getInitialTime(startsAt?: string) {
-  if (!startsAt) return null;
-  return new Date(startsAt).toTimeString().slice(0, 5);
-}
 
 export const CreateAppointmentDrawer = ({
   defaultCustomerId,
@@ -66,45 +52,16 @@ export const CreateAppointmentDrawer = ({
   );
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(defaultServiceId ?? null);
   const [selectedProfessionalId, setSelectedProfessionalId] = useState<string | null>(defaultProfessionalId ?? null);
-  const [selectedDate, setSelectedDate] = useState(getInitialDate(defaultDate, defaultStartsAt));
-  const [selectedSlot, setSelectedSlot] = useState<AppointmentAvailabilitySlot | null>(
-    defaultStartsAt
-      ? {
-          time: getInitialTime(defaultStartsAt) ?? '',
-          startsAt: defaultStartsAt,
-          endsAt: defaultStartsAt,
-          status: 'available',
-        }
-      : null,
-  );
-
-  const [pageStart, setPageStart] = useState(() => getInitialDate(defaultDate, defaultStartsAt));
-  const days = useMemo(
-    () =>
-      Array.from({ length: 21 }, (_, index) => {
-        const date = addDays(parseISO(pageStart), index);
-        return {
-          date: format(date, 'yyyy-MM-dd'),
-          dayNumber: format(date, 'd'),
-          label: format(date, 'EEE', { locale: es }).replace('.', ''),
-        };
-      }),
-    [pageStart],
-  );
-
-  const availabilityParams = useMemo(
-    () => ({
-      serviceId: selectedServiceId,
-      professionalId: selectedProfessionalId,
-      startDate: days[0]?.date ?? selectedDate,
-      endDate: days[days.length - 1]?.date ?? selectedDate,
-    }),
-    [days, selectedDate, selectedProfessionalId, selectedServiceId],
-  );
+  const schedule = useAppointmentDrawerSchedule({
+    serviceId: selectedServiceId,
+    professionalId: selectedProfessionalId,
+    initialDate: defaultDate,
+    initialStartsAt: defaultStartsAt,
+  });
+  const { selectedDate, selectedSlot, clearSelection } = schedule;
   const { data: servicesData, isLoading: isLoadingServices } = useServices();
   const services = servicesData?.data ?? [];
   const { data: professionals = [], isLoading: isLoadingProfessionals } = useServiceProfessionals(selectedServiceId);
-  const { data: appointmentAvailability, isLoading: isLoadingAvailability } = useAppointmentAvailability(availabilityParams);
   const { data: customers = [], isLoading: isSearchingCustomers } = useCustomerSearch(
     customerMode === 'with-customer' ? customerQuery : '',
   );
@@ -112,33 +69,25 @@ export const CreateAppointmentDrawer = ({
 
   const selectedService = services.find((service) => service.id === selectedServiceId) ?? null;
   const selectedProfessional = professionals.find((professional) => professional.id === selectedProfessionalId) ?? null;
-  const selectedDayAvailability = appointmentAvailability?.days.find((day) => day.date === selectedDate);
-  const selectedDateSlots = selectedDayAvailability?.slots ?? [];
-  const canSubmit = Boolean(selectedServiceId && selectedProfessionalId && selectedSlot && selectedSlot.status !== 'busy');
+  const canSubmit = schedule.hasValidSelection;
 
   useEffect(() => {
     if (!selectedProfessionalId || professionals.length === 0) return;
     if (!professionals.some((professional) => professional.id === selectedProfessionalId)) {
       setSelectedProfessionalId(null);
-      setSelectedSlot(null);
+      clearSelection();
     }
-  }, [professionals, selectedProfessionalId]);
+  }, [professionals, selectedProfessionalId, clearSelection]);
 
   const handleSelectService = (serviceId: string) => {
     setSelectedServiceId(serviceId);
     setSelectedProfessionalId(null);
-    setSelectedSlot(null);
-  };
-
-  const handleSelectDate = (date: string) => {
-    if (date < days[0].date || date > days[days.length - 1].date) setPageStart(date);
-    setSelectedDate(date);
-    setSelectedSlot(null);
+    clearSelection();
   };
 
   const handleSelectProfessional = (professionalId: string) => {
     setSelectedProfessionalId(professionalId);
-    setSelectedSlot(null);
+    clearSelection();
   };
 
   const handleSelectCustomerMode = (mode: CustomerMode) => {
@@ -254,16 +203,17 @@ export const CreateAppointmentDrawer = ({
           <section className="space-y-3">
             <AppointmentDrawerScheduleSection
               title="Seleccionar fecha"
-              days={days}
-              slots={selectedDateSlots}
-              availabilityDays={appointmentAvailability?.days}
+              days={schedule.days}
+              slots={schedule.slots}
+              availabilityDays={schedule.availability.data?.days}
               selectedDate={selectedDate}
               selectedStartsAt={selectedSlot?.startsAt ?? null}
-              isLoading={isLoadingAvailability}
+              isLoading={schedule.availability.isFetching}
+              interactionDisabled={isPending}
               isDisabled={!selectedServiceId || !selectedProfessionalId}
               missingSelection={!selectedServiceId ? 'service' : 'professional'}
-              onSelectDate={handleSelectDate}
-              onSelectSlot={setSelectedSlot}
+              onSelectDate={schedule.selectDate}
+              onSelectSlot={schedule.selectSlot}
             />
           </section>
         </DrawerBody>
@@ -275,7 +225,7 @@ export const CreateAppointmentDrawer = ({
             date={selectedDate}
             time={selectedSlot?.time}
           />
-          <Button type="button" variant="secondary" onClick={close}>
+          <Button type="button" variant="secondary" disabled={isPending} onClick={close}>
             Cancelar
           </Button>
           <Button type="button" variant="primary" disabled={!canSubmit} isSubmitting={isPending} onClick={handleSubmit}>

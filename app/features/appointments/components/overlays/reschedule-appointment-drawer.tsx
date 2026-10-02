@@ -1,6 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { addDays, format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,13 +7,13 @@ import { useAuthStore } from '@/core/auth/use-auth-store';
 import { Button, Card, Drawer } from '@/shared/components/ui';
 import { DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
 import { Avatar } from '@/shared/components/ui/avatar';
+import { Text } from '@/shared/components/typography';
 import { Textarea } from '@/shared/components/form/Textarea';
 import { SectionHeader } from './appointment-drawer-options';
 import { AppointmentSelectionSummary } from './appointment-selection-summary';
 import { FormField } from '@/shared/components/form/form-field';
 import { useOverlay } from '@/shared/hooks/use-overlay';
-import { useAppointmentAvailability } from '@/features/availability';
-import type { AppointmentAvailabilitySlot } from '@/features/availability';
+import { useAppointmentDrawerSchedule } from '../../hooks/use-appointment-drawer-schedule';
 import type { Appointment } from '../../types/appointments-types';
 import { useRescheduleAppointment } from '../../hooks/use-reschedule-appointment';
 import { rescheduleAppointmentSchema, type RescheduleAppointmentInput } from '../../schemas/reschedule-appointment-schema';
@@ -24,29 +22,10 @@ import { AppointmentDrawerScheduleSection } from './appointment-drawer-schedule-
 
 const OVERLAY_KEY = 'reschedule-appointment-drawer';
 
-function dateInZone(value: string | Date, timeZone: string) {
-  const parts = new Intl.DateTimeFormat('en-US', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(
-    new Date(value),
-  );
-  const part = (type: string) => parts.find((item) => item.type === type)?.value;
-  return `${part('year')}-${part('month')}-${part('day')}`;
-}
-
-function shiftDate(date: string, days: number) {
-  return format(addDays(parseISO(date), days), 'yyyy-MM-dd');
-}
-
 export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appointment }) {
   const { close } = useOverlay(OVERLAY_KEY);
   const tenant = useAuthStore((state) => state.session?.activeTenant);
   const eligible = canReschedule(appointment, tenant);
-  const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
-  const today = dateInZone(new Date(), timeZone);
-  const initialDate = today;
-  const [pageStart, setPageStart] = useState(initialDate);
-  const [selectedDate, setSelectedDate] = useState(initialDate);
-  const [selectedSlot, setSelectedSlot] = useState<AppointmentAvailabilitySlot | null>(null);
-  const initializedZone = useRef(false);
   const submissionLock = useRef(false);
   const { mutateAsync, isPending } = useRescheduleAppointment(appointment.id);
   const {
@@ -58,57 +37,22 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
     resolver: zodResolver(rescheduleAppointmentSchema),
     defaultValues: { startsAt: '', rescheduleReason: '' },
   });
-  const availability = useAppointmentAvailability({
+  const schedule = useAppointmentDrawerSchedule({
     serviceId: eligible ? appointment.serviceId : null,
     professionalId: appointment.professionalId,
-    startDate: pageStart,
-    endDate: shiftDate(pageStart, 20),
     excludeAppointmentId: appointment.id,
   });
-
-  useEffect(() => {
-    if (!availability.data || initializedZone.current) return;
-    initializedZone.current = true;
-    const zone = availability.data.timeZone;
-    const zoneToday = dateInZone(new Date(), zone);
-    const date = zoneToday;
-    setTimeZone(zone);
-    setPageStart(date);
-    setSelectedDate(date);
-  }, [availability.data, appointment.startsAt]);
-
-  const days = useMemo(
-    () =>
-      Array.from({ length: 21 }, (_, index) => {
-        const date = shiftDate(pageStart, index);
-        return { date, dayNumber: format(parseISO(date), 'd'), label: format(parseISO(date), 'EEE', { locale: es }).replace('.', '') };
-      }),
-    [pageStart],
-  );
-  const day = availability.data?.days.find((item) => item.date === selectedDate);
-  const slots = day?.slots ?? [];
-  const validSlot = selectedSlot && slots.find((slot) => slot.startsAt === selectedSlot.startsAt && slot.status !== 'busy');
+  const { availability, selectedDate, selectedSlot, validSlot } = schedule;
   const canSubmit = Boolean(
     eligible &&
+    schedule.hasValidSelection &&
     validSlot &&
-    !availability.isFetching &&
-    !availability.isError &&
     new Date(validSlot.startsAt).getTime() !== new Date(appointment.startsAt).getTime(),
   );
 
   useEffect(() => {
-    if (selectedSlot && !availability.isFetching && !validSlot) {
-      setSelectedSlot(null);
-      setValue('startsAt', '');
-    }
-  }, [selectedSlot, validSlot, availability.isFetching, setValue]);
-
-  const selectDate = (date: string) => {
-    if (date < pageStart || date > shiftDate(pageStart, 20)) setPageStart(date);
-    setSelectedDate(date);
-    setSelectedSlot(null);
-    setValue('startsAt', '');
-  };
+    setValue('startsAt', selectedSlot?.startsAt ?? '', { shouldValidate: Boolean(selectedSlot) });
+  }, [selectedSlot, setValue]);
 
   const submit = handleSubmit(async (input) => {
     if (!canSubmit || submissionLock.current) return;
@@ -124,19 +68,19 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
       submissionLock.current = false;
     }
   });
-  const displayDate = (value: string) =>
-    new Intl.DateTimeFormat('es-UY', {
-      timeZone,
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }).format(new Date(value));
+  const currentSchedule = appointment.formattedStartsAt;
 
   return (
     <Drawer overlayKey={OVERLAY_KEY} title="Reagendar reserva" size="3xl" isDismissible={!isPending}>
       <form onSubmit={submit} className="flex h-full min-h-0 flex-col">
         <DrawerBody>
           <section className="space-y-3">
-            <SectionHeader title="Reserva" description={`Horario actual: ${displayDate(appointment.startsAt)}`} />
+            <SectionHeader
+              title="Reserva"
+              description={
+                currentSchedule ? `Horario actual: ${currentSchedule.date} · ${currentSchedule.time}` : 'Horario actual no disponible'
+              }
+            />
             <div className="grid gap-2 sm:grid-cols-2">
               <Card className="rounded-xl border border-gray-200 p-3 shadow-none transition-colors hover:bg-gray-100">
                 <p className="text-base font-semibold text-gray-800">{appointment.serviceName}</p>
@@ -170,21 +114,18 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
                 </div>
               ) : (
                 <AppointmentDrawerScheduleSection
-                  days={days}
-                  slots={slots}
+                  days={schedule.days}
+                  slots={schedule.slots}
                   availabilityDays={availability.data?.days}
                   selectedDate={selectedDate}
                   selectedStartsAt={selectedSlot?.startsAt ?? null}
                   isLoading={availability.isFetching}
                   interactionDisabled={isPending}
-                  onSelectDate={selectDate}
-                  onSelectSlot={(slot) => {
-                    setSelectedSlot(slot);
-                    setValue('startsAt', slot.startsAt, { shouldValidate: true });
-                  }}
+                  onSelectDate={schedule.selectDate}
+                  onSelectSlot={schedule.selectSlot}
                 />
               )}
-              {day?.message && <p className="text-base text-muted-foreground">{day.message}</p>}
+              {schedule.day?.message && <p className="text-base text-muted-foreground">{schedule.day.message}</p>}
               {errors.startsAt && (
                 <p role="alert" className="text-base text-destructive">
                   {errors.startsAt.message}

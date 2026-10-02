@@ -27,6 +27,7 @@ export interface ActiveTenant {
   role: Role;
   onboardingStatus: OnboardingStatus;
   professionalId: string | null;
+  timeZone?: string | null;
   subscription: Subscription | null;
 }
 

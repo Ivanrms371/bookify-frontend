@@ -142,6 +142,13 @@ export const TenantGeneralSettings = () => {
       };
 
       await SettingsService.updateGeneralSettings(payload);
+      const currentSession = useAuthStore.getState().session;
+      if (currentSession?.activeTenant && currentSession.activeTenant.id === activeTenant?.id) {
+        useAuthStore.getState().setAuth({
+          ...currentSession,
+          activeTenant: { ...currentSession.activeTenant, timeZone: values.timeZone },
+        });
+      }
 
       // Limpiar isDirty y refrescar data
       reset({ ...values, logoFile: undefined, coverFile: undefined });

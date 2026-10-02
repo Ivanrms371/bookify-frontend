@@ -15,6 +15,7 @@ const statusStyles = {
   PENDING: 'bg-amber-50 text-amber-700 border-amber-200',
   COMPLETED: 'bg-indigo-50 text-indigo-700 border-indigo-200',
   CANCELLED: 'bg-rose-50 text-rose-700 border-rose-200',
+  NO_SHOW: 'bg-slate-100 text-slate-700 border-slate-200',
 };
 
 const statusLabels = {
@@ -22,6 +23,7 @@ const statusLabels = {
   PENDING: 'Pendiente',
   COMPLETED: 'Completado',
   CANCELLED: 'Cancelado',
+  NO_SHOW: 'No asistió',
 };
 
 export const AppointmentItem = ({ appointment }: Props) => {

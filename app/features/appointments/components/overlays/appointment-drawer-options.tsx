@@ -27,7 +27,7 @@ export const ServiceOption = ({ service, isSelected, onSelect }: { service: Serv
       type="button"
       onClick={onSelect}
       aria-pressed={isSelected}
-      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
+      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline  focus-visible:outline-indigo-500"
     >
       {service.imageUrl ? (
         <img src={service.imageUrl} alt={service.name} className="size-12 shrink-0 rounded-lg border border-gray-200 object-cover" />
@@ -75,7 +75,7 @@ export const ProfessionalOption = ({
       type="button"
       onClick={onSelect}
       aria-pressed={isSelected}
-      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
+      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline focus-visible:outline-indigo-500"
     >
       <Avatar src={professional.avatarUrl} name={professional.name} size="md" className="shrink-0" />
       <span className="min-w-0 flex-1">

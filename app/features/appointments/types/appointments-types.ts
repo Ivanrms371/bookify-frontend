@@ -1,12 +1,13 @@
 import type Decimal from 'decimal.js';
 
-export type AppointmentStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
+export type AppointmentStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED' | 'NO_SHOW';
 
 export type DiscountType = 'FIXED' | 'PERCENTAGE';
 
 export type GetAllAppointmentsParams = {
   query?: string;
-  orderBy?: string;
+  orderBy?: 'startsAt' | 'createdAt';
+  state?: AppointmentStatus;
   order?: 'asc' | 'desc';
   skip?: number;
   take?: number;
@@ -29,7 +30,8 @@ export type Appointment = {
   customerId: string;
   professionalId: string;
   status: AppointmentStatus;
-  timeZone?: string;
+  timeZone?: string | null;
+  formattedStartsAt?: { date: string; time: string } | null;
   startsAt: string;
   endsAt: string;
   customerName: string;
