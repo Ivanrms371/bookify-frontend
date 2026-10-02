@@ -80,9 +80,7 @@ export const AppointmentDrawerCustomerSection = ({
                       >
                         <div className="min-w-0">
                           <Text className="truncate text-base font-semibold text-gray-800">{customer.name}</Text>
-                          <Text className="truncate text-sm font-medium text-gray-500">
-                            {[customer.email, customer.phoneNumber].filter(Boolean).join(' · ')}
-                          </Text>
+                          <Text className="truncate text-sm font-medium text-gray-500">{customer.email}</Text>
                         </div>
                         <CheckCircleIcon className="size-5 shrink-0 text-gray-300" />
                       </button>
@@ -109,9 +107,7 @@ const SelectedCustomer = ({ customer, onClear }: { customer: CustomerSearchItem;
     <CheckCircleIcon className="size-6 shrink-0 text-indigo-500" aria-hidden="true" />
     <div className="min-w-0 flex-1">
       <Text className="truncate text-base font-semibold text-gray-800">{customer.name}</Text>
-      <Text className="truncate text-sm font-medium text-gray-500">
-        {[customer.email, customer.phoneNumber].filter(Boolean).join(' · ') || 'Cliente precargado'}
-      </Text>
+      <Text className="truncate text-sm font-medium text-gray-500">{customer.email}</Text>
     </div>
     <Button type="button" variant="secondary" size="sm" className="shrink-0 bg-white" onClick={onClear}>
       Cambiar
@@ -135,7 +131,7 @@ const CustomerModeOption = ({
     onClick={onSelect}
     aria-pressed={isSelected}
     className={cn(
-      'cursor-pointer rounded-lg border border-gray-200 p-3 text-left transition-colors',
+      'cursor-pointer rounded-xl border border-gray-200 p-3 text-left transition-colors',
       !isSelected && 'hover:bg-gray-100',
       isSelected && 'border-indigo-500',
     )}

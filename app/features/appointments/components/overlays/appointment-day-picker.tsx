@@ -146,7 +146,7 @@ export function AppointmentDayPicker({
                 aria-label={format(parseISO(day.date), "EEEE d 'de' MMMM", { locale: es })}
                 onClick={() => onSelect(day.date)}
                 className={cn(
-                  'flex w-16 shrink-0 cursor-pointer flex-col items-center gap-1 rounded-xl border border-gray-200 bg-white px-2 py-3 text-gray-700 transition-colors focus-visible:border-indigo-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+                  'flex w-16 shrink-0 cursor-pointer flex-col items-center rounded-xl border border-gray-200 bg-white px-2 py-3 text-gray-700 transition-colors focus-visible:border-indigo-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                   !isSelected && !disabled && 'hover:bg-gray-100',
                   isSelected && 'border-indigo-500 bg-indigo-500 text-white',
                 )}

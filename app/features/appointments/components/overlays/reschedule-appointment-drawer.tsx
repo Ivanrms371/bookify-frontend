@@ -148,21 +148,8 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
                 <Avatar src={appointment.professionalAvatar} name={appointment.professionalName} size="md" className="shrink-0" />
                 <div className="min-w-0">
                   <p className="truncate text-base font-semibold text-gray-800">{appointment.professionalName}</p>
-                  {(appointment.professionalEmail || appointment.professionalPhone) && (
-                    <p className="mt-1 text-sm font-medium text-gray-500">
-                      {[
-                        appointment.professionalEmail,
-                        appointment.professionalPhone &&
-                          [
-                            appointment.professionalPhoneCountryCode && `+${appointment.professionalPhoneCountryCode.replace(/^\+/, '')}`,
-                            appointment.professionalPhone,
-                          ]
-                            .filter(Boolean)
-                            .join(' '),
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                    </p>
+                  {appointment.professionalEmail && (
+                    <Text className="truncate text-sm font-medium text-gray-500">{appointment.professionalEmail}</Text>
                   )}
                 </div>
               </Card>

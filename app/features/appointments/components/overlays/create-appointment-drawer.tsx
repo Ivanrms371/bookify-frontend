@@ -177,7 +177,7 @@ export const CreateAppointmentDrawer = ({
   };
 
   return (
-    <Drawer overlayKey={OVERLAY_KEY} size="3xl" closeOnBackdrop title="Nueva reserva" titleClassName="text-2xl sm:text-xl">
+    <Drawer overlayKey={OVERLAY_KEY} size="3xl" closeOnBackdrop title="Nueva reserva" titleClassName="text-3xl sm:text-xl">
       <div className="flex h-full min-h-0 flex-col">
         <DrawerBody>
           <section className="space-y-3">

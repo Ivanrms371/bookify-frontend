@@ -26,7 +26,7 @@ export function AppointmentTimeSlotGrid({ slots, selectedStartsAt, disabled, onS
               !isSelected && !isUnavailable && !disabled && 'hover:bg-gray-100',
               isUnavailable && 'cursor-not-allowed border-transparent bg-muted text-muted-foreground line-through',
               disabled && 'cursor-not-allowed opacity-50',
-              isSelected && !isUnavailable && 'border-indigo-500 bg-indigo-500 text-white',
+              isSelected && !isUnavailable && 'border-indigo-500',
             )}
           >
             {slot.time}

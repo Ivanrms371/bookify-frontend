@@ -80,19 +80,7 @@ export const ProfessionalOption = ({
       <Avatar src={professional.avatarUrl} name={professional.name} size="md" className="shrink-0" />
       <span className="min-w-0 flex-1">
         <Text className="truncate text-base font-semibold text-gray-800">{professional.name}</Text>
-        {(professional.email || professional.phoneNumber) && (
-          <Text className="truncate text-sm font-medium text-gray-500">
-            {[
-              professional.email,
-              professional.phoneNumber &&
-                [professional.phoneCountryCode && `+${professional.phoneCountryCode.replace(/^\+/, '')}`, professional.phoneNumber]
-                  .filter(Boolean)
-                  .join(' '),
-            ]
-              .filter(Boolean)
-              .join(' · ')}
-          </Text>
-        )}
+        {professional.email && <Text className="truncate text-sm font-medium text-gray-500">{professional.email}</Text>}
       </span>
       <span
         className={cn(
