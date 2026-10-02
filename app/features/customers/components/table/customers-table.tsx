@@ -1,8 +1,9 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from '@/shared/components/ui/table';
-import type { Customer, CustomerBasic } from '../../types/customer-types';
+import type { CustomerBasic } from '../../types/customer-types';
 import { CustomerActions } from './customer-actions';
 import { formatPhoneForDisplay } from '@/shared/utils/format-phone';
 import { formatDateDMY } from '@/shared/utils/date';
+import { format } from 'date-fns';
 import { formatCurrency } from '@/shared/utils/currency';
 import { Badge } from '@/shared/components/ui/badge';
 
@@ -18,8 +19,8 @@ export const CustomersTable = ({ customers }: Props) => {
           <Th>Nombre</Th>
           <Th>Email</Th>
           <Th>Teléfono</Th>
-          <Th>Primera Cita</Th>
-          <Th>Última Cita</Th>
+          <Th>Próxima cita</Th>
+          <Th>Última visita</Th>
           <Th>Total Gastado</Th>
           <Th className="text-right">Acciones</Th>
         </Tr>
@@ -41,19 +42,19 @@ export const CustomersTable = ({ customers }: Props) => {
             </Td>
             <Td>
               <div className="text-gray-800">
-                {customer.firstAppointmentAt ? (
-                  formatDateDMY(customer.firstAppointmentAt)
+                {customer.nextAppointmentAt ? (
+                  format(new Date(customer.nextAppointmentAt), 'dd/MM/yyyy HH:mm')
                 ) : (
-                  <span className="text-gray-400">Todavía no ha tenido su primera cita</span>
+                  <span className="text-gray-400">No tiene próxima cita</span>
                 )}
               </div>
             </Td>
             <Td>
               <div className="text-gray-800">
-                {customer.lastAppointmentAt ? (
-                  formatDateDMY(customer.lastAppointmentAt)
+                {customer.lastVisitAt ? (
+                  formatDateDMY(customer.lastVisitAt)
                 ) : (
-                  <span className="text-gray-400">Sin última cita</span>
+                  <span className="text-gray-400">Sin visitas completadas</span>
                 )}
               </div>
             </Td>

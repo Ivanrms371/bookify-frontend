@@ -20,7 +20,7 @@ export const UpdateCustomerModal = ({ customer }: Props) => {
     name: customer.name,
     phoneCountryCode: customer.phoneCountryCode,
     phoneNumber: customer.phoneNumber,
-    email: customer.email,
+    email: customer.email ?? '',
     notes: customer.notes ?? '',
   };
 

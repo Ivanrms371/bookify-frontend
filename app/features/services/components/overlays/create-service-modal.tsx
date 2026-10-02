@@ -1,5 +1,6 @@
+import { Button } from '@/shared/components/ui';
 import { useState } from 'react';
-import { Drawer } from '@/shared/components/ui/drawer';
+import { Modal } from '@/shared/components/ui/modal';
 import { ServiceForm } from './service-form';
 import { useMediaDelete, useMediaUpload } from '@/shared/media';
 import { useCreateService } from '../../hooks/use-create-service';
@@ -8,9 +9,9 @@ import type { ServiceFormData } from '../../schemas/service-form-schema';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import type { OverlayKey } from '@/shared/components/overlays/overlay-registry';
 
-const OVERLAY_KEY: OverlayKey = 'create-service-drawer';
+const OVERLAY_KEY: OverlayKey = 'create-service-modal';
 
-export const CreateServiceDrawer = () => {
+export const CreateServiceModal = () => {
   const { close } = useOverlay(OVERLAY_KEY);
   const { mutateAsync: uploadMedia } = useMediaUpload();
   const { mutateAsync: deleteMedia } = useMediaDelete();
@@ -54,8 +55,24 @@ export const CreateServiceDrawer = () => {
   };
 
   return (
-    <Drawer overlayKey={OVERLAY_KEY} size="xl" closeOnBackdrop title="Nuevo Servicio">
-      <ServiceForm onSubmit={onSubmit} onCancel={close} isSubmitting={isSubmitting} />
-    </Drawer>
+    <Modal
+      overlayKey={OVERLAY_KEY}
+      size="2xl"
+      closeDisabled={isSubmitting}
+      manageFocus
+      title="Nuevo Servicio"
+      footer={
+        <>
+          <Button variant="secondary" type="button" className="w-fit" onClick={close} disabled={isSubmitting}>
+            Cancelar
+          </Button>
+          <Button variant="primary" type="submit" form="create-service-form" className="w-fit" isSubmitting={isSubmitting}>
+            Crear Servicio
+          </Button>
+        </>
+      }
+    >
+      <ServiceForm formId="create-service-form" onSubmit={onSubmit} isSubmitting={isSubmitting} />
+    </Modal>
   );
 };

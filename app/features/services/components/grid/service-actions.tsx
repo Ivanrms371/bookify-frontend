@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const ServiceActions = ({ service }: Props) => {
-  const { open: openUpdateService } = useOverlay('update-service-drawer');
+  const { open: openUpdateService } = useOverlay('update-service-modal');
   const { open: openToggleStatus } = useOverlay('toggle-service-status-modal');
   const { open: openDeleteService } = useOverlay('delete-service-modal');
 

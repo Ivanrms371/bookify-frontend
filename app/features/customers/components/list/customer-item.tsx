@@ -1,5 +1,6 @@
 import { formatPhoneForDisplay } from '@/shared/utils/format-phone';
 import { formatDateDMY } from '@/shared/utils/date';
+import { format } from 'date-fns';
 import { formatCurrency } from '@/shared/utils/currency';
 import { Badge } from '@/shared/components/ui/badge';
 import { CustomerActions } from '@/features/customers/components/table/customer-actions';
@@ -19,10 +20,12 @@ export const CustomerCard = ({ customer }: Props) => {
       <p className="text-sm text-gray-600 mb-1">{customer.email}</p>
       <p className="text-sm text-gray-600 mb-1">{formatPhoneForDisplay(customer.phoneNumber, customer.phoneCountryCode)}</p>
       <p className="text-sm text-gray-600 mb-1">
-        {customer.firstAppointmentAt ? `Primera cita: ${formatDateDMY(customer.firstAppointmentAt)}` : 'Sin primera cita'}
+        {customer.nextAppointmentAt
+          ? `Próxima cita: ${format(new Date(customer.nextAppointmentAt), 'dd/MM/yyyy HH:mm')}`
+          : 'No tiene próxima cita'}
       </p>
       <p className="text-sm text-gray-600 mb-1">
-        {customer.lastAppointmentAt ? `Última cita: ${formatDateDMY(customer.lastAppointmentAt)}` : 'Sin última cita'}
+        {customer.lastVisitAt ? `Última visita: ${formatDateDMY(customer.lastVisitAt)}` : 'Sin visitas completadas'}
       </p>
       <p className="text-sm font-medium text-gray-900 mb-3">
         Total gastado: {customer.totalSpent ? formatCurrency(customer.totalSpent) : formatCurrency(0)}

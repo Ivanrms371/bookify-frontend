@@ -1,14 +1,13 @@
 // overlay-registry.ts
 import { CancelAppointmentModal } from '../../../features/appointments/components/overlays/cancel-appointment-modal';
 import { RescheduleAppointmentDrawer } from '@/features/appointments/components/overlays/reschedule-appointment-drawer';
-import { AppointmentWizardModal } from '@/features/appointments/components/appointment-wizard/appointment-wizard-modal';
 import { CreateAppointmentDrawer } from '@/features/appointments/components/overlays/create-appointment-drawer';
 import { UpdateCustomerModal } from '@/features/customers/components/overlays/update-customer-modal';
 import { DeleteCustomerModal } from '@/features/customers/components/overlays/delete-customer-modal';
 import { BlockCustomerModal } from '@/features/customers/components/overlays/block-customer-modal';
 import { UnblockCustomerModal } from '@/features/customers/components/overlays/unblock-customer-modal';
-import { CreateServiceDrawer } from '@/features/services/components/overlays/create-service-drawer';
-import { UpdateServiceDrawer } from '@/features/services/components/overlays/update-service-drawer';
+import { CreateServiceModal } from '@/features/services/components/overlays/create-service-modal';
+import { UpdateServiceModal } from '@/features/services/components/overlays/update-service-modal';
 import { ToggleServiceStatusModal } from '@/features/services/components/overlays/toggle-service-status-modal';
 import { DeleteServiceModal } from '@/features/services/components/overlays/delete-service-modal';
 import { ViewCustomerDrawer } from '@/features/customers/components/overlays/view-customer-drawer';
@@ -25,14 +24,13 @@ import { CreateCustomerModal } from '@/features/customers/components/overlays/cr
 import { CreateProfessionalModal } from '@/features/professionals/components/overlays/create-professional-modal';
 
 export const overlayRegistry = {
-  'new-appointment-modal': AppointmentWizardModal,
   'create-appointment-drawer': CreateAppointmentDrawer,
   'reschedule-appointment-drawer': RescheduleAppointmentDrawer,
   'cancel-appointment-modal': CancelAppointmentModal,
 
   // Services
-  'create-service-drawer': CreateServiceDrawer,
-  'update-service-drawer': UpdateServiceDrawer,
+  'create-service-modal': CreateServiceModal,
+  'update-service-modal': UpdateServiceModal,
   'toggle-service-status-modal': ToggleServiceStatusModal,
   'delete-service-modal': DeleteServiceModal,
 

@@ -26,6 +26,11 @@ export interface CreateServicePayload {
 export type UpdateServicePayload = Partial<CreateServicePayload>;
 
 export interface GetAllServicesParams {
+  query?: string;
+  isActive?: boolean;
+  count?: boolean;
+  duration?: 'short' | 'medium' | 'long';
+  discount?: 'with' | 'without';
   professionalId?: string;
   orderBy?: string;
   order?: 'asc' | 'desc';
@@ -36,6 +41,7 @@ export interface GetAllServicesParams {
 export interface GetAllServicesResponse {
   data: Service[];
   meta: {
+    total?: number;
     skip: number;
     take: number;
   };

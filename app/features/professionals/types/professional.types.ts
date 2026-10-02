@@ -24,9 +24,11 @@ export type ProfessionalBasic = {
   name: string;
   colorTheme: string | null;
   bio: string | null;
-  email?: string;
-  phoneNumber?: string;
-  phoneCountryCode?: string;
+  isActive?: boolean;
+  role?: Role | null;
+  email?: string | null;
+  phoneNumber?: string | null;
+  phoneCountryCode?: string | null;
 };
 
 import type { Role } from '@/shared/types';
@@ -53,4 +55,18 @@ export type ProfessionalWithDetails = {
   slotIntervalMinutes: number;
   maxAdvancedDays: number;
   minAdvancedMinutes: number;
+};
+
+export type GetProfessionalsParams = {
+  query?: string;
+  isActive?: boolean;
+  serviceId?: string;
+  orderBy?: 'name' | 'createdAt';
+  sortOrder?: 'asc' | 'desc';
+  skip?: number;
+  take?: number;
+};
+export type ProfessionalsListing = {
+  data: ProfessionalBasic[];
+  meta: { total: number; skip: number; take: number };
 };

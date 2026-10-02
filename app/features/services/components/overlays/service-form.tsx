@@ -1,22 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/shared/components/form/input';
 import { FormField } from '@/shared/components/form/form-field';
 import { Textarea } from '@/shared/components/form/Textarea';
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { cn } from '@/shared/utils/cn';
-import { Button } from '@/shared/components/ui';
 import { useProfessionals } from '@/features/professionals/hooks/use-professionals';
 import { serviceFormSchema, type ServiceFormData } from '../../schemas/service-form-schema';
 import type { ApiError } from '@/core/error/api-error';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
+import { ModalBody } from '@/shared/components/ui/modal';
+import { ServiceThumbnail } from '../service-thumbnail';
 
 interface Props {
+  formId: string;
   defaultValues?: Partial<ServiceFormData>;
   onSubmit: (data: ServiceFormData) => void;
-  onCancel?: () => void;
-  submitLabel?: string;
   isSubmitting?: boolean;
   error?: ApiError | null;
   previewImageUrl?: string;
@@ -33,11 +32,17 @@ const initialValues = {
   image: null,
 };
 
-export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, isSubmitting, previewImageUrl }: Props) => {
+export const ServiceForm = ({ formId, defaultValues, onSubmit, isSubmitting, previewImageUrl }: Props) => {
   const { data: professionals = [] } = useProfessionals();
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>(defaultValues?.discountFixed ? 'fixed' : 'percentage');
 
-  const [previewImage, setPreviewImage] = useState<string | null>(previewImageUrl || null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  useEffect(
+    () => () => {
+      if (previewImage) URL.revokeObjectURL(previewImage);
+    },
+    [previewImage],
+  );
 
   const {
     register,
@@ -65,19 +70,39 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
 
   return (
     <form
+      id={formId}
       onSubmit={handleSubmit((data) =>
         onSubmit({
           ...data,
           ...(discountType === 'percentage'
-            ? { discountPercentage: data.discountPercentage, discountFixed: undefined }
-            : { discountFixed: data.discountFixed, discountPercentage: undefined }),
+            ? { discountPercentage: data.discountPercentage, discountFixed: null }
+            : { discountFixed: data.discountFixed, discountPercentage: null }),
         }),
       )}
       className="flex flex-col h-full"
     >
-      <DrawerBody>
+      <ModalBody>
         <FormField label="Nombre" id="name" error={errors.name?.message}>
           <Input id="name" {...register('name', { required: true })} placeholder="Ej: Corte de pelo" />
+        </FormField>
+
+        <FormField label="Imagen (opcional)" id="image" error={errors.image?.message ? String(errors.image.message) : undefined}>
+          <div className="flex items-center gap-3">
+            <ServiceThumbnail imageUrl={previewImage ?? previewImageUrl} />
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              disabled={isSubmitting}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) {
+                  setValue('image', file, { shouldDirty: true, shouldValidate: true });
+                  setPreviewImage(URL.createObjectURL(file));
+                }
+              }}
+            />
+          </div>
         </FormField>
 
         <FormField label="Descripción (opcional)" id="description" error={errors.description?.message}>
@@ -90,24 +115,6 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
             type="number"
             {...register('durationMinutes', { setValueAs: (v) => (v === '' ? undefined : Number(v)) })}
           />
-        </FormField>
-
-        <FormField label="Imagen" id="image" error={errors.image?.message as string}>
-          <div className="flex gap-2">
-            {previewImage && <img src={previewImage} className=" object-cover size-10 rounded-lg" alt="Preview" />}
-            <Input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0] || null;
-                if (file) {
-                  setValue('image', file);
-                  setPreviewImage(URL.createObjectURL(file));
-                }
-              }}
-            />
-          </div>
         </FormField>
 
         <FormField label="Precio" id="price" error={errors.price?.message}>
@@ -183,16 +190,7 @@ export const ServiceForm = ({ defaultValues, onSubmit, onCancel, submitLabel, is
             })}
           </div>
         </FormField>
-      </DrawerBody>
-
-      <DrawerFooter>
-        <Button variant="secondary" type="button" className="flex-1" onClick={onCancel}>
-          Cancelar
-        </Button>
-        <Button variant="primary" type="submit" className="flex-1" loading={isSubmitting}>
-          {submitLabel || 'Crear Servicio'}
-        </Button>
-      </DrawerFooter>
+      </ModalBody>
     </form>
   );
 };

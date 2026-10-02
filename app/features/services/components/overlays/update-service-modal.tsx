@@ -1,5 +1,6 @@
+import { Button } from '@/shared/components/ui';
 import { useState, useMemo } from 'react';
-import { Drawer } from '@/shared/components/ui/drawer';
+import { Modal } from '@/shared/components/ui/modal';
 import { ServiceForm } from './service-form';
 import { useMediaDelete, useMediaUpload } from '@/shared/media';
 import { useUpdateService } from '../../hooks/use-update-service';
@@ -10,20 +11,20 @@ import { useOverlay } from '@/shared/hooks/use-overlay';
 import type { OverlayKey } from '@/shared/components/overlays/overlay-registry';
 import type { Service } from '../../types/services.types';
 
-const OVERLAY_KEY: OverlayKey = 'update-service-drawer';
+const OVERLAY_KEY: OverlayKey = 'update-service-modal';
 
 interface Props {
   service: Service;
 }
 
-export const UpdateServiceDrawer = ({ service }: Props) => {
+export const UpdateServiceModal = ({ service }: Props) => {
   const { close } = useOverlay(OVERLAY_KEY);
   const { mutateAsync: upload } = useMediaUpload();
   const { mutateAsync: deleteMedia } = useMediaDelete();
   const { mutateAsync: updateService } = useUpdateService();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: professionals, isLoading } = useServiceProfessionals(service.id);
+  const { data: professionals, isLoading, isError, refetch } = useServiceProfessionals(service.id);
   const professionalIds = professionals?.map((p) => p.id) || [];
 
   const defaultValues: Partial<ServiceFormData> = useMemo(() => {
@@ -77,21 +78,50 @@ export const UpdateServiceDrawer = ({ service }: Props) => {
   };
 
   return (
-    <Drawer overlayKey={OVERLAY_KEY} size="xl" closeOnBackdrop title="Editar Servicio">
+    <Modal
+      overlayKey={OVERLAY_KEY}
+      size="2xl"
+      closeDisabled={isSubmitting}
+      manageFocus
+      title="Editar Servicio"
+      footer={
+        <>
+          <Button variant="secondary" type="button" className="w-fit" onClick={close} disabled={isSubmitting}>
+            Cancelar
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            form="update-service-form"
+            className="w-fit"
+            isSubmitting={isSubmitting}
+            disabled={isLoading || isError}
+          >
+            Guardar Cambios
+          </Button>
+        </>
+      }
+    >
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
           <p className="text-gray-500">Cargando datos del servicio...</p>
         </div>
+      ) : isError ? (
+        <div className="space-y-3 py-8 text-center" role="alert">
+          <p>No se pudo cargar el personal asignado.</p>
+          <Button variant="secondary" onClick={() => void refetch()}>
+            Reintentar
+          </Button>
+        </div>
       ) : (
         <ServiceForm
+          formId="update-service-form"
           onSubmit={onSubmit}
-          onCancel={close}
           isSubmitting={isSubmitting}
           defaultValues={defaultValues}
           previewImageUrl={service.imageUrl ?? undefined}
-          submitLabel="Guardar Cambios"
         />
       )}
-    </Drawer>
+    </Modal>
   );
 };

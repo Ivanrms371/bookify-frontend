@@ -16,7 +16,7 @@ export const ProfessionalActions = ({ professional }: Props) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button variant="secondary" type="button" size="icon">
+        <Button variant="ghost" type="button" size="icon">
           <span className="sr-only">Abrir menú</span>
           <EllipsisHorizontalIcon className="size-5 text-gray-500" />
         </Button>

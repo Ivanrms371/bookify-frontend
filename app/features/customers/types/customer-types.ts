@@ -21,13 +21,14 @@ export type CustomerBasic = {
   name: string;
   phoneNumber: string;
   phoneCountryCode: string;
-  email: string;
-  preferredLanguage: string;
+  email: string | null;
   notes: string | null;
   firstAppointmentAt: string | null;
   lastAppointmentAt: string | null;
-  totalSpent?: string;
-  blockedAt?: string | null;
+  totalSpent: string;
+  lastVisitAt: string | null;
+  nextAppointmentAt: string | null;
+  blockedAt: string | null;
 };
 
 export type GetAllCustomersResponse = {
@@ -41,7 +42,9 @@ export type GetAllCustomersResponse = {
 
 export interface GetAllCustomersParams {
   query?: string;
-  orderBy?: string;
+  status?: 'all' | 'unblocked' | 'blocked';
+  bookingActivity?: 'all' | 'upcoming' | 'never-booked';
+  orderBy?: 'name' | 'createdAt' | 'lastVisitAt' | 'totalSpent';
   order?: 'asc' | 'desc';
   skip?: number;
   take?: number;
