@@ -29,6 +29,7 @@ export type Appointment = {
   customerId: string;
   professionalId: string;
   status: AppointmentStatus;
+  timeZone?: string;
   startsAt: string;
   endsAt: string;
   customerName: string;
@@ -42,6 +43,9 @@ export type Appointment = {
   discountAmount?: Decimal | null;
   durationMinutes: number;
   professionalName: string | null;
+  professionalEmail?: string | null;
+  professionalPhone?: string | null;
+  professionalPhoneCountryCode?: string | null;
   professionalAvatar: string | null;
   professionalBio: string | null;
   serviceName: string | null;

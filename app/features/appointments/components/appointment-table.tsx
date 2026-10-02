@@ -28,7 +28,6 @@ export const AppointmentTable = ({ appointments, selectedDate, onNext, onPreviou
             <Th>Servicio</Th>
             <Th>Estado</Th>
             <Th>Precio</Th>
-            <Th>Teléfono</Th>
             <Th className="text-right">Acciones</Th>
           </tr>
         </Thead>
@@ -44,7 +43,12 @@ export const AppointmentTable = ({ appointments, selectedDate, onNext, onPreviou
                 </div>
               </Td>
               <Td>
-                <div className="text-gray-800">{appt.customerName}</div>
+                <div className={appt.customerId ? 'text-gray-800' : 'text-gray-400 italic'}>
+                  {appt.customerId ? appt.customerName : 'Sin cliente asociado'}
+                </div>
+                {appt.customerId && (appt.customerEmail || appt.customerPhone) && (
+                  <div className="mt-1 text-xs text-gray-500">{[appt.customerEmail, appt.customerPhone].filter(Boolean).join(' · ')}</div>
+                )}
               </Td>
               <Td>
                 <div className="text-gray-800">{appt.serviceName}</div>
@@ -55,10 +59,6 @@ export const AppointmentTable = ({ appointments, selectedDate, onNext, onPreviou
               <Td>
                 <div className="text-gray-800">{formatCurrency(appt.price)}</div>
               </Td>
-              <Td>
-                <div className="text-gray-800">{appt.customerPhone}</div>
-              </Td>
-
               <Td>
                 <div className="flex justify-end w-full relative">
                   <AppointmentActions appointment={appt} />

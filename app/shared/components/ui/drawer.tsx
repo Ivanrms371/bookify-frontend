@@ -30,6 +30,7 @@ type DrawerProps = {
   overlayKey: OverlayKey;
   children: ReactNode;
   title?: string;
+  titleClassName?: string;
   size?: DrawerSize;
   position?: DrawerPosition;
   className?: string;
@@ -41,6 +42,7 @@ export const Drawer = ({
   overlayKey,
   children,
   title,
+  titleClassName,
   size = 'md',
   position = 'right',
   className,
@@ -84,7 +86,7 @@ export const Drawer = ({
         )}
       >
         <DrawerHeader onClose={isDismissible ? close : undefined}>
-          <DrawerTitle>{title}</DrawerTitle>
+          <DrawerTitle className={titleClassName}>{title}</DrawerTitle>
         </DrawerHeader>
         <div className="min-h-0 flex-1">{children}</div>
       </div>
@@ -111,16 +113,16 @@ export const DrawerHeader = ({ children, onClose }: DrawerHeaderProps) => {
   );
 };
 
-export const DrawerTitle = ({ children }: { children: React.ReactNode }) => {
+export const DrawerTitle = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   return (
     <div className="w-full">
-      <Heading className="text-xl font-bold">{children}</Heading>
+      <Heading className={cn('text-xl font-bold', className)}>{children}</Heading>
     </div>
   );
 };
 
 export const DrawerBody = ({ children }: { children: React.ReactNode }) => {
-  return <div className="overflow-y-auto px-2 space-y-5 flex-1">{children}</div>;
+  return <div className="overflow-y-auto space-y-5 flex-1">{children}</div>;
 };
 
 export const DrawerFooter = ({ children }: { children: React.ReactNode }) => {

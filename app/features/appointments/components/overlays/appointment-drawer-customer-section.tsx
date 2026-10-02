@@ -106,7 +106,7 @@ export const AppointmentDrawerCustomerSection = ({
 
 const SelectedCustomer = ({ customer, onClear }: { customer: CustomerSearchItem; onClear: () => void }) => (
   <div className="flex items-center justify-between gap-3 rounded-lg border border-indigo-200 bg-indigo-50 p-3">
-    <CheckCircleIcon className="size-6 shrink-0 text-indigo-600" aria-hidden="true" />
+    <CheckCircleIcon className="size-6 shrink-0 text-indigo-500" aria-hidden="true" />
     <div className="min-w-0 flex-1">
       <Text className="truncate text-base font-semibold text-gray-800">{customer.name}</Text>
       <Text className="truncate text-sm font-medium text-gray-500">
@@ -137,7 +137,7 @@ const CustomerModeOption = ({
     className={cn(
       'cursor-pointer rounded-lg border border-gray-200 p-3 text-left transition-colors',
       !isSelected && 'hover:bg-gray-100',
-      isSelected && 'border-indigo-600',
+      isSelected && 'border-indigo-500',
     )}
   >
     <Text className="text-base font-semibold text-gray-800">{title}</Text>

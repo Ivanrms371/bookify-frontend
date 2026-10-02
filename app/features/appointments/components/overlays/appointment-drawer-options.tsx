@@ -1,4 +1,4 @@
-import { PhotoIcon, UserIcon } from '@heroicons/react/24/outline';
+import { PhotoIcon } from '@heroicons/react/24/outline';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { Card } from '@/shared/components/ui/card';
 import { Avatar } from '@/shared/components/ui/avatar';
@@ -10,7 +10,7 @@ import type { ProfessionalBasic } from '@/features/professionals/types/professio
 
 export const SectionHeader = ({ title, description }: { title: string; description: string }) => (
   <div>
-    <Text className="text-xl font-bold text-gray-800 md:text-2xl">{title}</Text>
+    <Text className="text-lg font-bold text-gray-800">{title}</Text>
     <Text className="text-base font-medium text-gray-500">{description}</Text>
   </div>
 );
@@ -20,14 +20,14 @@ export const ServiceOption = ({ service, isSelected, onSelect }: { service: Serv
     className={cn(
       'rounded-xl border border-gray-200 p-0 shadow-none transition-colors',
       !isSelected && 'hover:bg-gray-100',
-      isSelected && 'border-indigo-600',
+      isSelected && 'border-indigo-500',
     )}
   >
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={isSelected}
-      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600"
+      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
     >
       {service.imageUrl ? (
         <img src={service.imageUrl} alt={service.name} className="size-12 shrink-0 rounded-lg border border-gray-200 object-cover" />
@@ -45,7 +45,7 @@ export const ServiceOption = ({ service, isSelected, onSelect }: { service: Serv
       <span
         className={cn(
           'flex size-5 shrink-0 items-center justify-center rounded-full border border-gray-200',
-          isSelected && 'border-indigo-600 bg-indigo-600',
+          isSelected && 'border-indigo-500 bg-indigo-500',
         )}
         aria-hidden="true"
       >
@@ -68,30 +68,36 @@ export const ProfessionalOption = ({
     className={cn(
       'rounded-xl border border-gray-200 p-0 shadow-none transition-colors',
       !isSelected && 'hover:bg-gray-100',
-      isSelected && 'border-indigo-600',
+      isSelected && 'border-indigo-500',
     )}
   >
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={isSelected}
-      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600"
+      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
     >
-      {professional.avatarUrl ? (
-        <Avatar src={professional.avatarUrl} size="md" className="shrink-0" />
-      ) : (
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-50">
-          <UserIcon className="size-5 text-gray-400" />
-        </span>
-      )}
+      <Avatar src={professional.avatarUrl} name={professional.name} size="md" className="shrink-0" />
       <span className="min-w-0 flex-1">
         <Text className="truncate text-base font-semibold text-gray-800">{professional.name}</Text>
-        <Text className="truncate text-sm font-medium text-gray-500">{professional.bio}</Text>
+        {(professional.email || professional.phoneNumber) && (
+          <Text className="truncate text-sm font-medium text-gray-500">
+            {[
+              professional.email,
+              professional.phoneNumber &&
+                [professional.phoneCountryCode && `+${professional.phoneCountryCode.replace(/^\+/, '')}`, professional.phoneNumber]
+                  .filter(Boolean)
+                  .join(' '),
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </Text>
+        )}
       </span>
       <span
         className={cn(
           'flex size-5 shrink-0 items-center justify-center rounded-full border border-gray-200',
-          isSelected && 'border-indigo-600 bg-indigo-600',
+          isSelected && 'border-indigo-500 bg-indigo-500',
         )}
         aria-hidden="true"
       >

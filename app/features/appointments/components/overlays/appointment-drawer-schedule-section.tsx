@@ -4,7 +4,7 @@ import { CalendarIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Button } from '@/shared/components/ui';
+import { Button, Callout } from '@/shared/components/ui';
 import { AppointmentDayPicker, type AppointmentDayOption } from './appointment-day-picker';
 import { AppointmentTimeSlotGrid } from './appointment-time-slot-grid';
 
@@ -18,9 +18,7 @@ type Props = {
   isLoading?: boolean;
   isDisabled?: boolean;
   missingSelection?: 'service' | 'professional';
-  disablePastSlots?: boolean;
   interactionDisabled?: boolean;
-  unavailableStartsAt?: string;
   previousDisabled?: boolean;
   onPreviousPage?: (daysCount: number) => void;
   onNextPage?: (daysCount: number) => void;
@@ -29,7 +27,7 @@ type Props = {
 };
 
 export function AppointmentDrawerScheduleSection({
-  title,
+  title = 'Seleccionar fecha',
   days,
   slots,
   availabilityDays = [],
@@ -38,20 +36,15 @@ export function AppointmentDrawerScheduleSection({
   isLoading,
   isDisabled,
   missingSelection,
-  disablePastSlots,
   interactionDisabled,
-  unavailableStartsAt,
   previousDisabled,
   onPreviousPage,
   onNextPage,
   onSelectDate,
   onSelectSlot,
 }: Props) {
-  const isSelectable = (slot: AppointmentAvailabilitySlot) =>
-    slot.status !== 'busy' &&
-    (!disablePastSlots || (slot.status !== 'past' && new Date(slot.startsAt).getTime() > Date.now())) &&
-    (!unavailableStartsAt || new Date(slot.startsAt).getTime() !== new Date(unavailableStartsAt).getTime());
-  const hasSelectableSlots = slots.some(isSelectable);
+  const isSelectable = (slot: AppointmentAvailabilitySlot) => slot.status !== 'busy';
+  const isPastTime = Boolean(selectedStartsAt && new Date(selectedStartsAt).getTime() < Date.now());
   const nextAvailableDay = availabilityDays
     .filter((day) => day.date > selectedDate && day.slots.some(isSelectable))
     .sort((a, b) => a.date.localeCompare(b.date))[0];
@@ -68,16 +61,17 @@ export function AppointmentDrawerScheduleSection({
         onNext={onNextPage}
         onSelect={onSelectDate}
       />
+      <p className="text-lg font-semibold text-gray-800">Seleccionar hora</p>
       {!isDisabled && isLoading ? (
         <div className="flex h-24 items-center justify-center">
           <Spinner />
         </div>
-      ) : isDisabled || !hasSelectableSlots ? (
+      ) : isDisabled || slots.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center" role="status">
           <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-indigo-50 ring-1 ring-indigo-200">
             <CalendarIcon className="size-7 text-indigo-500" aria-hidden="true" />
           </div>
-          <p className="text-lg font-semibold text-gray-900 md:text-xl">
+          <p className="text-lg font-semibold text-gray-900">
             {isDisabled
               ? missingSelection === 'professional'
                 ? 'Seleccioná un profesional'
@@ -117,14 +111,12 @@ export function AppointmentDrawerScheduleSection({
           )}
         </div>
       ) : (
-        <AppointmentTimeSlotGrid
-          slots={slots}
-          selectedStartsAt={selectedStartsAt}
-          disablePastSlots={disablePastSlots}
-          disabled={interactionDisabled}
-          unavailableStartsAt={unavailableStartsAt}
-          onSelect={onSelectSlot}
-        />
+        <AppointmentTimeSlotGrid slots={slots} selectedStartsAt={selectedStartsAt} disabled={interactionDisabled} onSelect={onSelectSlot} />
+      )}
+      {!isDisabled && isPastTime && (
+        <Callout type="warning">
+          El horario seleccionado ya pasó. Si continuás, la cita quedará registrada en una fecha y hora pasadas.
+        </Callout>
       )}
     </>
   );

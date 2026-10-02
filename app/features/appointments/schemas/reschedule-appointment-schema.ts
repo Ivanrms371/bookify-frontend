@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const rescheduleAppointmentSchema = z.object({
-  startsAt: z.iso.datetime({ offset: true }).refine((value) => new Date(value).getTime() > Date.now(), 'Elegí un horario futuro'),
+  startsAt: z.iso.datetime({ offset: true }),
   rescheduleReason: z
     .string()
     .trim()

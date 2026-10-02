@@ -13,5 +13,6 @@ export const appointmentsApi = {
 
   reschedule: (id: string, input: RescheduleAppointmentInput) => httpClient.patch<Appointment>(`/appointments/${id}/reschedule`, input),
 
-  cancel: () => {},
+  cancel: (id: string, input: { cancellationReason?: string } = {}) =>
+    httpClient.patch<Appointment>(`/appointments/${id}/cancel`, input),
 };

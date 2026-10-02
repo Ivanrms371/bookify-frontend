@@ -1,4 +1,5 @@
 // overlay-registry.ts
+import { CancelAppointmentModal } from '../../../features/appointments/components/overlays/cancel-appointment-modal';
 import { RescheduleAppointmentDrawer } from '@/features/appointments/components/overlays/reschedule-appointment-drawer';
 import { AppointmentWizardModal } from '@/features/appointments/components/appointment-wizard/appointment-wizard-modal';
 import { CreateAppointmentDrawer } from '@/features/appointments/components/overlays/create-appointment-drawer';
@@ -27,6 +28,7 @@ export const overlayRegistry = {
   'new-appointment-modal': AppointmentWizardModal,
   'create-appointment-drawer': CreateAppointmentDrawer,
   'reschedule-appointment-drawer': RescheduleAppointmentDrawer,
+  'cancel-appointment-modal': CancelAppointmentModal,
 
   // Services
   'create-service-drawer': CreateServiceDrawer,

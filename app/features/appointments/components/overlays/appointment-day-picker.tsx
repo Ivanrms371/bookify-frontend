@@ -19,7 +19,7 @@ type Props = {
 };
 
 export function AppointmentDayPicker({
-  title = 'Cambiar horario',
+  title = 'Seleccionar fecha',
   days,
   selectedDate,
   disabled,
@@ -36,15 +36,11 @@ export function AppointmentDayPicker({
   }));
   const pendingScroll = useRef<{ anchor: string; target: string } | null>(null);
   const initialized = useRef(false);
-  const renderedDays = Array.from(
-    { length: differenceInCalendarDays(parseISO(range.end), parseISO(range.start)) + 1 },
-    (_, index) => {
-      const date = addDays(parseISO(range.start), index);
-      return { date: format(date, 'yyyy-MM-dd'), dayNumber: format(date, 'd'), label: format(date, 'EEE', { locale: es }).replace('.', '') };
-    },
-  );
-  const scrollBehavior = (): ScrollBehavior =>
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+  const renderedDays = Array.from({ length: differenceInCalendarDays(parseISO(range.end), parseISO(range.start)) + 1 }, (_, index) => {
+    const date = addDays(parseISO(range.start), index);
+    return { date: format(date, 'yyyy-MM-dd'), dayNumber: format(date, 'd'), label: format(date, 'EEE', { locale: es }).replace('.', '') };
+  });
+  const scrollBehavior = (): ScrollBehavior => (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth');
 
   const moveDays = (direction: -1 | 1) => {
     const container = strip.current;
@@ -59,8 +55,10 @@ export function AppointmentDayPicker({
       pendingScroll.current = { anchor, target };
       setRange({
         start: target < range.start ? format(addDays(parseISO(target), -42), 'yyyy-MM-dd') : range.start,
-        end: target > format(addDays(parseISO(range.end), -visibleCount), 'yyyy-MM-dd')
-          ? format(addDays(parseISO(target), 42), 'yyyy-MM-dd') : range.end,
+        end:
+          target > format(addDays(parseISO(range.end), -visibleCount), 'yyyy-MM-dd')
+            ? format(addDays(parseISO(target), 42), 'yyyy-MM-dd')
+            : range.end,
       });
     } else {
       container.scrollTo({ left: differenceInCalendarDays(parseISO(target), parseISO(range.start)) * stride, behavior: scrollBehavior() });
@@ -87,7 +85,10 @@ export function AppointmentDayPicker({
     if (pending) {
       pendingScroll.current = null;
       container.scrollTo({ left: differenceInCalendarDays(parseISO(pending.anchor), parseISO(range.start)) * stride, behavior: 'instant' });
-      container.scrollTo({ left: differenceInCalendarDays(parseISO(pending.target), parseISO(range.start)) * stride, behavior: scrollBehavior() });
+      container.scrollTo({
+        left: differenceInCalendarDays(parseISO(pending.target), parseISO(range.start)) * stride,
+        behavior: scrollBehavior(),
+      });
     }
     return () => observer.disconnect();
   }, [range]);
@@ -107,7 +108,7 @@ export function AppointmentDayPicker({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xl font-bold text-gray-800 md:text-2xl">{title}</p>
+        <p className="text-lg font-semibold text-gray-800">{title}</p>
         <div className="flex gap-1">
           <Button
             type="button"
@@ -145,9 +146,9 @@ export function AppointmentDayPicker({
                 aria-label={format(parseISO(day.date), "EEEE d 'de' MMMM", { locale: es })}
                 onClick={() => onSelect(day.date)}
                 className={cn(
-                  'flex w-16 shrink-0 cursor-pointer flex-col items-center gap-1 rounded-xl border border-gray-200 bg-white px-2 py-3 text-gray-700 transition-colors focus-visible:border-indigo-600 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+                  'flex w-16 shrink-0 cursor-pointer flex-col items-center gap-1 rounded-xl border border-gray-200 bg-white px-2 py-3 text-gray-700 transition-colors focus-visible:border-indigo-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                   !isSelected && !disabled && 'hover:bg-gray-100',
-                  isSelected && 'border-indigo-600 bg-indigo-600 text-white',
+                  isSelected && 'border-indigo-500 bg-indigo-500 text-white',
                 )}
               >
                 <span className={cn('font-display text-sm font-normal capitalize', isSelected ? 'text-white' : 'text-gray-700')}>

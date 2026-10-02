@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { Button, Card, Drawer } from '@/shared/components/ui';
 import { DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
+import { Avatar } from '@/shared/components/ui/avatar';
 import { Textarea } from '@/shared/components/form/Textarea';
 import { SectionHeader } from './appointment-drawer-options';
 import { AppointmentSelectionSummary } from './appointment-selection-summary';
@@ -86,13 +87,12 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
   );
   const day = availability.data?.days.find((item) => item.date === selectedDate);
   const slots = day?.slots ?? [];
-  const validSlot = selectedSlot && slots.find((slot) => slot.startsAt === selectedSlot.startsAt && slot.status === 'available');
+  const validSlot = selectedSlot && slots.find((slot) => slot.startsAt === selectedSlot.startsAt && slot.status !== 'busy');
   const canSubmit = Boolean(
     eligible &&
     validSlot &&
     !availability.isFetching &&
     !availability.isError &&
-    new Date(validSlot.startsAt).getTime() > Date.now() &&
     new Date(validSlot.startsAt).getTime() !== new Date(appointment.startsAt).getTime(),
   );
 
@@ -145,12 +145,25 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
                 </p>
               </Card>
               <Card className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 shadow-none transition-colors hover:bg-gray-100">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-base font-semibold text-muted-foreground">
-                  {appointment.professionalName?.charAt(0) ?? 'P'}
-                </span>
+                <Avatar src={appointment.professionalAvatar} name={appointment.professionalName} size="md" className="shrink-0" />
                 <div className="min-w-0">
                   <p className="truncate text-base font-semibold text-gray-800">{appointment.professionalName}</p>
-                  <p className="mt-1 text-sm font-medium text-gray-500">Profesional</p>
+                  {(appointment.professionalEmail || appointment.professionalPhone) && (
+                    <p className="mt-1 text-sm font-medium text-gray-500">
+                      {[
+                        appointment.professionalEmail,
+                        appointment.professionalPhone &&
+                          [
+                            appointment.professionalPhoneCountryCode && `+${appointment.professionalPhoneCountryCode.replace(/^\+/, '')}`,
+                            appointment.professionalPhone,
+                          ]
+                            .filter(Boolean)
+                            .join(' '),
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </p>
+                  )}
                 </div>
               </Card>
             </div>
@@ -176,9 +189,7 @@ export function RescheduleAppointmentDrawer({ appointment }: { appointment: Appo
                   selectedDate={selectedDate}
                   selectedStartsAt={selectedSlot?.startsAt ?? null}
                   isLoading={availability.isFetching}
-                  disablePastSlots
                   interactionDisabled={isPending}
-                  unavailableStartsAt={appointment.startsAt}
                   onSelectDate={selectDate}
                   onSelectSlot={(slot) => {
                     setSelectedSlot(slot);

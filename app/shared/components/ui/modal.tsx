@@ -1,5 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { cn } from '@/shared/utils/cn';
@@ -35,6 +35,8 @@ type ModalProps = {
   closeOnBackdrop?: boolean;
   showCloseButton?: boolean;
   footer?: ReactNode;
+  closeDisabled?: boolean;
+  manageFocus?: boolean;
 };
 
 export const Modal = ({
@@ -46,19 +48,57 @@ export const Modal = ({
   closeOnBackdrop = true,
   showCloseButton = true,
   footer,
+  closeDisabled = false,
+  manageFocus = false,
 }: ModalProps) => {
   const { close, isVisible, shouldRender } = useOverlay(overlayKey);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!shouldRender || !manageFocus) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const frame = requestAnimationFrame(() => dialogRef.current?.focus());
+    const containFocus = (event: FocusEvent) => {
+      if (event.target instanceof Node && !dialogRef.current?.contains(event.target)) dialogRef.current?.focus();
+    };
+    document.addEventListener('focusin', containFocus);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener('focusin', containFocus);
+      if (previousFocus?.isConnected) previousFocus.focus();
+    };
+  }, [shouldRender, manageFocus]);
 
   useEffect(() => {
     if (!shouldRender) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close();
+      if (event.key === 'Escape' && !closeDisabled) close();
+      if (event.key === 'Tab' && manageFocus) {
+        const items = Array.from(
+          dialogRef.current?.querySelectorAll<HTMLElement>(
+            'button:not(:disabled), textarea:not(:disabled), input:not(:disabled), a[href], [tabindex="0"]',
+          ) ?? [],
+        );
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (!first) {
+          event.preventDefault();
+          dialogRef.current?.focus();
+        } else if (event.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialogRef.current)) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [shouldRender, close]);
+  }, [shouldRender, close, closeDisabled, manageFocus]);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -81,12 +121,16 @@ export const Modal = ({
           'absolute inset-0 bg-gray-900/45 backdrop-blur-sm transition-opacity duration-300 ease-out',
           isVisible ? 'opacity-100' : 'opacity-0',
         )}
-        onClick={closeOnBackdrop ? close : undefined}
+        onClick={closeOnBackdrop && !closeDisabled ? close : undefined}
         aria-hidden="true"
       />
 
       <div
+        ref={dialogRef}
+        tabIndex={manageFocus ? -1 : undefined}
         role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
         className={cn(
           'relative z-10 flex w-full max-h-[85vh] transition-all duration-300 ease-out flex-col overflow-hidden',
           modalSizeClasses[size],
@@ -95,8 +139,10 @@ export const Modal = ({
           className,
         )}
       >
-        <ModalHeader onClose={showCloseButton ? close : undefined}>
-          <ModalTitle>{title}</ModalTitle>
+        <ModalHeader onClose={showCloseButton && !closeDisabled ? close : undefined}>
+          <div id={titleId}>
+            <ModalTitle>{title}</ModalTitle>
+          </div>
         </ModalHeader>
 
         <div className="min-h-0 flex-1 overflow-auto">{children}</div>

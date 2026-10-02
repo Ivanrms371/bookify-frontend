@@ -80,10 +80,15 @@ export const CreateAppointmentDrawer = ({
 
   const [pageStart, setPageStart] = useState(() => getInitialDate(defaultDate, defaultStartsAt));
   const days = useMemo(
-    () => Array.from({ length: 21 }, (_, index) => {
-      const date = addDays(parseISO(pageStart), index);
-      return { date: format(date, 'yyyy-MM-dd'), dayNumber: format(date, 'd'), label: format(date, 'EEE', { locale: es }).replace('.', '') };
-    }),
+    () =>
+      Array.from({ length: 21 }, (_, index) => {
+        const date = addDays(parseISO(pageStart), index);
+        return {
+          date: format(date, 'yyyy-MM-dd'),
+          dayNumber: format(date, 'd'),
+          label: format(date, 'EEE', { locale: es }).replace('.', ''),
+        };
+      }),
     [pageStart],
   );
 
@@ -146,6 +151,7 @@ export const CreateAppointmentDrawer = ({
 
   const handleSubmit = () => {
     if (!selectedServiceId || !selectedProfessionalId || !selectedSlot) return;
+    if (!canSubmit) return;
 
     const result = createAppointmentSchema.safeParse({
       serviceId: selectedServiceId,
@@ -171,11 +177,14 @@ export const CreateAppointmentDrawer = ({
   };
 
   return (
-    <Drawer overlayKey={OVERLAY_KEY} size="3xl" closeOnBackdrop title="Nueva reserva">
+    <Drawer overlayKey={OVERLAY_KEY} size="3xl" closeOnBackdrop title="Nueva reserva" titleClassName="text-2xl sm:text-xl">
       <div className="flex h-full min-h-0 flex-col">
         <DrawerBody>
           <section className="space-y-3">
-            <SectionHeader title="Cliente" description="Opcional para walk-ins. Podés buscar un cliente existente o crear uno nuevo." />
+            <SectionHeader
+              title="Seleccionar cliente"
+              description="Opcional para walk-ins. Podés buscar un cliente existente o crear uno nuevo."
+            />
 
             <AppointmentDrawerCustomerSection
               mode={customerMode}
@@ -192,7 +201,7 @@ export const CreateAppointmentDrawer = ({
           </section>
 
           <section className="space-y-3">
-            <SectionHeader title="Servicio" description="Elegí qué se va a reservar." />
+            <SectionHeader title="Seleccionar servicio" description="Elegí qué se va a reservar." />
             {isLoadingServices ? (
               <Spinner />
             ) : services.length > 0 ? (
@@ -212,7 +221,7 @@ export const CreateAppointmentDrawer = ({
           </section>
 
           <section className="space-y-3">
-            <SectionHeader title="Profesional" description="La lista se filtra según el servicio seleccionado." />
+            <SectionHeader title="Seleccionar profesional" description="La lista se filtra según el servicio seleccionado." />
             {!selectedServiceId ? (
               <EmptyInline icon={<UserIcon className="size-5" />} text="Seleccioná un servicio para ver profesionales." />
             ) : isLoadingProfessionals ? (
@@ -235,7 +244,7 @@ export const CreateAppointmentDrawer = ({
 
           <section className="space-y-3">
             <AppointmentDrawerScheduleSection
-              title="Elegir horario"
+              title="Seleccionar fecha"
               days={days}
               slots={selectedDateSlots}
               availabilityDays={appointmentAvailability?.days}
