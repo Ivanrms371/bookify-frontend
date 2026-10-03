@@ -5,15 +5,21 @@ import { useBillingSummary } from '../hooks/use-billing-subscription';
 import { BillingCurrentPlan } from './billing-current-plan';
 import { BillingPlanUsage } from './billing-plan-usage';
 import { BillingPaymentHistory } from './billing-payment-history';
+import { CustomerPortalButton } from './customer-portal-button';
+import { useBillingReturnRefresh } from '../hooks/use-customer-portal';
+import { Heading, Text } from '@/shared/components/typography';
 
 export function BillingOverview() {
   const query = useBillingSummary();
+  useBillingReturnRefresh();
   const { slug } = useParams();
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900">Facturación</h1>
-        <p className="mt-2 text-sm text-gray-500">Tu suscripción, el uso de tu plan y tus pagos en un solo lugar.</p>
+        <Heading>Facturación</Heading>
+        <Text size="base" weight="medium" variant="subtle">
+          Tu suscripción, el uso de tu plan y tus pagos en un solo lugar.
+        </Text>
       </div>
       {query.isPending ? (
         <p role="status" className="py-8 text-gray-500">
@@ -35,12 +41,14 @@ export function BillingOverview() {
           <BillingCurrentPlan summary={query.data} />
           <BillingPlanUsage summary={query.data} />
           <BillingPaymentHistory />
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-            <p className="text-xs text-gray-500">La gestión de pagos se conectará con Lemon Squeezy.</p>
-            <Button variant="ghost" size="sm" disabled title="Conexión con Lemon Squeezy pendiente">
-              Cancelar suscripción
-            </Button>
-          </div>
+          {query.data.access.canManageBilling && query.data.allowedActions.manageSubscription && (
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+              <p className="text-xs text-gray-500">
+                Gestiona tu método de pago y tu suscripción en Lemon Squeezy. Los cambios se reflejarán al volver.
+              </p>
+              {query.data.allowedActions.cancelSubscription && <CustomerPortalButton label="Cancelar suscripción" variant="danger" />}
+            </div>
+          )}
         </>
       )}
     </div>

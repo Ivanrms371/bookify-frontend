@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router';
 import type { BillingSummary } from '../types/billing.types';
+import { Card } from '@/shared/components/ui';
 
 function UsageItem({ label, used, limit, to }: { label: string; used: number; limit?: number; to: string }) {
   const available = limit === undefined ? undefined : Math.max(0, limit - used);
@@ -40,7 +41,7 @@ function UsageItem({ label, used, limit, to }: { label: string; used: number; li
 export function BillingPlanUsage({ summary }: { summary: BillingSummary }) {
   const { slug } = useParams();
   return (
-    <section aria-labelledby="plan-usage" className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+    <Card as="section" aria-labelledby="plan-usage" className="p-6 sm:p-8">
       <h2 id="plan-usage" className="text-lg font-semibold text-gray-900">
         Uso del plan
       </h2>
@@ -54,6 +55,6 @@ export function BillingPlanUsage({ summary }: { summary: BillingSummary }) {
         />
         <UsageItem label="Servicios" used={summary.usage.services} to={`/${slug}/services`} />
       </div>
-    </section>
+    </Card>
   );
 }

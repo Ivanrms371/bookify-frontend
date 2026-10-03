@@ -69,11 +69,13 @@ export const PlanCard = ({ plan, isAnnual, isCurrent, canManage, pending, onSele
             <>
               {hasDiscount ? (
                 <div className="relative flex w-fit items-center gap-1 h-8">
-                  <span className={cn('text-sm font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>$</span>
+                  <Text as="span" className={cn('text-sm font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>
+                    $
+                  </Text>
 
-                  <span className={cn('text-lg font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>
+                  <Text as="span" className={cn('text-lg font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>
                     {(Number(comparePrice) / 12).toFixed(2)}
-                  </span>
+                  </Text>
 
                   <span className={cn('text-xs text-gray-400', isPopular && 'text-gray-500')}>/mes</span>
 
@@ -86,23 +88,29 @@ export const PlanCard = ({ plan, isAnnual, isCurrent, canManage, pending, onSele
           )}
 
           <div className="mb-2 flex items-end gap-1">
-            <span className={cn('text-2xl font-display font-medium text-gray-800', isPopular && 'text-gray-100')}>$</span>
+            <Text className={cn('text-2xl font-display font-medium text-gray-800', isPopular && 'text-gray-100')}>$</Text>
 
-            <span className={cn('text-6xl font-display leading-12 font-bold text-gray-800', isPopular && 'text-gray-100')}>
+            <Text className={cn('text-6xl font-display leading-12 font-bold text-gray-800', isPopular && 'text-gray-100')}>
               {displayPrice}
-            </span>
+            </Text>
 
-            <span className={cn('text-base font-medium text-gray-600', isPopular && 'text-gray-300')}>/mes</span>
+            <Text className={cn('text-base font-medium text-gray-600', isPopular && 'text-gray-300')}>/mes</Text>
           </div>
 
-          <p className={cn('text-left text-sm text-gray-600', isPopular && 'text-gray-300')}>{description}</p>
+          <Text size="sm" variant="muted" className={cn('text-left', isPopular && 'text-gray-100')}>
+            {description}
+          </Text>
         </div>
 
-        {annual && (
-          <p className={cn('mb-3 text-sm text-gray-500', isPopular && 'text-gray-300')}>
+        {annual ? (
+          <Text size="sm" variant="subtle" className={cn('mb-3', isPopular && 'text-gray-300')}>
             {annual.amount} {plan.currency} al año
-          </p>
-        )}
+          </Text>
+        ) : plan.id === 'free' ? (
+          <Text size="sm" variant="subtle" className={cn('mb-3', isPopular && 'text-gray-300')}>
+            Completamente gratis
+          </Text>
+        ) : null}
         <Button
           disabled={pending || Boolean(disabledReason)}
           title={disabledReason}

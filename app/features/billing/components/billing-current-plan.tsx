@@ -1,20 +1,23 @@
 import { useSubscriptionNotice } from '../hooks/use-subscription-notice';
-import { useNavigate } from 'react-router';
-import { ArrowUpRightIcon, CreditCardIcon, SparklesIcon } from '@heroicons/react/24/outline';
-import { Button } from '@/shared/components/ui';
+import { useNavigate, useParams } from 'react-router';
+import { CustomerPortalButton } from './customer-portal-button';
+import { CreditCardIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { Button, Card } from '@/shared/components/ui';
 import type { BillingSummary } from '../types/billing.types';
 import { formatBillingDate, formatBillingMoney, subscriptionStatusLabel } from '../utils/billing-format';
 
 export function BillingCurrentPlan({ summary }: { summary: BillingSummary }) {
   const navigate = useNavigate();
+  const { slug } = useParams();
   const { subscription, currentPlan } = summary;
   const notice = useSubscriptionNotice(summary.access);
   const status = subscription && notice?.needsPlan ? 'Finalizada' : subscription ? subscriptionStatusLabel(subscription.status) : null;
   const date = subscription?.status === 'TRIAL' ? subscription.trialEndsAt : (subscription?.endsAt ?? subscription?.currentPeriodEnd);
   const dateLabel =
     subscription?.status === 'TRIAL' ? 'Fin de la prueba' : subscription?.endsAt ? 'Fin del acceso' : 'Fin del período actual';
+
   return (
-    <section aria-labelledby="current-plan" className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <Card as="section" aria-labelledby="current-plan" className="p-0">
       <div className="flex flex-col justify-between gap-6 p-6 sm:flex-row sm:p-8">
         <div>
           <p id="current-plan" className="text-xs font-semibold uppercase tracking-wider text-gray-500">
@@ -42,20 +45,28 @@ export function BillingCurrentPlan({ summary }: { summary: BillingSummary }) {
               {dateLabel}: {formatBillingDate(date)}
             </p>
           )}
-          <Button variant="primary" className="mt-4" onClick={() => navigate('plans')}>
-            Explorar otros planes <ArrowUpRightIcon className="ml-2 size-4" />
-          </Button>
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 bg-gray-50/60 px-6 py-4 sm:px-8">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl px-6 py-4 sm:px-8">
         <p className="flex items-center gap-2 text-sm text-gray-600">
           <CreditCardIcon className="size-4" />
           {subscription?.paymentMethod ?? 'Sin método de pago registrado'}
         </p>
-        <Button variant="secondary" size="sm" disabled title="Conexión con Lemon Squeezy pendiente">
-          Gestionar suscripción
-        </Button>
+        {summary.access.canManageBilling &&
+          (summary.allowedActions.manageSubscription ? (
+            <CustomerPortalButton
+              variant="primary"
+              label={subscription?.status === 'CANCELLED' ? 'Gestionar o reanudar suscripción' : 'Gestionar suscripción'}
+            />
+          ) : summary.allowedActions.explorePlans ? (
+            <div className="sm:text-right">
+              <Button variant="primary" size="sm" onClick={() => navigate(`/${slug}/billing/plans`)}>
+                Iniciar suscripción de pago
+              </Button>
+              <p className="mt-2 text-xs text-gray-500">Elige tu plan y el pago mensual o anual.</p>
+            </div>
+          ) : null)}
       </div>
-    </section>
+    </Card>
   );
 }

@@ -47,6 +47,10 @@ export function PlanCheckout({
           {eligibility.data.eligible && (
             <>
               <p className="mt-3 text-sm text-gray-500">Continuarás en Lemon Squeezy para revisar el precio final y completar el pago.</p>
+              <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+                Al completar el pago, se te cobrará de inmediato y comenzará tu suscripción de pago. Si aún tienes días de prueba gratuita,
+                se perderán: no se suman al período de pago. Puedes esperar hasta que termine tu prueba para aprovecharlos.
+              </p>
               <Button className="mt-4" variant="primary" disabled={checkoutPending} onClick={onCheckout}>
                 {checkoutPending ? 'Abriendo pago…' : 'Continuar al pago'}
               </Button>

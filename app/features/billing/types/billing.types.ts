@@ -28,9 +28,16 @@ export interface SubscriptionAccess {
 }
 export interface BillingSummary {
   subscription: {
-    id: string; planId: string; status: string; cycle: 'MONTHLY' | 'ANNUAL' | null;
-    amount: string | null; currency: string; trialEndsAt: string | null;
-    currentPeriodEnd: string | null; endsAt: string | null; cancelledAt: string | null;
+    id: string;
+    planId: string;
+    status: string;
+    cycle: 'MONTHLY' | 'ANNUAL' | null;
+    amount: string | null;
+    currency: string;
+    trialEndsAt: string | null;
+    currentPeriodEnd: string | null;
+    endsAt: string | null;
+    cancelledAt: string | null;
     paymentMethod: string | null;
   } | null;
   currentPlan: Plan | null;
@@ -39,8 +46,18 @@ export interface BillingSummary {
   allowedActions: { explorePlans: boolean; manageSubscription: boolean; cancelSubscription: boolean };
 }
 
-export interface CheckoutSelection { planId: Plan['id']; cycle: 'MONTHLY' | 'ANNUAL' }
+export interface CheckoutSelection {
+  planId: Plan['id'];
+  cycle: 'MONTHLY' | 'ANNUAL';
+}
 export interface CheckoutEligibility {
   eligible: boolean;
-  blockers: { code: string; message: string; resource?: 'professionals' | 'workspace' | 'provider' | 'cycle'; used?: number; limit?: number; excess?: number }[];
+  blockers: {
+    code: string;
+    message: string;
+    resource?: 'professionals' | 'workspace' | 'provider' | 'cycle';
+    used?: number;
+    limit?: number;
+    excess?: number;
+  }[];
 }
