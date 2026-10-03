@@ -2,32 +2,50 @@ import { Heading, Text } from '@/shared/components/typography';
 import { Button } from '@/shared/components/ui';
 import { cn } from '@/shared/utils';
 import { ArrowRightIcon, CheckIcon } from '@heroicons/react/20/solid';
-import type { Plan } from '../../data/plans';
+import type { Plan } from '../../types/billing.types';
 
 interface Props {
   plan: Plan;
   isAnnual: boolean;
+  isCurrent?: boolean;
+  canManage: boolean;
+  pending: boolean;
+  onSelect: () => void;
 }
 
-export const PlanCard = ({ plan, isAnnual }: Props): React.JSX.Element => {
+export const PlanCard = ({ plan, isAnnual, isCurrent, canManage, pending, onSelect }: Props): React.JSX.Element => {
   const { isPopular, description, features, pricing, title, cta } = plan;
 
-  const displayPrice = isAnnual ? (pricing.ANNUAL?.equivalentMonthlyPrice ?? pricing.MONTHLY.price) : pricing.MONTHLY.price;
+  const available = plan.availability[isAnnual ? 'ANNUAL' : 'MONTHLY'];
+  const disabledReason = !canManage
+    ? 'Solo el propietario puede gestionar la suscripción'
+    : plan.id === 'free'
+      ? 'Selección de Free pendiente'
+      : !available
+        ? 'Ciclo de pago no disponible'
+        : undefined;
 
-  const comparePrice = isAnnual ? (pricing.ANNUAL?.compareAtPrice ?? null) : null;
+  const annual = isAnnual && pricing.ANNUAL;
+  const displayPrice = Number(annual ? (annual.equivalentMonthlyAmount ?? Number(annual.amount) / 12) : pricing.MONTHLY.amount).toFixed(2);
+
+  const comparePrice = isAnnual ? (pricing.ANNUAL?.compareAtAmount ?? null) : null;
 
   const savingsPercentage =
-    isAnnual && comparePrice && pricing.ANNUAL?.price ? Math.round(((comparePrice - pricing.ANNUAL.price) / comparePrice) * 100) : 0;
+    isAnnual && comparePrice && pricing.ANNUAL?.amount
+      ? Math.round(((Number(comparePrice) - Number(pricing.ANNUAL.amount)) / Number(comparePrice)) * 100)
+      : 0;
 
   const hasDiscount = savingsPercentage > 0 && comparePrice !== null;
 
   return (
     <div
       className={cn(
-        'relative flex flex-col  rounded-3xl border border-gray-200 bg-white p-7 transition-all',
+        'relative flex flex-col  rounded-3xl border border-gray-200 bg-white py-12 px-10 transition-all',
         isPopular && 'border-gray-900 bg-gray-900 shadow-xl',
+        isCurrent && 'border-2 border-indigo-500',
       )}
     >
+      {isCurrent && <div className="absolute bg-indigo-500 text-white font-medium text-sm py-1 px-2 -top-4 rounded-lg">Tu plan actual</div>}
       <div>
         <Heading as="h3" className={cn('mb-6 text-left font-bold text-3xl', isPopular && 'text-gray-50')}>
           {title}
@@ -54,7 +72,7 @@ export const PlanCard = ({ plan, isAnnual }: Props): React.JSX.Element => {
                   <span className={cn('text-sm font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>$</span>
 
                   <span className={cn('text-lg font-display font-medium text-gray-400', isPopular && 'text-gray-500')}>
-                    {comparePrice / 12}
+                    {(Number(comparePrice) / 12).toFixed(2)}
                   </span>
 
                   <span className={cn('text-xs text-gray-400', isPopular && 'text-gray-500')}>/mes</span>
@@ -80,11 +98,24 @@ export const PlanCard = ({ plan, isAnnual }: Props): React.JSX.Element => {
           <p className={cn('text-left text-sm text-gray-600', isPopular && 'text-gray-300')}>{description}</p>
         </div>
 
-        <Button size="md" variant={isPopular ? 'primary' : 'secondary'} fullWidth>
-          {cta}
+        {annual && (
+          <p className={cn('mb-3 text-sm text-gray-500', isPopular && 'text-gray-300')}>
+            {annual.amount} {plan.currency} al año
+          </p>
+        )}
+        <Button
+          disabled={pending || Boolean(disabledReason)}
+          title={disabledReason}
+          onClick={onSelect}
+          size="md"
+          variant={isPopular ? 'primary' : 'secondary'}
+          fullWidth
+        >
+          {isCurrent ? 'Elegir este plan' : cta}
           <ArrowRightIcon className="size-4.5 transition-transform duration-300 group-hover:translate-x-1" />
         </Button>
 
+        {disabledReason && <p className={cn('mt-2 text-xs text-gray-500', isPopular && 'text-gray-300')}>{disabledReason}</p>}
         <div className={cn('border-b border-gray-200 my-6', isPopular && 'border-gray-700')}></div>
       </div>
 

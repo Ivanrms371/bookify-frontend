@@ -1,38 +1,77 @@
-import React, { useState } from 'react';
-import { PlanGrid } from './plan-grid';
+import { useCheckout } from '../../hooks/use-checkout';
+import { PlanCheckout } from './plan-checkout';
+import type { Plan } from '../../types/billing.types';
+import { SubscriptionNotice } from '../subscription-notice';
+import { useState } from 'react';
 import { Heading } from '@/shared/components/typography';
-import { cn } from '@/shared/utils';
+import { Button } from '@/shared/components/ui';
+import { useSubscriptionAccess } from '../../hooks/use-billing-subscription';
+import { useBillingPlans } from '../../hooks/use-billing-plans';
+import { BillingCycleToggle } from './billing-cycle-toggle';
+import { PlanGrid } from './plan-grid';
 
-export const Plans = () => {
+export function Plans() {
   const [isAnnual, setIsAnnual] = useState(true);
-
+  const [selectedPlanId, setSelectedPlanId] = useState<Plan['id'] | null>(null);
+  const query = useBillingPlans();
+  const access = useSubscriptionAccess();
+  const checkout = useCheckout();
   return (
     <>
-      <Heading className="font-semibold text-4xl md:text-5xl text-center mb-6">Selecciona un plan</Heading>
-      <div className="relative mb-8 flex w-72 gap-4 rounded-full border border-gray-100 bg-white p-1 mx-auto">
-        <button
-          onClick={() => setIsAnnual(false)}
-          className="z-10 flex w-full flex-1 cursor-pointer items-center justify-center rounded-full bg-transparent py-2 text-sm font-medium text-gray-800 transition-colors duration-300"
-          type="button"
-        >
-          Mensual
-        </button>
-        <button
-          onClick={() => setIsAnnual(true)}
-          className="z-10 flex w-full flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-transparent py-2 text-sm font-medium text-gray-800 transition-colors duration-300"
-          type="button"
-        >
-          Anual
-          <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-600">-20%</span>
-        </button>
-        <span
-          className={cn(
-            'absolute top-1 left-1 h-[calc(100%-8px)] w-[calc(50%-4px)] translate-x-0 rounded-full border border-gray-300 bg-gray-100 transition-transform duration-300 ease-in-out',
-            isAnnual && 'translate-x-full',
-          )}
+      <Heading className="mb-6 text-center text-4xl font-semibold md:text-5xl">Selecciona un plan</Heading>
+      {access.isPending && (
+        <p role="status" className="mb-4 text-center text-sm text-gray-500">
+          Consultando tu suscripción…
+        </p>
+      )}
+
+      <BillingCycleToggle
+        isAnnual={isAnnual}
+        disabled={checkout.isPending}
+        onChange={(annual) => {
+          checkout.reset();
+          setIsAnnual(annual);
+        }}
+      />
+      {query.isPending ? (
+        <p role="status" className="text-center text-gray-500">
+          Cargando planes…
+        </p>
+      ) : query.isError ? (
+        <div role="alert" className="text-center">
+          <p className="mb-3 text-gray-500">No pudimos cargar los planes.</p>
+          <Button variant="secondary" onClick={() => query.refetch()}>
+            Reintentar
+          </Button>
+        </div>
+      ) : query.data.length === 0 ? (
+        <p className="text-center text-gray-500">No hay planes disponibles.</p>
+      ) : (
+        <PlanGrid
+          plans={query.data}
+          isAnnual={isAnnual}
+          currentPlanId={access.data?.effectivePlanId}
+          canManage={Boolean(access.data?.canManageBilling)}
+          pending={checkout.isPending}
+          onSelect={(id) => {
+            checkout.reset();
+            setSelectedPlanId(id);
+          }}
         />
-      </div>
-      <PlanGrid isAnnual={isAnnual} />
+      )}
+      {selectedPlanId && (
+        <PlanCheckout
+          key={`${selectedPlanId}-${isAnnual}`}
+          selection={{ planId: selectedPlanId, cycle: isAnnual ? 'ANNUAL' : 'MONTHLY' }}
+          canManage={Boolean(access.data?.canManageBilling)}
+          checkoutPending={checkout.isPending}
+          checkoutError={checkout.isError ? checkout.error.message : undefined}
+          onCheckout={() => checkout.mutate({ planId: selectedPlanId, cycle: isAnnual ? 'ANNUAL' : 'MONTHLY' })}
+        />
+      )}
+      {access.data && !access.data.canManageBilling && (
+        <p className="mt-6 text-center text-sm text-gray-500">Solo el propietario puede gestionar la suscripción.</p>
+      )}
     </>
   );
-};
+}

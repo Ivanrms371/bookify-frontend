@@ -32,7 +32,11 @@ export default [
         route('profile', 'routes/app/profile.tsx'),
       ]),
 
-      route('billing', 'routes/app/billing.tsx'),
+      route('billing', 'routes/app/billing-layout.tsx', [
+        index('routes/app/billing.tsx'),
+        route('plans', 'routes/app/billing-plans.tsx'),
+        route('return', 'routes/app/billing-return.tsx'),
+      ]),
     ]),
   ]),
 ] satisfies RouteConfig;

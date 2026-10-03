@@ -1,2 +1,2 @@
 export { SidebarTrialCard } from './components/sidebar-trial-card';
-export { BillingShell } from './layout/billing-shell';
+export { SidebarSubscriptionCard } from './components/sidebar-subscription-card';

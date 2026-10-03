@@ -1,13 +1,5 @@
-import type { ReactElement } from 'react';
-import { BillingShell } from '@/features/billing';
-import { Plans } from '@/features/billing/components/plans/plans';
+import { BillingOverview } from '@/features/billing/components/billing-overview';
 
-const BillingPage = (): ReactElement => {
-  return (
-    <BillingShell>
-      <Plans />
-    </BillingShell>
-  );
-};
-
-export default BillingPage;
+export default function BillingPage() {
+  return <BillingOverview />;
+}

@@ -1,9 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { ArrowLeft, HelpCircle } from 'lucide-react';
-import { useAuthStore } from '@/core/auth/use-auth-store';
+import { NavLink, useNavigate, useParams } from 'react-router';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/shared/components/ui';
-import { getInitials } from '@/shared/utils/string';
 
 interface Props {
   children: ReactNode;
@@ -12,8 +10,6 @@ interface Props {
 export const BillingShell = ({ children }: Props): ReactElement => {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug?: string }>();
-  const { session } = useAuthStore();
-  const tenant = session?.activeTenant;
   const dashboardUrl = slug ? `/${slug}` : '/';
 
   return (
@@ -26,18 +22,20 @@ export const BillingShell = ({ children }: Props): ReactElement => {
             onClick={() => navigate(dashboardUrl)}
             className="group flex items-center gap-2 cursor-pointer text-gray-600 hover:text-gray-900 -ml-2"
           >
-            <ArrowLeft className="size-4 text-gray-400 transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:text-gray-600" />
+            <ArrowLeftIcon className="size-4 text-gray-400 transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:text-gray-600" />
             <span>Volver al Dashboard</span>
           </Button>
 
-          {/* Derecha: Contexto limpio sin ruido */}
-          <div className="flex items-center gap-4">
-            {/* Link de ayuda discreto */}
-            <Button variant="ghost" size="sm" rel="noreferrer">
-              <HelpCircle className="size-4 text-gray-400" />
-              <span>¿Dudas?</span>
-            </Button>
-          </div>
+          <nav aria-label="Facturación" className="flex items-center gap-1">
+            {[
+              { label: 'Facturación', to: `/${slug}/billing`, end: true },
+              { label: 'Planes', to: `/${slug}/billing/plans`, end: false },
+            ].map(({ label, to, end }) => (
+              <NavLink key={to} to={to} end={end} className={({ isActive }) =>
+                `rounded-lg px-3 py-2 text-sm font-medium ${isActive ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-100'}`
+              }>{label}</NavLink>
+            ))}
+          </nav>
         </div>
       </header>
 

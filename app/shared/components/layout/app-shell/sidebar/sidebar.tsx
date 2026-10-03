@@ -1,11 +1,9 @@
-import { Button } from '@/shared/components/ui';
 import { SidebarMainNav } from './sidebar-main-nav';
 import { SidebarSecondaryNav } from './sidebar-secondary-nav';
 import { Heading } from '@/shared/components/typography';
 
 import { cn } from '@/shared/utils/cn';
-import { useParams } from 'react-router';
-import { SidebarTrialCard } from '@/features/billing';
+import { SidebarSubscriptionCard } from '@/features/billing';
 
 interface Props {
   open: boolean;
@@ -48,7 +46,7 @@ export const Sidebar = ({ open, onClose }: Props) => {
           <SidebarMainNav />
         </div>
 
-        <SidebarTrialCard />
+        <SidebarSubscriptionCard />
         <SidebarSecondaryNav />
       </aside>
     </>
