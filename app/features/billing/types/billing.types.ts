@@ -10,7 +10,7 @@ export interface Plan {
   features: string[];
   currency: 'USD';
   compatibleWorkspaces: ('INDIVIDUAL' | 'TEAM')[];
-  limits: { professionals: number; services: { kind: 'not_configured' } };
+  limits: { professionals: number; services: number };
   pricing: { MONTHLY: PlanPrice; ANNUAL?: PlanPrice };
   isPopular: boolean;
   cta: string;
@@ -39,6 +39,9 @@ export interface BillingSummary {
     endsAt: string | null;
     cancelledAt: string | null;
     paymentMethod: string | null;
+    pendingPlanId: string | null;
+    pendingBillingCycle: 'MONTHLY' | 'ANNUAL' | null;
+    planChangesAt: string | null;
   } | null;
   currentPlan: Plan | null;
   access: SubscriptionAccess;
@@ -55,7 +58,7 @@ export interface CheckoutEligibility {
   blockers: {
     code: string;
     message: string;
-    resource?: 'professionals' | 'workspace' | 'provider' | 'cycle';
+    resource?: 'professionals' | 'services' | 'workspace' | 'provider' | 'cycle';
     used?: number;
     limit?: number;
     excess?: number;

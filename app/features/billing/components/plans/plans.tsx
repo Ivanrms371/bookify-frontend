@@ -1,21 +1,32 @@
 import { useCheckout } from '../../hooks/use-checkout';
 import { PlanCheckout } from './plan-checkout';
 import type { Plan } from '../../types/billing.types';
-import { SubscriptionNotice } from '../subscription-notice';
+import { PlanChangeReview } from './plan-change-review';
 import { useState } from 'react';
 import { Heading } from '@/shared/components/typography';
 import { Button } from '@/shared/components/ui';
-import { useSubscriptionAccess } from '../../hooks/use-billing-subscription';
+import { useBillingSummary, useSubscriptionAccess } from '../../hooks/use-billing-subscription';
 import { useBillingPlans } from '../../hooks/use-billing-plans';
 import { BillingCycleToggle } from './billing-cycle-toggle';
 import { PlanGrid } from './plan-grid';
 
 export function Plans() {
-  const [isAnnual, setIsAnnual] = useState(true);
+  const [isAnnual, setIsAnnual] = useState<boolean | null>(null);
   const [selectedPlanId, setSelectedPlanId] = useState<Plan['id'] | null>(null);
   const query = useBillingPlans();
   const access = useSubscriptionAccess();
   const checkout = useCheckout();
+  const summary = useBillingSummary(Boolean(access.data?.canManageBilling));
+  const subscription = summary.data?.subscription;
+  const paidChange = Boolean(
+    summary.data?.allowedActions.manageSubscription &&
+    subscription &&
+    !['TRIAL', 'EXPIRED'].includes(subscription.status) &&
+    !(subscription.status === 'CANCELLED' && subscription.endsAt && new Date(subscription.endsAt) <= new Date()),
+  );
+  const annual = isAnnual ?? (paidChange ? subscription?.cycle === 'ANNUAL' : true);
+  const selection = selectedPlanId ? { planId: selectedPlanId, cycle: annual ? ('ANNUAL' as const) : ('MONTHLY' as const) } : null;
+
   return (
     <>
       <Heading className="mb-6 text-center text-4xl font-semibold md:text-5xl">Selecciona un plan</Heading>
@@ -26,13 +37,27 @@ export function Plans() {
       )}
 
       <BillingCycleToggle
-        isAnnual={isAnnual}
+        isAnnual={annual}
         disabled={checkout.isPending}
         onChange={(annual) => {
           checkout.reset();
           setIsAnnual(annual);
+          setSelectedPlanId(null);
         }}
       />
+      {paidChange && (
+        <p className="mb-4 text-center text-sm text-gray-500">
+          El cambio mensual/anual se aplica al finalizar tu período pagado. Para cambiar también de plan, hazlo por separado.
+        </p>
+      )}
+      {summary.isError && (
+        <p role="alert" className="mb-4 text-center">
+          No pudimos comprobar tu facturación.{' '}
+          <Button variant="secondary" onClick={() => summary.refetch()}>
+            Reintentar
+          </Button>
+        </p>
+      )}
       {query.isPending ? (
         <p role="status" className="text-center text-gray-500">
           Cargando planes…
@@ -49,26 +74,33 @@ export function Plans() {
       ) : (
         <PlanGrid
           plans={query.data}
-          isAnnual={isAnnual}
+          isAnnual={annual}
           currentPlanId={access.data?.effectivePlanId}
           canManage={Boolean(access.data?.canManageBilling)}
-          pending={checkout.isPending}
+          pending={
+            checkout.isPending || access.isPending || (Boolean(access.data?.canManageBilling) && (summary.isPending || summary.isError))
+          }
           onSelect={(id) => {
             checkout.reset();
             setSelectedPlanId(id);
           }}
         />
       )}
-      {selectedPlanId && (
-        <PlanCheckout
-          key={`${selectedPlanId}-${isAnnual}`}
-          selection={{ planId: selectedPlanId, cycle: isAnnual ? 'ANNUAL' : 'MONTHLY' }}
-          canManage={Boolean(access.data?.canManageBilling)}
-          checkoutPending={checkout.isPending}
-          checkoutError={checkout.isError ? checkout.error.message : undefined}
-          onCheckout={() => checkout.mutate({ planId: selectedPlanId, cycle: isAnnual ? 'ANNUAL' : 'MONTHLY' })}
-        />
-      )}
+      {selection &&
+        !summary.isPending &&
+        !summary.isError &&
+        (paidChange ? (
+          <PlanChangeReview key={`${selectedPlanId}-${annual}`} selection={selection} canManage={Boolean(access.data?.canManageBilling)} />
+        ) : (
+          <PlanCheckout
+            key={`${selectedPlanId}-${annual}`}
+            selection={selection}
+            canManage={Boolean(access.data?.canManageBilling)}
+            checkoutPending={checkout.isPending}
+            checkoutError={checkout.isError ? checkout.error.message : undefined}
+            onCheckout={() => checkout.mutate(selection)}
+          />
+        ))}
       {access.data && !access.data.canManageBilling && (
         <p className="mt-6 text-center text-sm text-gray-500">Solo el propietario puede gestionar la suscripción.</p>
       )}

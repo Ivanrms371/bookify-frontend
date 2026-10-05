@@ -1,15 +1,16 @@
 import { Link, useParams } from 'react-router';
 import type { BillingSummary } from '../types/billing.types';
 import { Card } from '@/shared/components/ui';
+import { Heading, Text } from '@/shared/components/typography';
 
-function UsageItem({ label, used, limit, to }: { label: string; used: number; limit?: number; to: string }) {
+function UsageItem({ label, used, limit }: { label: string; used: number; limit?: number }) {
   const available = limit === undefined ? undefined : Math.max(0, limit - used);
   return (
     <div>
       <div className="mb-3 flex justify-between text-sm">
-        <Link to={to} className="font-medium text-gray-700 hover:text-indigo-600">
+        <Text variant="default" size="base" className="font-medium text-gray-700e">
           {label}
-        </Link>
+        </Text>
         <span className="text-gray-500">
           <strong className="text-gray-900">{used}</strong>
           {limit !== undefined && ` / ${limit}`}
@@ -22,7 +23,7 @@ function UsageItem({ label, used, limit, to }: { label: string; used: number; li
           aria-valuenow={Math.min(used, limit)}
           aria-valuemin={0}
           aria-valuemax={limit}
-          className="h-2 overflow-hidden rounded-full bg-gray-100"
+          className="h-2 overflow-hidden rounded-full bg-gray-200"
         >
           <div className="h-full rounded-full bg-indigo-500" style={{ width: `${limit > 0 ? Math.min((used / limit) * 100, 100) : 0}%` }} />
         </div>
@@ -42,18 +43,13 @@ export function BillingPlanUsage({ summary }: { summary: BillingSummary }) {
   const { slug } = useParams();
   return (
     <Card as="section" aria-labelledby="plan-usage" className="p-6 sm:p-8">
-      <h2 id="plan-usage" className="text-lg font-semibold text-gray-900">
-        Uso del plan
-      </h2>
-      <p className="mt-1 text-sm text-gray-500">Profesionales y servicios registrados en tu negocio.</p>
+      <Heading className="text-xl md:text-2xl font-semibold text-gray-900">Uso del plan</Heading>
+      <Text variant="muted" size="base">
+        Profesionales y servicios registrados en tu negocio.
+      </Text>
       <div className="mt-6 grid gap-6 sm:grid-cols-2 sm:gap-10">
-        <UsageItem
-          label="Profesionales"
-          used={summary.usage.professionals}
-          limit={summary.currentPlan?.limits.professionals}
-          to={`/${slug}/professionals`}
-        />
-        <UsageItem label="Servicios" used={summary.usage.services} to={`/${slug}/services`} />
+        <UsageItem label="Profesionales" used={summary.usage.professionals} limit={summary.currentPlan?.limits.professionals} />
+        <UsageItem label="Servicios" used={summary.usage.services} limit={summary.currentPlan?.limits.services} />
       </div>
     </Card>
   );

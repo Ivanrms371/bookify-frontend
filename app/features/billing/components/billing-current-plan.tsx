@@ -5,6 +5,7 @@ import { CreditCardIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { Button, Card } from '@/shared/components/ui';
 import type { BillingSummary } from '../types/billing.types';
 import { formatBillingDate, formatBillingMoney, subscriptionStatusLabel } from '../utils/billing-format';
+import { Text } from '@/shared/components/typography';
 
 export function BillingCurrentPlan({ summary }: { summary: BillingSummary }) {
   const navigate = useNavigate();
@@ -18,46 +19,56 @@ export function BillingCurrentPlan({ summary }: { summary: BillingSummary }) {
 
   return (
     <Card as="section" aria-labelledby="current-plan" className="p-0">
-      <div className="flex flex-col justify-between gap-6 p-6 sm:flex-row sm:p-8">
+      <div className="flex relative flex-col justify-between gap-6 p-6 sm:flex-row sm:p-8">
         <div>
-          <p id="current-plan" className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-            Plan actual
-          </p>
+          <div className="absolute bg-indigo-500 text-white font-medium text-sm py-1 px-2 -top-2 rounded-lg">Tu plan actual</div>
+
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <SparklesIcon className="size-6 text-indigo-600" />
-            <h2 className="text-3xl font-semibold text-gray-900">{currentPlan?.title ?? 'Sin plan disponible'}</h2>
-            {subscription && <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700">{status}</span>}
+            <h2 className="text-3xl font-semibold text-gray-900 font-display">{currentPlan?.title ?? 'Sin plan disponible'}</h2>
+            {subscription && <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-800">{status}</span>}
           </div>
-          <p className="mt-3 text-sm text-gray-500">{currentPlan?.description ?? 'Explora los planes disponibles para tu negocio.'}</p>
+          <Text className="mt-1" weight="medium" variant="subtle">
+            {currentPlan?.description ?? 'Explora los planes disponibles para tu negocio.'}
+          </Text>
         </div>
         <div className="sm:text-right">
           {subscription?.amount != null && (
-            <p className="text-3xl font-semibold text-gray-900">
+            <p className="text-3xl font-display font-semibold text-gray-900">
               {formatBillingMoney(subscription.amount, subscription.currency)}{' '}
-              <span className="text-sm font-normal text-gray-500">
+              <Text as="span" weight="medium" variant="subtle" size="base">
+                {' '}
                 {subscription.cycle === 'ANNUAL' ? '/ año' : subscription.cycle === 'MONTHLY' ? '/ mes' : ''}
-              </span>
+              </Text>
             </p>
           )}
-          {subscription?.status === 'TRIAL' && <p className="text-sm text-gray-500">Sin cobro durante la prueba</p>}
+          {subscription?.status === 'TRIAL' && (
+            <Text className="mt-1" weight="medium" variant="subtle">
+              Sin cobro durante la prueba
+            </Text>
+          )}
           {date && (
-            <p className="mt-2 text-sm text-gray-500">
+            <Text className="mt-1" weight="medium" variant="subtle">
               {dateLabel}: {formatBillingDate(date)}
-            </p>
+            </Text>
           )}
         </div>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl px-6 py-4 sm:px-8">
-        <p className="flex items-center gap-2 text-sm text-gray-600">
-          <CreditCardIcon className="size-4" />
+        <p className="flex items-center gap-2 text-sm text-gray-800 font-medium">
+          <CreditCardIcon className="size-4.5" />
           {subscription?.paymentMethod ?? 'Sin método de pago registrado'}
         </p>
         {summary.access.canManageBilling &&
           (summary.allowedActions.manageSubscription ? (
-            <CustomerPortalButton
-              variant="primary"
-              label={subscription?.status === 'CANCELLED' ? 'Gestionar o reanudar suscripción' : 'Gestionar suscripción'}
-            />
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="secondary" size="sm" onClick={() => navigate(`/${slug}/billing/plans`)}>
+                Cambiar plan
+              </Button>
+              <CustomerPortalButton
+                variant="primary"
+                label={subscription?.status === 'CANCELLED' ? 'Gestionar o reanudar suscripción' : 'Gestionar suscripción'}
+              />
+            </div>
           ) : summary.allowedActions.explorePlans ? (
             <div className="sm:text-right">
               <Button variant="primary" size="sm" onClick={() => navigate(`/${slug}/billing/plans`)}>

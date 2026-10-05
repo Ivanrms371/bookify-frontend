@@ -22,24 +22,22 @@ function PaymentHistoryTable() {
   const forbidden = query.error instanceof ApiError && query.error.status === 403;
   const totalPages = query.data ? Math.max(1, Math.ceil(query.data.meta.total / query.data.meta.pageSize)) : 1;
   return (
-    <Card as="section" aria-labelledby="payments" className="p-0">
-      <div className="p-6 sm:px-8">
+    <Card as="section" aria-labelledby="payments" className="p-6 sm:p-8">
+      <div>
         <Heading id="payments" className="text-lg md:text-2xl font-semibold text-gray-900">
           Historial de pagos
         </Heading>
-        <Text size="base" weight="medium" className="mt-1 text-gray-500">
+        <Text variant="muted" size="base">
           La fecha corresponde a la emisión de la factura.
         </Text>
       </div>
       {query.isPending ? (
-        <p role="status" className="px-6 pb-6 text-sm text-gray-500">
-          Cargando pagos…
-        </p>
+        <p role="status">Cargando pagos…</p>
       ) : query.isError ? (
         <div role="alert" className="px-6 pb-6">
-          <p className="mb-3 text-sm text-gray-700">
+          <Text variant="muted" size="base">
             {forbidden ? 'No tienes permiso para consultar los pagos de este negocio.' : 'No pudimos cargar tus pagos.'}
-          </p>
+          </Text>
           {!forbidden && (
             <Button variant="secondary" onClick={() => query.refetch()}>
               Reintentar
@@ -49,9 +47,9 @@ function PaymentHistoryTable() {
       ) : (
         <>
           {query.data.items.length === 0 ? (
-            <p role="status" className="px-6 pb-6 text-sm text-gray-500">
+            <Text variant="muted" size="base">
               {query.data.meta.total === 0 ? 'Todavía no tienes pagos.' : 'No hay pagos en esta página.'}
-            </p>
+            </Text>
           ) : (
             <Table containerClassName="rounded-none shadow-none" className="min-w-145" aria-label="Historial de pagos">
               <Thead className="bg-gray-50">

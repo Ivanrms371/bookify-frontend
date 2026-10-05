@@ -35,8 +35,13 @@ export function PlanCheckout({
       ) : (
         <>
           {eligibility.data.blockers.map((blocker) => (
-            <div key={blocker.code} className="mt-3 text-sm text-amber-800">
+            <div key={`${blocker.code}-${blocker.resource ?? 'selection'}`} className="mt-3 text-sm text-amber-800">
               <p>{blocker.message}</p>
+              {blocker.resource === 'services' && (
+                <Link to={`/${slug}/services`} className="mt-1 inline-block underline">
+                  Ir a servicios
+                </Link>
+              )}
               {blocker.resource === 'professionals' && (
                 <Link to={`/${slug}/professionals`} className="mt-1 inline-block underline">
                   Ir a profesionales
