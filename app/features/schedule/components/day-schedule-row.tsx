@@ -10,14 +10,14 @@ import { useWorkingHoursForm } from '../hooks/use-working-hours-form';
 import { TimeIntervalRow } from './time-interval-row';
 import { useWorkingDay } from '../hooks/use-working-day';
 import { DAY_LABELS } from '@/shared/constants/week-days';
-import type { SaveWorkingHours } from '../schemas/schedule-form-schema';
+import { intervalSchema, type SaveWorkingHours } from '../schemas/schedule-form-schema';
 
 interface DayScheduleRowProps {
   dayIndex: number;
 }
 
 export const DayScheduleRow = ({ dayIndex }: DayScheduleRowProps) => {
-  const { watch } = useFormContext<SaveWorkingHours>();
+  const { watch, getValues, trigger } = useFormContext<SaveWorkingHours>();
 
   const { onToggleDay, copyToAll } = useWorkingHoursForm();
 
@@ -47,11 +47,14 @@ export const DayScheduleRow = ({ dayIndex }: DayScheduleRowProps) => {
   };
 
   const handleAdd = () => {
-    if (fields.every((field) => field.opensAt.length !== 0 || field.closesAt.length !== 0)) {
+    const intervals = getValues(`workingHours.${dayIndex}.intervals`);
+    if (intervals.every((interval) => intervalSchema.safeParse(interval).success)) {
       append({
         opensAt: '',
         closesAt: '',
       });
+    } else {
+      void trigger(`workingHours.${dayIndex}.intervals`);
     }
   };
 
@@ -68,8 +71,11 @@ export const DayScheduleRow = ({ dayIndex }: DayScheduleRowProps) => {
   };
 
   const handleCopyToAll = () => {
+    if (!copyToAll(day)) {
+      void trigger(`workingHours.${dayIndex}.intervals`);
+      return;
+    }
     setHasCopied(true);
-    copyToAll(day);
 
     setTimeout(() => {
       setHasCopied(false);
@@ -111,7 +117,7 @@ export const DayScheduleRow = ({ dayIndex }: DayScheduleRowProps) => {
               type="button"
               className="flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-500 transition-colors hover:text-gray-800"
               onClick={handleCopyToAll}
-              title="Copiar horarios a todos los días"
+              title="Copiar horarios a todos los días abiertos"
             >
               {hasCopied ? (
                 <>

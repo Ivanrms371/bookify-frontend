@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
 
 import type { DayOfWeek } from '@/shared/constants/week-days';
-import type { SaveWorkingHours } from '../schemas/schedule-form-schema';
+import { intervalSchema, type SaveWorkingHours } from '../schemas/schedule-form-schema';
 
 export const useWorkingHoursForm = () => {
   const { getValues, setValue, watch } = useFormContext<SaveWorkingHours>();
@@ -32,7 +32,13 @@ export const useWorkingHoursForm = () => {
 
     const source = currentWorkingHours.find((item) => item.dayOfWeek === day);
 
-    if (!source) return;
+    if (
+      !source ||
+      !source.isActive ||
+      source.intervals.length === 0 ||
+      !source.intervals.every((interval) => intervalSchema.safeParse(interval).success)
+    )
+      return false;
 
     currentWorkingHours.forEach((item, index) => {
       if (!item.isActive || item.dayOfWeek === source.dayOfWeek) return;
@@ -48,6 +54,7 @@ export const useWorkingHoursForm = () => {
         },
       );
     });
+    return true;
   };
 
   return {

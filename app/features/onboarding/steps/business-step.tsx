@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { Heading, Text } from '@/shared/components/typography';
 import { Input } from '@/shared/components/form/input';
 import { cn } from '@/shared/utils/cn';
 import { TENANT_TYPES_OPTIONS } from '@/shared/constants/tenant-type';
-import { BackButton, NextButton, StepNavigation } from '../components/step-navigation';
+import { NextButton, StepNavigation } from '../components/step-navigation';
 import { useOnboarding } from '../hooks/use-onboarding';
 import { useBusinessStep } from '../hooks/use-business-step';
 import type { BusinessStepPayload } from '../schemas/business-step.schema';
@@ -13,7 +14,7 @@ type FormState = Omit<BusinessStepPayload, 'type'> & {
 };
 
 export const BusinessStep = () => {
-  const { back, next, savedData } = useOnboarding();
+  const { next, savedData } = useOnboarding();
 
   const [formData, setFormData] = useState<FormState>({
     name: savedData?.name ?? '',
@@ -30,14 +31,14 @@ export const BusinessStep = () => {
 
   const { mutateAsync: updateBusiness, isPending, isError, error } = useBusinessStep();
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (!formData.type) return;
-      const payload = { name: formData.name, type: formData.type };
-      next(() => updateBusiness(payload));
+      const payload = { name: formData.name.trim(), type: formData.type };
+      await next(() => updateBusiness(payload));
     } catch (error) {
-      console.error('Error creating business', error);
+      toast.error(error instanceof Error ? error.message : 'No se pudo guardar el negocio');
     }
   };
 
@@ -47,9 +48,9 @@ export const BusinessStep = () => {
         <div className="flex flex-col mb-10">
           <label htmlFor="business-name" className="flex flex-col">
             <Heading as="h2" className="text-xl md:text-2xl mb-1 font-semibold">
-              ¿Cómo se llama tu negocio?
+              Tu negocio
             </Heading>
-            <Text className="max-w-xl mb-4">
+            <Text size="base" className="max-w-xl mb-4">
               Este nombre será el que verán tus clientes al agendar un turno y se usará para generar tu enlace personalizado.
             </Text>
           </label>
@@ -65,7 +66,7 @@ export const BusinessStep = () => {
           <Heading as="h2" className="text-xl md:text-2xl mb-1 font-semibold">
             ¿De que trata?
           </Heading>
-          <Text className="max-w-xl mb-4">
+          <Text size="base" className="max-w-xl mb-4">
             Elige la opción que mejor describa los servicios que ofreces, nos servirá para adaptar tu configuración.
           </Text>
           <div className="grid md:grid-cols-4 grid-cols-2 gap-2">
@@ -93,8 +94,8 @@ export const BusinessStep = () => {
         </div>
 
         <StepNavigation>
-          <BackButton onBack={back} />
-          <NextButton isNextDisabled={false} type="submit" />
+          <div />
+          <NextButton isNextDisabled={!formData.name.trim() || !formData.type || isPending} type="submit" />
         </StepNavigation>
       </form>
     </>

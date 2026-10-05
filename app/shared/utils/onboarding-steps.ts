@@ -6,7 +6,7 @@ export function getOnboardingStepIdFromPathname(pathname: string): string {
   }
 
   const match = Object.entries(ONBOARDING_STATUS_TO_ROUTE)
-    .filter(([id]) => id !== 'COMPLETED')
+    .filter(([id]) => !['COMPLETED', 'WORKSPACE_TYPE', 'TEAM_INVITE'].includes(id))
     .sort(([, a], [, b]) => b.length - a.length)
     .find(([, route]) => pathname.includes(route));
 

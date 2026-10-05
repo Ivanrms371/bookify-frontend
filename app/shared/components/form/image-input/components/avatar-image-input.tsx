@@ -1,11 +1,13 @@
 import { Alert } from '@/shared/components/feedback/Alert';
+
 import { fieldErrorBorderClassName } from '@/shared/components/form/field-error-styles';
 import { cn } from '@/shared/utils/cn';
-import { ArrowUpTrayIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { ArrowUpTrayIcon, PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useId } from 'react';
 import { ACCEPT, actionButtonClassName } from '../constants';
 import { useImageInput } from '../hooks/use-image-input';
 import type { ImageInputProps } from '../image-input.types';
+import { Button } from '@/shared/components/ui';
 
 export const AvatarImageInput = (props: ImageInputProps) => {
   const fallbackId = useId();
@@ -44,7 +46,7 @@ export const AvatarImageInput = (props: ImageInputProps) => {
       >
         <div
           className={cn(
-            'relative size-16 shrink-0 overflow-hidden rounded-full border border-dashed transition-colors',
+            'relative size-18 shrink-0 overflow-hidden rounded-full border border-dashed transition-colors',
             !hasImage && 'border-gray-300 bg-white ',
             hasImage && 'border-gray-200 ',
             isDragging && 'border-indigo-400',
@@ -54,16 +56,15 @@ export const AvatarImageInput = (props: ImageInputProps) => {
           {hasImage ? (
             <>
               <img src={previewUrl!} alt="" className="size-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center gap-0.5 bg-gray-900/0 opacity-0 transition-all duration-200 group-hover:bg-gray-900/55 group-hover:opacity-100 group-focus-within:bg-gray-900/55 group-focus-within:opacity-100">
+              <div className="absolute inset-0 flex items-center justify-center gap-2 bg-gray-900/0 opacity-0 transition-all duration-200 group-hover:bg-gray-900/55 group-hover:opacity-100 group-focus-within:bg-gray-900/55 group-focus-within:opacity-100">
                 <button
-                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     openPicker();
                   }}
-                  className={actionButtonClassName}
+                  className={cn(actionButtonClassName, 'p-1')}
                 >
-                  Cambiar
+                  <TrashIcon className="size-4" />
                 </button>
                 <button
                   type="button"
@@ -71,9 +72,9 @@ export const AvatarImageInput = (props: ImageInputProps) => {
                     e.stopPropagation();
                     setFile(null);
                   }}
-                  className={cn(actionButtonClassName, 'text-red-700 hover:bg-red-50')}
+                  className={cn(actionButtonClassName, 'p-1 text-red-700 bg-red-100 hover:bg-red-200')}
                 >
-                  Quitar
+                  <ArrowUpTrayIcon className="size-4" />
                 </button>
               </div>
             </>
@@ -90,10 +91,10 @@ export const AvatarImageInput = (props: ImageInputProps) => {
 
         <div className="min-w-0 flex-1 text-left">
           <p className="text-sm font-semibold text-gray-800 ">
-            {isDragging ? 'Soltá la imagen acá' : hasImage ? 'Avatar listo' : 'Subí tu foto de perfil'}
+            {isDragging ? 'Soltá la imagen acá' : hasImage ? 'Imagen cargada' : 'Subí tu logo'}
           </p>
-          <p className="mt-0.5 text-xs text-gray-500 ">
-            {hasImage ? 'Pasá el mouse sobre la imagen para cambiarla o quitarla' : 'Arrastrá y soltá o hacé clic para elegir un archivo'}
+          <p className="mt-1 max-w-xs text-sm font-medium text-gray-500 leading-normal">
+            Arrastrá y soltá tu imagen aquí, o hacé clic para explorar
           </p>
         </div>
 

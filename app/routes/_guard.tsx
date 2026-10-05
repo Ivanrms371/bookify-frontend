@@ -24,7 +24,7 @@ export default function RouteGuard() {
     if (location.pathname.startsWith('/onboarding')) {
       return <Outlet />;
     }
-    return <Navigate to="/onboarding/welcome" replace />;
+    return <Navigate to="/onboarding/business" replace />;
   }
 
   if (tenant.role === 'OWNER' && tenant.onboardingStatus !== 'COMPLETED') {

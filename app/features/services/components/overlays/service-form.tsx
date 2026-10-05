@@ -171,12 +171,18 @@ export const ServiceForm = ({ formId, defaultValues, onSubmit, isSubmitting, pre
               return (
                 <label
                   key={prof.id}
-                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 has-[:checked]:border-indigo-200 has-[:checked]:bg-indigo-50/50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60"
                 >
-                  <input type="checkbox" className="hidden" checked={isChecked} onChange={() => toggleProfessional(prof.id)} />
+                  <input
+                    type="checkbox"
+                    className="peer sr-only"
+                    checked={isChecked}
+                    disabled={isSubmitting}
+                    onChange={() => toggleProfessional(prof.id)}
+                  />
                   <div
                     className={cn(
-                      'size-5 border rounded-md border-gray-200 flex justify-center items-center',
+                      'size-5 shrink-0 border rounded-md border-gray-200 flex justify-center items-center peer-focus-visible:ring-2 peer-focus-visible:ring-indigo-500 peer-focus-visible:ring-offset-2',
                       isChecked && 'bg-indigo-600 border-transparent text-white',
                     )}
                   >

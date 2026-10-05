@@ -1,10 +1,9 @@
-import type { TenantWorkingHoursSaveInput } from '@/features/tenant-working-hours/types/tenant-working-hours.types';
+import type { SaveWorkingHours } from '@/features/schedule/schemas/schedule-form-schema';
 import { useMutation } from '@tanstack/react-query';
-import React from 'react';
 import { onboardingApi } from '../api/onboarding-api';
 
 export const useSaveWorkingHours = () => {
   return useMutation({
-    mutationFn: (data: TenantWorkingHoursSaveInput) => onboardingApi.updateSchedule(data),
+    mutationFn: (data: SaveWorkingHours) => onboardingApi.updateSchedule(data),
   });
 };

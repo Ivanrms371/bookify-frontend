@@ -5,7 +5,7 @@ const timeSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Hora inválida
 
 export const intervalSchema = z
   .object({ opensAt: timeSchema, closesAt: timeSchema })
-  .refine(({ opensAt, closesAt }) => opensAt < closesAt, { message: 'La apertura debe ser anterior al cierre', path: ['closes'] });
+  .refine(({ opensAt, closesAt }) => opensAt < closesAt, { message: 'La apertura debe ser anterior al cierre', path: ['closesAt'] });
 export const scheduleWorkingHourSchema = z.object({
   dayOfWeek: z.enum(DAYS_OF_WEEK),
   isActive: z.boolean(),

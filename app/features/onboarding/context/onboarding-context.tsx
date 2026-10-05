@@ -1,5 +1,6 @@
-import { createContext, useEffect, useMemo, type ReactNode } from 'react';
-import { useNavigate } from 'react-router';
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import { createContext, useMemo, type ReactNode } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { ONBOARDING_STATUS_TO_ROUTE } from '@/shared/constants/onboarding';
 import { getOnboardingStepIdFromPathname } from '@/shared/utils/onboarding-steps';
@@ -15,7 +16,7 @@ export interface OnboardingContextType {
   isLoading: boolean;
   isError: boolean;
   back: () => void;
-  next: (action?: () => Promise<OnboardingStatusResponse>) => void;
+  next: (action?: () => Promise<OnboardingStatusResponse>) => Promise<void>;
   totalSteps: number;
   currentStep: string;
   setStep: (step: string) => void;
@@ -28,26 +29,25 @@ export const OnboardingContext = createContext<OnboardingContextType | undefined
 
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const queryClient = useQueryClient();
 
   const { data: onboardingData, isLoading, isError } = useOnboardingInitializer();
 
   const totalSteps = useMemo(() => onboardingData?.steps?.length ?? 0, [onboardingData]);
-  const currentStep = useMemo(() => getOnboardingStepIdFromPathname(window.location.pathname), [onboardingData]);
+  const currentStep = useMemo(() => getOnboardingStepIdFromPathname(pathname), [pathname]);
 
   const setOnboardingData = (data: OnboardingStatusResponse) => {
-    queryClient.setQueryData(ONBOARDING_STATUS_QUERY_KEY, data);
+    queryClient.setQueryData([...ONBOARDING_STATUS_QUERY_KEY, useAuthStore.getState().session?.id], data);
   };
 
   const back = () => {
-    const currentStepId = getOnboardingStepIdFromPathname(window.location.pathname);
+    const currentStepId = getOnboardingStepIdFromPathname(pathname);
     if (!currentStepId) return;
 
     const currentStepIndex = onboardingData?.steps.findIndex((step) => step.id === currentStepId);
 
-    if (!currentStepIndex || currentStepIndex === -1) {
-      throw new Error('Current step not found');
-    }
+    if (currentStepIndex === undefined || currentStepIndex <= 0) return;
 
     const previousStep = onboardingData?.steps[currentStepIndex - 1];
 
@@ -60,34 +60,16 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     // 1. If we don't have initial data, we can't calculate routes
     if (!onboardingData) return;
 
-    try {
-      // 2. Execute the promise (Server Action / Mutation)
-      const data = await action?.();
-
-      // 3. Create the immediate truth source combining the old with the new
-      const updatedOnboardingData = data ? { ...onboardingData, ...data } : onboardingData;
-
-      if (data) {
-        setOnboardingData(updatedOnboardingData);
-      }
-
-      // 4. Get the current step by URL
-      const currentStepId = getOnboardingStepIdFromPathname(window.location.pathname);
-      if (!currentStepId) return;
-
-      // 5. Search in the updated data
-      const currentStepIndex = updatedOnboardingData.steps.findIndex((step) => step.id === currentStepId);
-      if (currentStepIndex === -1) return;
-
-      const nextStep = updatedOnboardingData.steps[currentStepIndex + 1];
-
-      // 6. Advance safely if the next step exists
-      if (nextStep) {
-        navigate(STATUS_TO_ROUTE[nextStep.id]);
-      }
-    } catch (error) {
-      console.error('Error en la transición del onboarding:', error);
+    const data = await action?.();
+    const updated = data ?? onboardingData;
+    if (data) setOnboardingData(data);
+    if (updated.onboardingStatus === 'COMPLETED') {
+      navigate(STATUS_TO_ROUTE.COMPLETED, { replace: true });
+      return;
     }
+    const index = updated.steps.findIndex((step) => step.id === getOnboardingStepIdFromPathname(pathname));
+    const nextStep = updated.steps[index + 1];
+    if (index >= 0 && nextStep && nextStep.status !== 'PENDING') navigate(STATUS_TO_ROUTE[nextStep.id]);
   };
 
   const setStep = (step: string) => {

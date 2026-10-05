@@ -33,6 +33,7 @@ export const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
             color,
             value === color ? 'ring-1 ring-offset-2 ring-indigo-500' : '',
           )}
+          aria-pressed={value === color}
           aria-label={`Seleccionar color ${color}`}
         />
       ))}

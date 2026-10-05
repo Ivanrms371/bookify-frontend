@@ -14,8 +14,7 @@ export const ScheduleStep = () => {
 
   const handleSave = async (data: SaveWorkingHours): Promise<void> => {
     try {
-      console.log(data);
-      next(() => saveWorkingHours(data));
+      await next(() => saveWorkingHours(data));
     } catch (error) {
       toast.error('Error al guardar los horarios de trabajo', {
         description: error instanceof Error ? error.message : 'Error desconocido',
@@ -26,16 +25,18 @@ export const ScheduleStep = () => {
   return (
     <>
       <Heading as="h2" className="text-xl md:text-2xl mb-1 font-semibold">
-        Definí tus horario de trabajo
+        Tus horarios
       </Heading>
-      <Text className="max-w-xl mb-4">
+      <Text size="base" className="max-w-xl mb-4">
         Establecé las horas que tenés disponibles cada semana para mantener tu agenda organizada automáticamente.
       </Text>
 
-      <ScheduleForm id="onboarding-schedule-form" onSubmit={handleSave} defaultValues={workingHours} />
+      <div className="rounded-lg border border-gray-200 bg-white p-5">
+        <ScheduleForm id="onboarding-schedule-form" onSubmit={handleSave} defaultValues={workingHours} />
+      </div>
 
       <StepNavigation>
-        <BackButton onBack={back} />
+        <BackButton onBack={back} disabled={isPending} />
         <NextButton form="onboarding-schedule-form" isNextDisabled={isPending} type="submit" />
       </StepNavigation>
     </>

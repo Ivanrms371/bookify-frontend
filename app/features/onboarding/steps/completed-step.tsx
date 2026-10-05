@@ -1,41 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '@/core/auth/use-auth-store';
-import { useLoadingScreen } from '@/shared/store/use-loading-screen';
+import { authApi } from '@/features/auth/api/auth-api';
+import { Button } from '@/shared/components/ui';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const CompletedStep = () => {
   const navigate = useNavigate();
-  const { refetch, isRefetching, session } = useAuthStore();
-  const { show, hide } = useLoadingScreen();
-
-  const slug = session?.activeTenant?.slug;
-
+  const queryClient = useQueryClient();
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    if (!slug) {
-      show('Preparando tu panel...');
-    }
-    return () => hide();
-  }, [slug, show, hide]);
-
-  useEffect(() => {
-    if (slug) {
-      navigate(`/${slug}`, { replace: true });
-    }
-  }, [slug, navigate]);
-
-  useEffect(() => {
-    if (slug || isRefetching) return;
-
-    const executeRefetch = async () => {
-      try {
-        await refetch();
-      } catch (error) {
-        console.error('Error al sincronizar sesión en onboarding:', error);
-      }
+    let cancelled = false;
+    setError(false);
+    void authApi
+      .getMe()
+      .then((session) => {
+        if (cancelled) return;
+        if (session.activeTenant?.onboardingStatus !== 'COMPLETED' || !session.activeTenant.slug) {
+          setError(true);
+          return;
+        }
+        useAuthStore.getState().setAuth(session);
+        void queryClient.invalidateQueries({ queryKey: ['professionals'] });
+        navigate(`/${session.activeTenant.slug}`, { replace: true });
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      });
+    return () => {
+      cancelled = true;
     };
-
-    void executeRefetch();
-  }, [slug, isRefetching, refetch]);
-
-  return null;
+  }, [attempt, navigate, queryClient]);
+  return (
+    <div className="py-12 text-center space-y-4" role="status">
+      <p>{error ? 'Tu negocio está listo, pero no pudimos abrir el panel.' : 'Preparando tu panel...'}</p>
+      {error && (
+        <Button variant="primary" onClick={() => setAttempt((value) => value + 1)}>
+          Reintentar
+        </Button>
+      )}
+    </div>
+  );
 };

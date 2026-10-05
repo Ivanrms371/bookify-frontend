@@ -12,7 +12,12 @@ interface Props {
 }
 
 export const TimeIntervalRow = ({ dayIndex, intervalIndex, onRemove }: Props) => {
-  const { register } = useFormContext<SaveWorkingHours>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<SaveWorkingHours>();
+
+  const intervalErrors = errors.workingHours?.[dayIndex]?.intervals?.[intervalIndex];
 
   return (
     <div className="relative flex items-center gap-1">
@@ -32,6 +37,8 @@ export const TimeIntervalRow = ({ dayIndex, intervalIndex, onRemove }: Props) =>
         <Input
           className="w-full pl-14 text-sm"
           type="time"
+          aria-label={`Desde, intervalo ${intervalIndex + 1}`}
+          error={intervalErrors?.opensAt?.message}
           fullWidth={false}
           leftIcon={<span className="pointer-events-none text-sm font-medium text-gray-500">Desde</span>}
           {...register(`workingHours.${dayIndex}.intervals.${intervalIndex}.opensAt`)}
@@ -46,6 +53,8 @@ export const TimeIntervalRow = ({ dayIndex, intervalIndex, onRemove }: Props) =>
         <Input
           className="w-full pl-14 text-sm"
           type="time"
+          aria-label={`Hasta, intervalo ${intervalIndex + 1}`}
+          error={intervalErrors?.closesAt?.message}
           fullWidth={false}
           leftIcon={<span className="pointer-events-none text-sm font-medium text-gray-500">Hasta</span>}
           {...register(`workingHours.${dayIndex}.intervals.${intervalIndex}.closesAt`)}

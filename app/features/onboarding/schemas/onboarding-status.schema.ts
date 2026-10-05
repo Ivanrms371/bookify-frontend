@@ -1,3 +1,4 @@
+import { professionalStepSchema } from './professional-step.schema';
 import z from 'zod';
 import { TENANT_TYPE_VALUES } from '@/shared/constants/tenant-type';
 import { WORKSPACE_TYPE_VALUES } from '@/shared/constants/workspace-type';
@@ -18,6 +19,9 @@ export const onboardingSavedDataSchema = z.object({
   logoUrl: z.string().nullable(),
   coverUrl: z.string().nullable(),
   colorTheme: z.string().nullable(),
+  logoPublicId: z.string().nullable(),
+  coverPublicId: z.string().nullable(),
+  professional: professionalStepSchema.nullable(),
   workingHours: workingHoursSchema,
   services: z.array(
     z.object({
@@ -25,11 +29,15 @@ export const onboardingSavedDataSchema = z.object({
       name: z.string(),
       price: z.unknown(),
       durationMinutes: z.number(),
+      imageUrl: z.string().nullable().optional(),
+      imagePublicId: z.string().nullable().optional(),
     }),
   ),
 });
 
 export const onboardingStatusSchema = z.object({
+  tenantId: z.string(),
+  trial: z.object({ planName: z.string(), durationDays: z.number() }),
   onboardingStatus: z.string(),
   workspaceType: z.string(),
   steps: z.array(onboardingStepStatusSchema),

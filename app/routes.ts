@@ -15,6 +15,7 @@ export default [
       route('onboarding/business', 'routes/onboarding/business.tsx'),
       route('onboarding/schedule', 'routes/onboarding/schedule.tsx'),
       route('onboarding/services', 'routes/onboarding/services.tsx'),
+      route('onboarding/professional', 'routes/onboarding/professional.tsx'),
       route('onboarding/team', 'routes/onboarding/team.tsx'),
       route('onboarding/customize', 'routes/onboarding/customize.tsx'),
       route('onboarding/confirm', 'routes/onboarding/confirm.tsx'),

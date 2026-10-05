@@ -57,7 +57,7 @@ export const CreateServiceModal = () => {
   return (
     <Modal
       overlayKey={OVERLAY_KEY}
-      size="2xl"
+      size="3xl"
       closeDisabled={isSubmitting}
       manageFocus
       title="Nuevo Servicio"
