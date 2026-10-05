@@ -1,6 +1,7 @@
 import { type RouteConfig, index, layout, route } from '@react-router/dev/routes';
 
 export default [
+  route('auth/invitations', 'routes/auth/invitations.tsx'),
   layout('routes/_guard.tsx', [
     layout('routes/auth/_layout.tsx', [
       route('auth/login', 'routes/auth/login.tsx'),

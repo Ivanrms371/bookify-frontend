@@ -5,6 +5,8 @@ export interface UserSessionContext {
   email: string;
   name: string;
   avatarUrl: string | null;
+  phoneNumber?: string | null;
+  phoneCountryCode?: string | null;
   activeTenant: ActiveTenant | null;
   hasMultipleTenants: boolean;
 }
@@ -15,6 +17,7 @@ type OnboardingStatus =
   | 'SCHEDULE'
   | 'SERVICES'
   | 'TEAM_INVITE'
+  | 'PROFESSIONAL_PROFILE'
   | 'CUSTOMIZE'
   | 'CONFIRM'
   | 'COMPLETED';
@@ -39,3 +42,12 @@ export interface Subscription {
   trialEndsAt: string | null;
   currentPeriodEnd: string | null;
 }
+
+export type SignupResponse =
+  | ({ requiresEmailVerification: false } & UserSessionContext)
+  | {
+      requiresEmailVerification: true;
+      user: { id: string; name: string; email: string; avatarUrl: string | null };
+      activeTenant: null;
+      hasMultipleTenants: false;
+    };

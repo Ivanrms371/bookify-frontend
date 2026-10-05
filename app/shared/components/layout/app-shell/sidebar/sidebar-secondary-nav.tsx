@@ -1,5 +1,6 @@
 import { ArrowRightStartOnRectangleIcon, Cog6ToothIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { Link, useParams } from 'react-router';
+import { useLogout } from '@/features/auth/hooks/use-logout';
 
 const getSidebarItems = (slug: string) => [
   {
@@ -16,6 +17,7 @@ const getSidebarItems = (slug: string) => [
 
 export const SidebarSecondaryNav = () => {
   const { slug } = useParams();
+  const logout = useLogout();
   if (!slug) return null;
   const SIDEBAR_ITEMS = getSidebarItems(slug);
   return (
@@ -32,9 +34,15 @@ export const SidebarSecondaryNav = () => {
         </li>
       ))}
       <li>
-        <button className="flex w-full items-center gap-2 rounded-lg px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white disabled:opacity-50 ">
+        <button
+          type="button"
+          onClick={() => logout.mutate()}
+          disabled={logout.isPending}
+          aria-busy={logout.isPending}
+          className="flex w-full items-center gap-2 rounded-lg px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white disabled:opacity-50 "
+        >
           <ArrowRightStartOnRectangleIcon className="size-5" />
-          <span>Cerrar Sesión</span>
+          <span>{logout.isPending ? 'Cerrando sesión...' : 'Cerrar Sesión'}</span>
         </button>
       </li>
     </ul>

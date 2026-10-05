@@ -38,6 +38,4 @@ export interface CreateInviteResponse {
   success: boolean;
 }
 
-export interface AcceptInviteResponse {
-  message: string;
-}
+export type AcceptInviteResponse = import('./invitation-journey.types').InvitationAcceptance;

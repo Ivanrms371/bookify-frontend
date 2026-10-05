@@ -24,7 +24,7 @@ export const LoginForm = () => {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
+      email: new URLSearchParams(window.location.search).get('email') ?? '',
       password: '',
     },
   });

@@ -1,11 +1,9 @@
-import { httpClient } from "@/core/http/httpClient";
+import { httpClient } from '@/core/http/httpClient';
 
-export type VerificationType =
-  | "USER_EMAIL_VERIFICATION"
-  | "USER_PHONE_VERIFICATION"
-  | "PASSWORD_RESET";
+export type VerificationType = 'USER_EMAIL_VERIFICATION' | 'USER_PHONE_VERIFICATION' | 'PASSWORD_RESET';
 
 export interface ResendVerificationPayload {
+  invitationToken?: string;
   type: VerificationType;
   email: string;
 }
@@ -16,9 +14,7 @@ export interface VerifyTokenPayload {
 }
 
 export const verificationsApi = {
-  resend: (dto: ResendVerificationPayload) =>
-    httpClient.post("/verifications/resend", dto),
+  resend: (dto: ResendVerificationPayload) => httpClient.post('/verifications/resend', dto),
 
-  verify: (dto: VerifyTokenPayload) =>
-    httpClient.post("/verifications/verify", dto),
+  verify: (dto: VerifyTokenPayload) => httpClient.post('/verifications/verify', dto),
 };

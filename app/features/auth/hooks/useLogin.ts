@@ -8,10 +8,16 @@ export const useLogin = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
 
   return useMutation({
+    retry: false,
     mutationFn: authApi.login,
     onSuccess: (data) => {
       setAuth(data);
 
+      const token = new URLSearchParams(window.location.search).get('invitationToken');
+      if (token) {
+        navigate(`/auth/invitations?${new URLSearchParams({ token })}`);
+        return;
+      }
       const tenant = data?.activeTenant;
 
       if (!tenant) {
@@ -21,7 +27,11 @@ export const useLogin = () => {
       }
     },
     onError: (error) => {
-      console.log(error);
+      const token = new URLSearchParams(window.location.search).get('invitationToken');
+      if (token && error.message.includes('verifiques')) {
+        const email = new URLSearchParams(window.location.search).get('email') || '';
+        navigate(`/auth/verify-email?${new URLSearchParams({ invitationToken: token, email })}`);
+      }
     },
   });
 };

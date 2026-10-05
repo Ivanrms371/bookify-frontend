@@ -3,10 +3,11 @@ import { useGoogleLogin } from '../hooks/useGoogleLogin';
 
 interface GoogleAuthButtonProps {
   className?: string;
+  invitationToken?: string;
 }
 
-export function GoogleAuthButton({ className }: GoogleAuthButtonProps) {
-  const { handleGoogleLogin, isPending } = useGoogleLogin();
+export function GoogleAuthButton({ className, invitationToken }: GoogleAuthButtonProps) {
+  const { handleGoogleLogin, isPending } = useGoogleLogin(invitationToken);
 
   return (
     <Button type="button" onClick={handleGoogleLogin} disabled={isPending} variant="secondary">

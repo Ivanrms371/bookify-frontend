@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupFormValues } from '../schemas/signup.schema';
@@ -15,7 +15,7 @@ import { COUNTRIES } from '@/shared/constants';
 
 const DEFAULT_DIAL_CODE = COUNTRIES[0]?.dialCode ?? '598';
 
-export const SignupForm = () => {
+export const SignupForm = ({ token, email = '' }: { token?: string; email?: string } = {}) => {
   const { mutateAsync: signup, isPending, error } = useSignup();
 
   const {
@@ -28,13 +28,14 @@ export const SignupForm = () => {
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: '',
-      email: '',
+      email,
       phoneCountryCode: DEFAULT_DIAL_CODE,
       phoneNumber: '',
       password: '',
     },
   });
 
+  const submitting = useRef(false);
   const selectedCountryCode = watch('phoneCountryCode');
 
   useEffect(() => {
@@ -50,54 +51,67 @@ export const SignupForm = () => {
   }, []);
 
   const onSubmit = async (values: SignupFormValues) => {
+    if (submitting.current) return;
+    submitting.current = true;
     try {
-      await signup(values);
-    } catch {}
+      await signup({ ...values, token });
+    } catch {
+    } finally {
+      submitting.current = false;
+    }
   };
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      {error && <Alert message={getApiError(error)} title="Error al registrar usuario" variant="error" />}
+      <fieldset disabled={isPending} className="contents">
+        {error && <Alert message={getApiError(error)} title="Error al registrar usuario" variant="error" />}
 
-      <FormField>
-        <Label htmlFor="name">Nombre Completo</Label>
-        <Input type="text" id="name" placeholder="Tu nombre" {...register('name')} error={errors.name?.message} />
-      </FormField>
+        <FormField>
+          <Label htmlFor="name">Nombre Completo</Label>
+          <Input type="text" id="name" placeholder="Tu nombre" {...register('name')} error={errors.name?.message} />
+        </FormField>
 
-      <FormField>
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" placeholder="Tu email" {...register('email')} error={errors.email?.message} />
-      </FormField>
+        <FormField>
+          <Label htmlFor="email">Email</Label>
+          <Input type="email" id="email" placeholder="Tu email" {...register('email')} error={errors.email?.message} />
+        </FormField>
 
-      <FormField>
-        <Label htmlFor="phoneNumber">Teléfono</Label>
-        <div className="flex gap-2">
-          <PhoneCountryCode
-            value={selectedCountryCode}
-            onChange={(val) => setValue('phoneCountryCode', val, { shouldValidate: true, shouldDirty: true })}
-            disabled={isPending}
-          />
+        <FormField>
+          <Label htmlFor="phoneNumber">Teléfono</Label>
+          <div className="flex gap-2">
+            <PhoneCountryCode
+              value={selectedCountryCode}
+              onChange={(val) => setValue('phoneCountryCode', val, { shouldValidate: true, shouldDirty: true })}
+              disabled={isPending}
+            />
+            <Input
+              type="tel"
+              id="phoneNumber"
+              placeholder="099 123 456"
+              fullWidth
+              {...register('phoneNumber')}
+              error={errors.phoneNumber?.message || errors.phoneCountryCode?.message}
+            />
+          </div>
+        </FormField>
+
+        <FormField>
+          <div className="flex justify-between">
+            <Label htmlFor="password">Contraseña</Label>
+          </div>
           <Input
-            type="tel"
-            id="phoneNumber"
-            placeholder="099 123 456"
-            fullWidth
-            {...register('phoneNumber')}
-            error={errors.phoneNumber?.message || errors.phoneCountryCode?.message}
+            type="password"
+            id="password"
+            placeholder="Crea una contraseña"
+            {...register('password')}
+            error={errors.password?.message}
           />
-        </div>
-      </FormField>
+        </FormField>
 
-      <FormField>
-        <div className="flex justify-between">
-          <Label htmlFor="password">Contraseña</Label>
-        </div>
-        <Input type="password" id="password" placeholder="Crea una contraseña" {...register('password')} error={errors.password?.message} />
-      </FormField>
-
-      <Button type="submit" isSubmitting={isPending} disabled={isPending} variant="primary" className="mt-2">
-        Registrarse
-      </Button>
+        <Button type="submit" isSubmitting={isPending} disabled={isPending} variant="primary" className="mt-2">
+          Registrarse
+        </Button>
+      </fieldset>
     </form>
   );
 };

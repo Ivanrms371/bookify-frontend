@@ -1,8 +1,10 @@
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { AuthDivider, AuthHeader, LoginForm, GoogleAuthButton } from '@/features/auth';
 import { Text } from '@/shared/components/typography';
 
 export default function LoginPage() {
+  const [params] = useSearchParams();
+  const invitationToken = params.get('invitationToken');
   return (
     <>
       <AuthHeader title="¡Qué bueno verte de nuevo!" subtitle="Accede a tu agenda y gestiona todas tus citas" />
@@ -16,7 +18,10 @@ export default function LoginPage() {
 
         <Text className="text-center text-sm">
           ¿No tienes una cuenta?
-          <Link to="/auth/signup" className="ml-1 cursor-pointer text-indigo-600 hover:text-indigo-700">
+          <Link
+            to={invitationToken ? `/auth/invitations?${new URLSearchParams({ token: invitationToken })}` : '/auth/signup'}
+            className="ml-1 cursor-pointer text-indigo-600 hover:text-indigo-700"
+          >
             Crea una aquí
           </Link>
         </Text>

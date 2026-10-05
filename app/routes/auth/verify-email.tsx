@@ -8,6 +8,8 @@ import { getApiError } from '@/shared/utils/getApiError';
 
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
+  const invitationToken = searchParams.get('invitationToken') || sessionStorage.getItem('invitationToken');
+  const loginPath = invitationToken ? `/auth/login?${new URLSearchParams({ invitationToken })}` : '/auth/login';
   const email = searchParams.get('email') ?? '';
 
   const { mutateAsync: resend, isPending, isSuccess, error, reset } = useResendVerification();
@@ -16,7 +18,7 @@ export default function VerifyEmailPage() {
     if (!email) return;
     reset();
     try {
-      await resend({ type: 'USER_EMAIL_VERIFICATION', email });
+      await resend({ type: 'USER_EMAIL_VERIFICATION', email, invitationToken: invitationToken ?? undefined });
     } catch {}
   };
 
@@ -24,7 +26,9 @@ export default function VerifyEmailPage() {
     <>
       <AuthHeader
         title="Confirma tu cuenta"
-        subtitle={email ? `Te enviamos un email a ${email}, confírmalo para continuar.` : 'Te enviamos un email, confírmalo para continuar.'}
+        subtitle={
+          email ? `Te enviamos un email a ${email}, confírmalo para continuar.` : 'Te enviamos un email, confírmalo para continuar.'
+        }
       />
 
       <div className="mt-8 flex flex-col gap-4">
@@ -37,7 +41,7 @@ export default function VerifyEmailPage() {
 
         <Text className="text-center text-sm">
           ¿Ya confirmaste?
-          <Link to="/auth/login" className="ml-1 cursor-pointer text-indigo-600 hover:text-indigo-700">
+          <Link to={loginPath} className="ml-1 cursor-pointer text-indigo-600 hover:text-indigo-700">
             Inicia sesión
           </Link>
         </Text>

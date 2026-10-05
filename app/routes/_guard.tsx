@@ -6,7 +6,9 @@ export default function RouteGuard() {
   const { isAuthenticated, session } = useAuthStore();
   const location = useLocation();
 
-  console.log(session);
+  if (location.pathname === '/auth/signup' && new URLSearchParams(location.search).has('token'))
+    return <Navigate to={`/auth/invitations${location.search}`} replace />;
+  if (location.pathname.startsWith('/auth') && new URLSearchParams(location.search).has('invitationToken')) return <Outlet />;
 
   if (!isAuthenticated) {
     if (location.pathname.startsWith('/auth')) {

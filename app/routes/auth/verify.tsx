@@ -10,10 +10,13 @@ import { getApiError } from '@/shared/utils/getApiError';
 
 const VALID_TYPES: readonly VerificationType[] = ['USER_EMAIL_VERIFICATION', 'USER_PHONE_VERIFICATION', 'PASSWORD_RESET'];
 
-const isVerificationType = (value: string | null): value is VerificationType => value !== null && (VALID_TYPES as readonly string[]).includes(value);
+const isVerificationType = (value: string | null): value is VerificationType =>
+  value !== null && (VALID_TYPES as readonly string[]).includes(value);
 
 export default function VerifyPage() {
   const [searchParams] = useSearchParams();
+  const invitationToken = searchParams.get('invitationToken') || sessionStorage.getItem('invitationToken');
+  const loginPath = invitationToken ? `/auth/login?${new URLSearchParams({ invitationToken })}` : '/auth/login';
   const navigate = useNavigate();
   const firedRef = useRef(false);
 
@@ -32,9 +35,9 @@ export default function VerifyPage() {
 
   useEffect(() => {
     if (!isSuccess) return;
-    const timer = setTimeout(() => navigate('/auth/login'), 2500);
+    const timer = setTimeout(() => navigate(loginPath), 2500);
     return () => clearTimeout(timer);
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate, loginPath]);
 
   const missingParams = !token || !type;
 
@@ -42,11 +45,15 @@ export default function VerifyPage() {
     <>
       <AuthHeader
         title={isSuccess ? '¡Cuenta confirmada!' : 'Confirmando tu cuenta'}
-        subtitle={isSuccess ? 'Te redirigimos al inicio de sesión en un momento.' : 'Estamos verificando tu enlace, esto solo toma un instante.'}
+        subtitle={
+          isSuccess ? 'Te redirigimos al inicio de sesión en un momento.' : 'Estamos verificando tu enlace, esto solo toma un instante.'
+        }
       />
 
       <div className="mt-8 flex flex-col gap-4">
-        {missingParams && <Alert title="Enlace inválido" message="El enlace de verificación es inválido o está incompleto." variant="error" />}
+        {missingParams && (
+          <Alert title="Enlace inválido" message="El enlace de verificación es inválido o está incompleto." variant="error" />
+        )}
 
         {!missingParams && isPending && <Text className="text-center text-sm text-gray-600">Verificando…</Text>}
 
@@ -55,7 +62,7 @@ export default function VerifyPage() {
         {isSuccess && <Alert title="Todo listo" message="Tu correo fue confirmado correctamente." variant="success" />}
 
         {isSuccess ? (
-          <Button variant="primary" fullWidth onClick={() => navigate('/auth/login')}>
+          <Button variant="primary" fullWidth onClick={() => navigate(loginPath)}>
             Ir a iniciar sesión
           </Button>
         ) : (
