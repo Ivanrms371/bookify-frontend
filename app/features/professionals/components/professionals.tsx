@@ -7,7 +7,7 @@ import { servicesApi } from '@/features/services/api/services-api';
 import { ProfessionalsCard } from './list/professionals-card';
 import { ProfessionalsTable } from './table/professionals-table';
 import { Button } from '@/shared/components/ui';
-import { Spinner } from '@/shared/components/ui/spinner';
+import { TableSkeleton } from '@/shared/components/ui/table';
 import { Select } from '@/shared/components/ui/select';
 import { BarsArrowUpIcon, FunnelIcon, MagnifyingGlassIcon, PlusIcon, TagIcon } from '@heroicons/react/20/solid';
 import { Input } from '@/shared/components/form/input';
@@ -155,9 +155,18 @@ export const Professionals = () => {
         )}
       </div>
       {loading ? (
-        <div className="flex justify-center py-10" role="status" aria-label="Cargando profesionales">
-          <Spinner />
-        </div>
+        <TableSkeleton
+          label="Cargando profesionales..."
+          tableClassName="min-w-225"
+          columns={[
+            { label: 'Nombre', variant: 'avatar', width: 'w-32' },
+            { label: 'Email', width: 'w-40' },
+            { label: 'Teléfono', width: 'w-28' },
+            { label: 'Estado', variant: 'badge' },
+            { label: 'Acceso', variant: 'badge' },
+            { label: 'Acciones', variant: 'actions', align: 'right' },
+          ]}
+        />
       ) : isError ? (
         <div className="space-y-3 py-10 text-center" role="alert">
           <p>No se pudieron cargar los profesionales.</p>

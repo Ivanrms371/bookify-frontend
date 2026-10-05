@@ -8,7 +8,7 @@ import type { Service } from '../../types/services.types';
 
 export function ServicesTable({ services }: { services: Service[] }) {
   return (
-    <Table className="min-w-[750px]">
+    <Table className="min-w-225">
       <Thead>
         <Tr>
           <Th>Servicio</Th>

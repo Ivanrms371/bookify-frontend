@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCustomers } from '../hooks/use-customers';
 import { CustomersTable } from './table/customers-table';
 import { Button } from '@/shared/components/ui';
-import { Spinner } from '@/shared/components/ui/spinner';
+import { TableSkeleton } from '@/shared/components/ui/table';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import { CustomerList } from './list/customer-list';
 import { CustomersHeader, type BookingActivity, type CustomerSort, type CustomerStatus } from './customers-header';
@@ -91,9 +91,19 @@ export const Customers = () => {
         )}
       </div>
       {isLoading || searching ? (
-        <div className="flex justify-center py-10" role="status" aria-label="Cargando clientes">
-          <Spinner />
-        </div>
+        <TableSkeleton
+          label="Cargando clientes..."
+          tableClassName="min-w-[900px]"
+          columns={[
+            { label: 'Nombre', width: 'w-32' },
+            { label: 'Email', width: 'w-40' },
+            { label: 'Teléfono', width: 'w-28' },
+            { label: 'Próxima cita', width: 'w-32' },
+            { label: 'Última visita', width: 'w-24' },
+            { label: 'Total Gastado', width: 'w-20' },
+            { label: 'Acciones', variant: 'actions', align: 'right' },
+          ]}
+        />
       ) : isError ? (
         <div className="space-y-3 py-10 text-center" role="alert">
           <p className="text-gray-600">No se pudieron cargar los clientes.</p>

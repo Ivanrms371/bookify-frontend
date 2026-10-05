@@ -4,7 +4,7 @@ import { useServices } from '../hooks/use-services';
 import { ServiceCard } from './grid/service-card';
 import { ServicesTable } from './table/services-table';
 import { Button } from '@/shared/components/ui';
-import { Spinner } from '@/shared/components/ui/spinner';
+import { TableSkeleton } from '@/shared/components/ui/table';
 import { Select } from '@/shared/components/ui/select';
 import { BarsArrowUpIcon, FunnelIcon, MagnifyingGlassIcon, PlusIcon, ClockIcon, TagIcon } from '@heroicons/react/20/solid';
 import { Input } from '@/shared/components/form/input';
@@ -152,9 +152,18 @@ export const Services = () => {
         )}
       </div>
       {loading ? (
-        <div className="flex justify-center py-10" role="status" aria-label="Cargando servicios">
-          <Spinner />
-        </div>
+        <TableSkeleton
+          label="Cargando servicios..."
+          tableClassName="min-w-225"
+          columns={[
+            { label: 'Servicio', variant: 'thumbnail', width: 'w-32', secondaryLine: true },
+            { label: 'Duración', width: 'w-20' },
+            { label: 'Precio', width: 'w-20' },
+            { label: 'Descuento', width: 'w-24' },
+            { label: 'Estado', variant: 'badge' },
+            { label: 'Acciones', variant: 'actions', align: 'right' },
+          ]}
+        />
       ) : isError ? (
         <div className="space-y-3 py-10 text-center" role="alert">
           <p>No se pudieron cargar los servicios.</p>

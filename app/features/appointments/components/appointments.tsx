@@ -7,7 +7,7 @@ import { useCalendarProfessionals } from '@/features/professionals/hooks/use-cal
 import { CalendarDateRangeIcon } from '@heroicons/react/24/outline';
 import { Text } from '@/shared/components/typography';
 import { Button } from '@/shared/components/ui';
-import { Spinner } from '@/shared/components/ui/spinner';
+import { TableSkeleton } from '@/shared/components/ui/table';
 import { ScheduleHeader, type CalendarState, type CalendarOrder } from './schedule-header';
 
 const PAGE_SIZE = 20;
@@ -81,9 +81,19 @@ export const Appointments = () => {
         </div>
       )}
       {isLoading ? (
-        <div className="flex justify-center py-10" role="status" aria-label="Cargando citas">
-          <Spinner />
-        </div>
+        <TableSkeleton
+          label="Cargando citas..."
+          mobileTitleColumn={2}
+          columns={[
+            { label: 'Fecha', width: 'w-24' },
+            { label: 'Hora', width: 'w-28' },
+            { label: 'Cliente', width: 'w-32', secondaryLine: true },
+            { label: 'Servicio', width: 'w-32' },
+            { label: 'Estado', variant: 'badge' },
+            { label: 'Precio', width: 'w-20' },
+            { label: 'Acciones', variant: 'actions', align: 'right' },
+          ]}
+        />
       ) : isError ? (
         <div className="space-y-3 py-10 text-center" role="alert">
           <Text className="text-gray-600">No se pudieron cargar las citas.</Text>
