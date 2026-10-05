@@ -34,6 +34,8 @@ export type ProfessionalBasic = {
 import type { Role } from '@/shared/types';
 
 export type ProfessionalWithDetails = {
+  avatarPublicId: string | null;
+  colorTheme: string | null;
   id: string;
   userId: string;
   avatarUrl: string;
@@ -46,6 +48,15 @@ export type ProfessionalWithDetails = {
   commissionType: CommissionType;
   commissionAmount: number;
   serviceIds: string[];
+  assignedServices: { id: string; name: string; isActive: boolean }[];
+  access: {
+    status: 'NONE' | 'PENDING' | 'EXPIRED' | 'ACTIVE' | 'DISABLED';
+    accountEmail: string | null;
+    role: Role | null;
+    invitationEmail: string | null;
+    expiresAt: string | null;
+    canChange: boolean;
+  };
   schedule: {
     workingHours: {
       dayOfWeek: string;

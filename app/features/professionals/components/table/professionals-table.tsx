@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@/shared/components/ui/table';
 import { formatPhoneForDisplay } from '@/shared/utils/format-phone';
 import { ProfessionalAvatar } from '../professional-avatar';
@@ -15,8 +16,9 @@ interface Props {
 }
 
 export const ProfessionalsTable = ({ professionals }: Props) => {
+  const ownProfessionalId = useAuthStore((state) => state.session?.activeTenant?.professionalId);
   return (
-    <Table className="min-w-[900px]">
+    <Table className="min-w-225">
       <Thead>
         <Tr>
           <Th>Nombre</Th>
@@ -33,7 +35,10 @@ export const ProfessionalsTable = ({ professionals }: Props) => {
             <Td>
               <div className="flex items-center gap-3">
                 <ProfessionalAvatar professional={professional} />
-                <div className="text-gray-900 font-semibold">{professional.name}</div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-900">{professional.name}</span>
+                  {professional.id === ownProfessionalId && <Badge variant="blue">Vos</Badge>}
+                </div>
               </div>
             </Td>
             <Td>

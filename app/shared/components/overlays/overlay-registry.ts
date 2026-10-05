@@ -1,4 +1,4 @@
-// overlay-registry.ts
+import { UpdateProfessionalStatusModal } from '@/features/professionals/components/overlays/update-professional-status-modal';
 import { CancelAppointmentModal } from '../../../features/appointments/components/overlays/cancel-appointment-modal';
 import { RescheduleAppointmentDrawer } from '@/features/appointments/components/overlays/reschedule-appointment-drawer';
 import { CreateAppointmentDrawer } from '@/features/appointments/components/overlays/create-appointment-drawer';
@@ -51,6 +51,7 @@ export const overlayRegistry = {
   'create-professional-modal': CreateProfessionalModal,
   'update-professional-drawer': UpdateProfessionalDrawer,
   'delete-professional-modal': DeleteProfessionalModal,
+  'update-professional-status-modal': UpdateProfessionalStatusModal,
 
   // Exceptions
   'add-exception-modal': AddExceptionModal,

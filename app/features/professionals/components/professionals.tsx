@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { useEffect, useState } from 'react';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { useQuery } from '@tanstack/react-query';
@@ -14,16 +15,21 @@ import { useDebounce } from '@/shared/hooks/useDebounce';
 
 const PAGE_SIZE = 24;
 export const Professionals = () => {
+  const tenant = useAuthStore((state) => state.session?.activeTenant);
+  const canCreate = tenant && ['OWNER', 'ADMIN'].includes(tenant.role);
   const { open } = useOverlay('create-professional-modal');
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
   const [serviceId, setServiceId] = useState('all');
   const serviceOptions = useQuery({
-    queryKey: ['services', 'professional-filter'],
-    queryFn: async () => {
+    queryKey: ['services', tenant?.id, 'professional-filter'],
+    enabled: !!tenant?.id,
+    queryFn: async ({ signal }) => {
       const services: import('@/features/services/types/services.types').Service[] = [];
       for (let skip = 0; ; skip += PAGE_SIZE) {
+        if (signal.aborted || useAuthStore.getState().session?.activeTenant?.id !== tenant?.id) throw new Error('El espacio cambió.');
         const result = await servicesApi.getAll({ skip, take: PAGE_SIZE, orderBy: 'name', order: 'asc' });
+        if (signal.aborted || useAuthStore.getState().session?.activeTenant?.id !== tenant?.id) throw new Error('El espacio cambió.');
         services.push(...result.data);
         if (result.data.length < PAGE_SIZE) return services;
       }
@@ -45,7 +51,8 @@ export const Professionals = () => {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ['professionals', { query, status, serviceId, sort, page }],
+    queryKey: ['professionals', tenant?.id, { query, status, serviceId, sort, page }],
+    enabled: !!tenant?.id,
     queryFn: () =>
       professionalApi.getListing({
         query: query || undefined,
@@ -126,9 +133,11 @@ export const Professionals = () => {
               { value: 'newest', label: 'Más recientes' },
             ]}
           />
+          {canCreate && (
           <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
             Nuevo Profesional
           </Button>
+          )}
         </div>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2">

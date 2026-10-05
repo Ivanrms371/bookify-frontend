@@ -5,7 +5,8 @@ import {
   type ProfessionalBasic,
   type ProfessionalWithDetails,
 } from '../types/professional.types';
-import type { ProfessionalFormValues } from '../schemas/professional-form-schema';
+import type { CreateProfessionalValues } from '../schemas/create-professional-schema';
+import type { UpdateProfessionalValues } from '../schemas/update-professional-schema';
 
 export const professionalApi = {
   getAll: async (params?: GetProfessionalsParams): Promise<ProfessionalBasic[]> =>
@@ -19,11 +20,17 @@ export const professionalApi = {
 
   getById: async (id: string) => {},
 
-  create: async (data: any) => {},
+  create: (data: CreateProfessionalValues, tenantId: string) =>
+    httpClient.post<ProfessionalBasic>('/team/professionals', data, { expectedTenantId: tenantId, skipAuthRetry: true }),
 
-  update: async (id: string, data: ProfessionalFormValues) => httpClient.put(`/professionals/${id}`, data),
+  update: (id: string, data: UpdateProfessionalValues, tenantId: string) =>
+    httpClient.put<{ success: true }>(`/team/professionals/${id}`, data, { expectedTenantId: tenantId, skipAuthRetry: true }),
 
-  delete: async (id: string) => {},
+  updateStatus: (id: string, isActive: boolean, tenantId: string) =>
+    httpClient.patch<{ success: true }>(`/professionals/${id}/status`, { isActive }, { expectedTenantId: tenantId, skipAuthRetry: true }),
+
+  delete: (id: string, tenantId: string) =>
+    httpClient.delete<{ success: true }>(`/team/professionals/${id}`, { expectedTenantId: tenantId, skipAuthRetry: true }),
 
   getAllServices: async (id: string) => {},
 

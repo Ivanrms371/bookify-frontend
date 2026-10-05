@@ -1,15 +1,21 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button } from '@/shared/components/ui';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon, PowerIcon } from '@heroicons/react/24/outline';
 import { useOverlay } from '@/shared/hooks/use-overlay';
-import type { Professional } from '../../types/professional.types';
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import type { ProfessionalBasic } from '../../types/professional.types';
 
 interface Props {
-  professional: Professional | any;
+  professional: ProfessionalBasic;
 }
 
 export const ProfessionalActions = ({ professional }: Props) => {
+  const role = useAuthStore((state) => state.session?.activeTenant?.role);
+  const canUpdateStatus = role === 'OWNER' || role === 'ADMIN';
+  const { open: openStatus } = useOverlay('update-professional-status-modal');
+  const ownProfessionalId = useAuthStore((state) => state.session?.activeTenant?.professionalId);
+  const isSelf = professional.id === ownProfessionalId;
   const { open: openUpdateProfessional } = useOverlay('update-professional-drawer');
   const { open: openDeleteProfessional } = useOverlay('delete-professional-modal');
 
@@ -35,15 +41,29 @@ export const ProfessionalActions = ({ professional }: Props) => {
             Editar
           </DropdownMenu.Item>
 
-          <DropdownMenu.Separator className="-mx-1 my-1 h-px bg-gray-100" />
+          {canUpdateStatus && (
+            <DropdownMenu.Item
+              className="relative flex cursor-pointer gap-2 select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none transition-colors focus:bg-gray-100 focus:text-gray-900 text-gray-800"
+              onSelect={() => openStatus({ professional })}
+            >
+              <PowerIcon className="size-4.5" />
+              {professional.isActive ? 'Desactivar' : 'Activar'}
+            </DropdownMenu.Item>
+          )}
 
-          <DropdownMenu.Item
-            className="relative flex cursor-pointer gap-2 select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none transition-colors text-red-500 focus:bg-red-50 focus:text-red-600"
-            onClick={() => openDeleteProfessional({ professional })}
-          >
-            <TrashIcon className="size-4.5" />
-            Eliminar
-          </DropdownMenu.Item>
+          {!isSelf && (
+            <>
+              <DropdownMenu.Separator className="-mx-1 my-1 h-px bg-gray-100" />
+
+              <DropdownMenu.Item
+                className="relative flex cursor-pointer gap-2 select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none transition-colors text-red-500 focus:bg-red-50 focus:text-red-600"
+                onClick={() => openDeleteProfessional({ professional })}
+              >
+                <TrashIcon className="size-4.5" />
+                Eliminar
+              </DropdownMenu.Item>
+            </>
+          )}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
