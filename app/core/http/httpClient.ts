@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AxiosRequestConfig } from 'axios';
+import type { HttpRequestConfig } from './request-config';
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { ApiError } from '../error/api-error';
 
@@ -29,6 +29,10 @@ axiosInstance.interceptors.request.use((config) => {
   }
 
   const session = useAuthStore.getState().session;
+  const expectedTenantId = (config as typeof config & HttpRequestConfig).expectedTenantId;
+  if (expectedTenantId && (session?.activeTenant?.id !== expectedTenantId || (urlSlug && session.activeTenant.slug !== urlSlug))) {
+    throw new ApiError('El espacio seleccionado cambió. Volvé a abrir el formulario.');
+  }
 
   if (urlSlug) {
     config.headers['x-tenant-slug'] = urlSlug;
@@ -38,31 +42,19 @@ axiosInstance.interceptors.request.use((config) => {
     if (session?.activeTenant?.slug === urlSlug) {
       config.headers['x-tenant-id'] = session.activeTenant.id;
     }
-  } else if (session?.activeTenant?.id) {
+  } else if (session?.activeTenant?.id && !config.headers['x-tenant-id']) {
     config.headers['x-tenant-id'] = session.activeTenant.id;
   }
-
-  console.group(`🚀 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
-
-  console.log('URL:', `${config.baseURL}${config.url}`);
-  console.log('Method:', config.method?.toUpperCase());
-  console.log('Headers:', config.headers);
-
-  if (config.data) {
-    console.log('Body:', config.data);
-    console.log('Body JSON:', JSON.stringify(config.data, null, 2));
-  }
-
-  console.groupEnd();
 
   return config;
 });
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    if (error instanceof ApiError) throw error;
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.skipAuthRetry) {
       originalRequest._retry = true;
 
       try {
@@ -91,7 +83,7 @@ axiosInstance.interceptors.response.use(
     if (!error.response) {
     }
 
-    const responseData = error.response?.data;
+    const responseData = error.response?.data ?? {};
     const { message, code, fields } = responseData;
 
     if (axios.isAxiosError(error)) {
@@ -106,19 +98,19 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
+const request = async <T>(config: HttpRequestConfig): Promise<T> => {
   const response = await axiosInstance.request<T>(config);
   return response.data;
 };
 
 export const httpClient = {
-  get: <T>(url: string, config?: AxiosRequestConfig) => request<T>({ ...config, url, method: 'GET' }),
+  get: <T>(url: string, config?: HttpRequestConfig) => request<T>({ ...config, url, method: 'GET' }),
 
-  post: <T>(url: string, data?: any, config?: AxiosRequestConfig) => request<T>({ ...config, url, method: 'POST', data }),
+  post: <T>(url: string, data?: any, config?: HttpRequestConfig) => request<T>({ ...config, url, method: 'POST', data }),
 
-  put: <T>(url: string, data?: any, config?: AxiosRequestConfig) => request<T>({ ...config, url, method: 'PUT', data }),
+  put: <T>(url: string, data?: any, config?: HttpRequestConfig) => request<T>({ ...config, url, method: 'PUT', data }),
 
-  patch: <T>(url: string, data?: any, config?: AxiosRequestConfig) => request<T>({ ...config, url, method: 'PATCH', data }),
+  patch: <T>(url: string, data?: any, config?: HttpRequestConfig) => request<T>({ ...config, url, method: 'PATCH', data }),
 
-  delete: <T>(url: string, config?: AxiosRequestConfig) => request<T>({ ...config, url, method: 'DELETE' }),
+  delete: <T>(url: string, config?: HttpRequestConfig) => request<T>({ ...config, url, method: 'DELETE' }),
 };
