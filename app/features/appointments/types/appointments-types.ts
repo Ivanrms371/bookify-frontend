@@ -36,6 +36,7 @@ export type Appointment = {
   endsAt: string;
   customerName: string;
   customerPhone: string;
+  customerPhoneCountryCode?: string | null;
   customerEmail: string | null;
   notes?: string | null;
   internalNotes?: string | null;

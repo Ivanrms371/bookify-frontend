@@ -1,13 +1,11 @@
-import { ScheduleHeader } from './schedule-header';
-import { AppointmentItem } from './appointment-item';
 import type { Appointment } from '../types/appointments-types';
-import { Button } from '@/shared/components/ui';
 import { StatusBadge } from './status-badge';
-import { CalendarDaysIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { formatDateDMY } from '@/shared/utils/date';
 import { formatTime } from '../utils/date-helpers';
 import { formatCurrency } from '@/shared/utils/currency';
+import { formatPhoneForDisplay } from '@/shared/utils/format-phone';
 import { AppointmentActions } from './ui/appointment-actions';
+import { CalendarDaysIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface Props {
   appointments: Appointment[];
@@ -24,42 +22,47 @@ export const AppointmentList = ({ appointments, selectedDate, onNext, onPrevious
     <ul className="space-y-4">
       {appointments.map((appt) => (
         <li key={appt.id} className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-semibold text-gray-900">{appt.customerName}</h3>
-
-              <div className="mt-1.5 text-sm text-gray-500 flex flex-col gap-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="min-w-0 break-words font-semibold text-gray-900">{appt.customerName}</h3>
+                <StatusBadge status={appt.status} />
+              </div>
+              <div className="mt-1.5 flex flex-row flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
                 <span className="flex items-center gap-1.5 font-medium">
-                  <CalendarDaysIcon className="size-4 text-gray-400" /> {formatDateDMY(appt.startsAt)}
+                  <CalendarDaysIcon className="size-4 shrink-0 text-gray-400" /> {formatDateDMY(appt.startsAt)}
                 </span>
                 <span className="flex items-center gap-1.5 font-medium">
-                  <ClockIcon className="size-4 text-gray-400" /> {formatTime(appt.startsAt)} - {formatTime(appt.endsAt)}
+                  <ClockIcon className="size-4 shrink-0 text-gray-400" /> {formatTime(appt.startsAt)} - {formatTime(appt.endsAt)}
                 </span>
               </div>
             </div>
-
-            <StatusBadge status={appt.status} />
+            <div className="shrink-0">
+              <AppointmentActions appointment={appt} />
+            </div>
           </div>
 
           <div className="mt-5 space-y-2.5 text-sm">
-            <div className="flex justify-between items-center">
+            <div className="flex items-start justify-between gap-3">
               <span className="text-gray-500 font-medium">Servicio</span>
-              <span className="font-semibold text-gray-800">{appt.serviceName}</span>
+              <span className="min-w-0 break-words text-right font-semibold text-gray-800">{appt.serviceName}</span>
             </div>
 
-            <div className="flex justify-between items-center">
+            <div className="flex items-start justify-between gap-3">
               <span className="text-gray-500 font-medium">Precio</span>
-              <span className="font-semibold text-gray-800">{formatCurrency(appt.price)}</span>
+              <span className="min-w-0 break-words text-right font-semibold text-gray-800">{formatCurrency(appt.price)}</span>
             </div>
 
-            <div className="flex justify-between items-center">
+            <div className="flex items-start justify-between gap-3">
               <span className="text-gray-500 font-medium">Teléfono</span>
-              <span className="font-semibold text-gray-800">{appt.customerPhone}</span>
+              <span className="min-w-0 break-words text-right font-semibold text-gray-800">
+                {appt.customerPhone
+                  ? appt.customerPhoneCountryCode
+                    ? formatPhoneForDisplay(appt.customerPhone, appt.customerPhoneCountryCode)
+                    : appt.customerPhone
+                  : '—'}
+              </span>
             </div>
-          </div>
-
-          <div className="mt-5 flex justify-end relative">
-            <AppointmentActions appointment={appt} />
           </div>
         </li>
       ))}
