@@ -1,3 +1,6 @@
+import { EmptyState } from '@/shared/components/feedback/EmptyState';
+import { SparklesIcon } from '@heroicons/react/24/outline';
+import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
 import { useEffect, useState } from 'react';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { useServices } from '../hooks/use-services';
@@ -84,7 +87,14 @@ export const Services = () => {
             leftIcon={<MagnifyingGlassIcon className="size-4 text-gray-500" />}
           />
         </div>
-        <div className="flex w-full flex-wrap items-center gap-2 md:w-auto">
+        <ResponsiveFilters
+          active={status !== 'all' || duration !== 'all' || discount !== 'all' || sort !== 'name'}
+          action={
+            <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
+              Nuevo Servicio
+            </Button>
+          }
+        >
           <Select
             label="Estado"
             value={status}
@@ -132,10 +142,7 @@ export const Services = () => {
               { value: 'duration', label: 'Menor duración' },
             ]}
           />
-          <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
-            Nuevo Servicio
-          </Button>
-        </div>
+        </ResponsiveFilters>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500" role="status">
@@ -172,15 +179,14 @@ export const Services = () => {
           </Button>
         </div>
       ) : services.length === 0 ? (
-        <div className="space-y-2 py-10 text-center">
-          <p className="font-semibold text-gray-600">No hemos encontrado servicios</p>
-          <p className="text-gray-500">
-            {active ? 'Probá con otros filtros o cambiá la búsqueda.' : 'Agregá tu primer servicio para comenzar.'}
-          </p>
-        </div>
+        <EmptyState
+          icon={<SparklesIcon />}
+          title="No hemos encontrado servicios"
+          description={active ? 'Probá con otros filtros o cambiá la búsqueda.' : 'Agregá tu primer servicio para comenzar.'}
+        />
       ) : (
         <>
-          <div className="hidden md:block overflow-x-auto">
+          <div className="hidden md:block">
             <ServicesTable services={services} />
           </div>
           <div className="space-y-3 md:hidden">

@@ -1,3 +1,4 @@
+import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
 import { BarsArrowUpIcon, CalendarDaysIcon, FunnelIcon, MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { Input } from '@/shared/components/form/input';
 import { Button } from '@/shared/components/ui';
@@ -35,7 +36,14 @@ export function CustomersHeader({ search, status, activity, sort, onSearchChange
           leftIcon={<MagnifyingGlassIcon className="size-4 text-gray-500" />}
         />
       </div>
-      <div className="flex w-full flex-wrap items-center gap-2 md:ml-auto md:w-auto">
+      <ResponsiveFilters
+        active={status !== 'all' || activity !== 'all' || sort !== 'name'}
+        action={
+          <Button variant="primary" className="shrink-0" icon={<PlusIcon className="size-5" />} iconPosition="left" onClick={open}>
+            Nuevo Cliente
+          </Button>
+        }
+      >
         <Select
           label="Estado"
           value={status}
@@ -73,10 +81,7 @@ export function CustomersHeader({ search, status, activity, sort, onSearchChange
             { value: 'spending', label: 'Mayor gasto' },
           ]}
         />
-        <Button variant="primary" className="shrink-0" icon={<PlusIcon className="size-5" />} iconPosition="left" onClick={open}>
-          Nuevo Cliente
-        </Button>
-      </div>
+      </ResponsiveFilters>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { useState } from 'react';
 import { useDateNavigator } from '../hooks/use-date-navigator';
 import { AppointmentList } from './appointment-list';
@@ -46,6 +47,12 @@ export const Appointments = () => {
   const appointments = appointmentsData?.data ?? [];
   const total = appointmentsData?.meta.total ?? 0;
   const filtersActive = state !== 'all' || professionalId !== 'all';
+  const clear = () => {
+    setState('all');
+    setProfessionalId('all');
+    setOrder('latest');
+    setPage(0);
+  };
 
   return (
     <div className="space-y-4">
@@ -72,6 +79,20 @@ export const Appointments = () => {
           setPage(0);
         }}
       />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-gray-500" role="status">
+          {isLoading
+            ? 'Buscando citas...'
+            : isError
+              ? 'Resultados no disponibles'
+              : `${total} ${total === 1 ? 'cita encontrada' : 'citas encontradas'}`}
+        </p>
+        {(filtersActive || order !== 'latest') && (
+          <Button variant="secondary" size="sm" onClick={clear}>
+            Limpiar filtros
+          </Button>
+        )}
+      </div>
       {professionalsError && (
         <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
           <span>No se pudieron cargar los profesionales.</span>
@@ -102,35 +123,19 @@ export const Appointments = () => {
           </Button>
         </div>
       ) : appointments.length === 0 ? (
-        <div className="mx-auto mt-2 flex flex-col w-full gap-10">
-          <AppointmentTable appointments={appointments} />
-
-          <div className="w-full flex flex-col items-center">
-            <CalendarDateRangeIcon className="mb-2 size-10 text-gray-500" />
-            <Text className="mb-1 text-xl font-semibold text-gray-600">No hemos encontrado citas</Text>
-            <Text className="mb-2 max-w-sm text-base font-medium text-gray-500">
-              {filtersActive ? 'Probá con otros filtros o seleccioná otra fecha.' : 'Prueba a seleccionar otra fecha para ver las citas.'}
-            </Text>
-            {filtersActive && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  setState('all');
-                  setProfessionalId('all');
-                  setPage(0);
-                }}
-              >
-                Limpiar filtros
-              </Button>
-            )}
-            {page > 0 && (
-              <Button variant="secondary" size="sm" onClick={() => setPage(0)}>
-                Volver al inicio
-              </Button>
-            )}
-          </div>
-        </div>
+        <EmptyState
+          icon={<CalendarDateRangeIcon />}
+          title="No hemos encontrado citas"
+          description={
+            filtersActive ? 'Probá con otros filtros o seleccioná otra fecha.' : 'Prueba a seleccionar otra fecha para ver las citas.'
+          }
+        >
+          {page > 0 && (
+            <Button variant="secondary" size="sm" onClick={() => setPage(0)}>
+              Volver al inicio
+            </Button>
+          )}
+        </EmptyState>
       ) : (
         <>
           <div className="block md:hidden">

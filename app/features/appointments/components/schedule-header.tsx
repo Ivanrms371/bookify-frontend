@@ -1,3 +1,4 @@
+import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
 import { Button } from '@/shared/components/ui';
 import { Select } from '@/shared/components/ui/select';
 import { BarsArrowUpIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, UserIcon, FunnelIcon } from '@heroicons/react/20/solid';
@@ -57,7 +58,14 @@ export const ScheduleHeader = ({
         <div className="text-sm font-medium text-gray-700">{formatDateFull(selectedDate)}</div>
       </div>
 
-      <div className="flex w-full flex-wrap items-center gap-2 md:ml-auto md:w-auto">
+      <ResponsiveFilters
+        active={state !== 'all' || order !== 'latest' || professionalId !== 'all'}
+        action={
+          <Button variant="primary" className="shrink-0" onClick={() => open({ defaultDate: selectedDate.toISOString().split('T')[0] })}>
+            <PlusIcon className="size-5" /> Nueva Reserva
+          </Button>
+        }
+      >
         <Select
           label="Estado"
           value={state}
@@ -97,10 +105,7 @@ export const ScheduleHeader = ({
             ...professionals.map((professional) => ({ value: professional.id, label: professional.name })),
           ]}
         />
-        <Button variant="primary" className="shrink-0" onClick={() => open({ defaultDate: selectedDate.toISOString().split('T')[0] })}>
-          <PlusIcon className="size-5" /> Nueva Reserva
-        </Button>
-      </div>
+      </ResponsiveFilters>
     </div>
   );
 };

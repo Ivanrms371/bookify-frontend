@@ -1,3 +1,5 @@
+import { EmptyState } from '@/shared/components/feedback/EmptyState';
+import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { useCustomers } from '../hooks/use-customers';
 import { CustomersTable } from './table/customers-table';
@@ -112,12 +114,11 @@ export const Customers = () => {
           </Button>
         </div>
       ) : customers.length === 0 ? (
-        <div className="space-y-2 py-10 text-center">
-          <p className="text-xl font-semibold text-gray-600">No hemos encontrado clientes</p>
-          <p className="text-gray-500">
-            {active ? 'Probá con otros filtros o cambiá la búsqueda.' : 'Agregá tu primer cliente para comenzar.'}
-          </p>
-        </div>
+        <EmptyState
+          icon={<UserGroupIcon />}
+          title="No hemos encontrado clientes"
+          description={active ? 'Probá con otros filtros o cambiá la búsqueda.' : 'Agregá tu primer cliente para comenzar.'}
+        />
       ) : (
         <>
           <div className="hidden md:block overflow-x-auto">

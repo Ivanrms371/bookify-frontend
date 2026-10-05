@@ -1,3 +1,6 @@
+import { EmptyState } from '@/shared/components/feedback/EmptyState';
+import { UsersIcon } from '@heroicons/react/24/outline';
+import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { useEffect, useState } from 'react';
 import { useOverlay } from '@/shared/hooks/use-overlay';
@@ -14,6 +17,7 @@ import { Input } from '@/shared/components/form/input';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 
 const PAGE_SIZE = 24;
+
 export const Professionals = () => {
   const tenant = useAuthStore((state) => state.session?.activeTenant);
   const canCreate = tenant && ['OWNER', 'ADMIN'].includes(tenant.role);
@@ -96,7 +100,16 @@ export const Professionals = () => {
             leftIcon={<MagnifyingGlassIcon className="size-4 text-gray-500" />}
           />
         </div>
-        <div className="flex w-full flex-wrap items-center gap-2 md:w-auto">
+        <ResponsiveFilters
+          active={status !== 'all' || serviceId !== 'all' || sort !== 'name'}
+          action={
+            canCreate ? (
+              <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
+                Nuevo Profesional
+              </Button>
+            ) : null
+          }
+        >
           <Select
             label="Estado"
             value={status}
@@ -133,12 +146,7 @@ export const Professionals = () => {
               { value: 'newest', label: 'Más recientes' },
             ]}
           />
-          {canCreate && (
-          <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
-            Nuevo Profesional
-          </Button>
-          )}
-        </div>
+        </ResponsiveFilters>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500" role="status">
@@ -175,15 +183,14 @@ export const Professionals = () => {
           </Button>
         </div>
       ) : professionals.length === 0 ? (
-        <div className="space-y-2 py-10 text-center">
-          <p className="font-semibold text-gray-600">No hemos encontrado profesionales</p>
-          <p className="text-gray-500">
-            {active ? 'Probá con otros filtros o cambiá la búsqueda.' : 'Agregá tu primer profesional para comenzar.'}
-          </p>
-        </div>
+        <EmptyState
+          icon={<UsersIcon />}
+          title="No hemos encontrado profesionales"
+          description={active ? 'Probá con otros filtros o cambiá la búsqueda.' : 'Agregá tu primer profesional para comenzar.'}
+        />
       ) : (
         <>
-          <div className="hidden md:block overflow-x-auto">
+          <div className="hidden md:block">
             <ProfessionalsTable professionals={professionals} />
           </div>
           <div className="space-y-3 md:hidden">
