@@ -21,9 +21,10 @@ type Props = {
   children: ReactNode;
   action: ReactNode;
   active?: boolean;
+  onApply?: (values: Record<string, string>) => void;
 };
 
-export function ResponsiveFilters({ children, action, active = false }: Props) {
+export function ResponsiveFilters({ children, action, active = false, onApply }: Props) {
   const [open, setOpen] = useState(false);
   const desktop = useMediaQuery('(min-width: 768px)');
   const groupId = useId();
@@ -37,6 +38,7 @@ export function ResponsiveFilters({ children, action, active = false }: Props) {
       if (nextOpen) {
         setDraft(Object.fromEntries(fields.map((field) => [field.props.label, field.props.value ?? ''])));
       } else {
+        const changed: Record<string, string> = {};
         for (const field of fields) {
           const value = draft[field.props.label];
           if (
@@ -45,13 +47,15 @@ export function ResponsiveFilters({ children, action, active = false }: Props) {
             value !== field.props.value &&
             field.props.options.some((option) => option.value === value && !option.disabled)
           ) {
-            field.props.onValueChange?.(value);
+            changed[field.props.label] = value;
+            if (!onApply) field.props.onValueChange?.(value);
           }
         }
+        if (Object.keys(changed).length) onApply?.(changed);
       }
       setOpen(nextOpen);
     },
-    [children, draft],
+    [children, draft, onApply],
   );
 
   useEffect(() => {

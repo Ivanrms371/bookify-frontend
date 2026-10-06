@@ -1,7 +1,6 @@
+import { appointmentDisplayDate, appointmentDisplayTime } from '../utils/appointment-display';
 import { formatCurrency } from '@/shared/utils/currency';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@/shared/components/ui/table';
-import { formatTime } from '../utils/date-helpers';
-import { formatDateDMY } from '@/shared/utils/date';
 import { StatusBadge } from './status-badge';
 import { AppointmentActions } from './ui/appointment-actions';
 import type { Appointment } from '../types/appointments-types';
@@ -29,11 +28,11 @@ export const AppointmentTable = ({ appointments }: Props) => {
           {appointments.map((appt) => (
             <Tr key={appt.id}>
               <Td>
-                <div className="text-gray-800">{formatDateDMY(appt.startsAt)}</div>
+                <div className="text-gray-800">{appointmentDisplayDate(appt.startsAt, appt.timeZone)}</div>
               </Td>
               <Td>
                 <div className="text-gray-800">
-                  {formatTime(appt.startsAt)} - {formatTime(appt.endsAt)}
+                  {appointmentDisplayTime(appt.startsAt, appt.timeZone)} - {appointmentDisplayTime(appt.endsAt, appt.timeZone)}
                 </div>
               </Td>
               <Td>

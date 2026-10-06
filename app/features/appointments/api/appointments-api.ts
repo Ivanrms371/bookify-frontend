@@ -5,7 +5,8 @@ import type { Appointment } from '../types/appointments-types';
 import type { GetAllAppointmentsResponse, GetAllAppointmentsParams } from '../types/appointments-types';
 
 export const appointmentsApi = {
-  getAll: async (params: GetAllAppointmentsParams) => await httpClient.get<GetAllAppointmentsResponse>('/appointments', { params }),
+  getAll: (params: GetAllAppointmentsParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
+    httpClient.get<GetAllAppointmentsResponse>('/appointments', { params, signal: options.signal, expectedTenantId: options.tenantId }),
 
   getById: (id: string) => {},
 
@@ -13,6 +14,5 @@ export const appointmentsApi = {
 
   reschedule: (id: string, input: RescheduleAppointmentInput) => httpClient.patch<Appointment>(`/appointments/${id}/reschedule`, input),
 
-  cancel: (id: string, input: { cancellationReason?: string } = {}) =>
-    httpClient.patch<Appointment>(`/appointments/${id}/cancel`, input),
+  cancel: (id: string, input: { cancellationReason?: string } = {}) => httpClient.patch<Appointment>(`/appointments/${id}/cancel`, input),
 };

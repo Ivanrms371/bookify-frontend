@@ -1,58 +1,36 @@
 import { EmptyState } from '@/shared/components/feedback/EmptyState';
-import { useState } from 'react';
-import { useDateNavigator } from '../hooks/use-date-navigator';
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
+import { useAgenda } from '../hooks/use-agenda';
+import { AGENDA_PAGE_SIZE as PAGE_SIZE } from '../utils/agenda-model';
 import { AppointmentList } from './appointment-list';
 import { AppointmentTable } from './appointment-table';
-import { useAppointments } from '../hooks/use-appointments';
-import { useCalendarProfessionals } from '@/features/professionals/hooks/use-calendar-professionals';
 import { CalendarDateRangeIcon } from '@heroicons/react/24/outline';
 import { Text } from '@/shared/components/typography';
 import { Button } from '@/shared/components/ui';
 import { TableSkeleton } from '@/shared/components/ui/table';
-import { ScheduleHeader, type CalendarState, type CalendarOrder } from './schedule-header';
-
-const PAGE_SIZE = 20;
+import { ScheduleHeader } from './schedule-header';
 
 export const Appointments = () => {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [state, setState] = useState<CalendarState>('all');
-  const [order, setOrder] = useState<CalendarOrder>('latest');
-  const [professionalId, setProfessionalId] = useState('all');
-  const [page, setPage] = useState(0);
-  const changeDate = (date: Date) => {
-    setSelectedDate(date);
-    setPage(0);
-  };
-  const { onNext, onPrevious, onToday } = useDateNavigator(selectedDate, changeDate);
+  const tenant = useAuthStore((state) => state.session?.activeTenant);
+  if (!tenant) return <TableSkeleton label="Cargando agenda..." columns={[{ label: 'Citas' }]} />;
+  const timeZone = tenant.timeZone ?? 'America/Montevideo';
+  return <Agenda key={`${tenant.id}-${timeZone}`} timeZone={timeZone} />;
+};
+
+function Agenda({ timeZone }: { timeZone: string }) {
+  const agenda = useAgenda(timeZone);
+  const desktop = useMediaQuery('(min-width: 768px)');
+  const { selectedDate, state, order, professionalId, page, appointments, total, filtersActive, setPage, onNext, onPrevious, onToday } =
+    agenda;
+  const { isLoading, isError, isFetching, isPlaceholderData, refetch } = agenda.query;
   const {
     data: professionals = [],
     isLoading: professionalsLoading,
     isError: professionalsError,
     refetch: retryProfessionals,
-  } = useCalendarProfessionals();
-  const {
-    data: appointmentsData,
-    isLoading,
-    isError,
-    refetch,
-  } = useAppointments({
-    date: selectedDate.toISOString(),
-    ...(state !== 'all' ? { state } : {}),
-    ...(professionalId !== 'all' ? { professionalId } : {}),
-    orderBy: order === 'latest' ? 'createdAt' : 'startsAt',
-    order: order === 'hour-asc' ? 'asc' : 'desc',
-    skip: page * PAGE_SIZE,
-    take: PAGE_SIZE,
-  });
-  const appointments = appointmentsData?.data ?? [];
-  const total = appointmentsData?.meta.total ?? 0;
-  const filtersActive = state !== 'all' || professionalId !== 'all';
-  const clear = () => {
-    setState('all');
-    setProfessionalId('all');
-    setOrder('latest');
-    setPage(0);
-  };
+  } = agenda.professionals;
+  const loading = isLoading || agenda.recoveringPage;
 
   return (
     <div className="space-y-4">
@@ -66,29 +44,20 @@ export const Appointments = () => {
         professionalId={professionalId}
         professionals={professionals}
         professionalsLoading={professionalsLoading}
-        onStateChange={(value) => {
-          setState(value);
-          setPage(0);
-        }}
-        onOrderChange={(value) => {
-          setOrder(value);
-          setPage(0);
-        }}
-        onProfessionalChange={(value) => {
-          setProfessionalId(value);
-          setPage(0);
-        }}
+        onFiltersChange={agenda.applyFilters}
       />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500" role="status">
-          {isLoading
+          {loading
             ? 'Buscando citas...'
-            : isError
-              ? 'Resultados no disponibles'
-              : `${total} ${total === 1 ? 'cita encontrada' : 'citas encontradas'}`}
+            : isPlaceholderData
+              ? 'Cargando resultados...'
+              : isError
+                ? 'Resultados no disponibles'
+                : `${total} ${total === 1 ? 'cita encontrada' : 'citas encontradas'}`}
         </p>
         {(filtersActive || order !== 'latest') && (
-          <Button variant="secondary" size="sm" onClick={clear}>
+          <Button variant="secondary" size="sm" onClick={agenda.clearFilters}>
             Limpiar filtros
           </Button>
         )}
@@ -101,7 +70,7 @@ export const Appointments = () => {
           </Button>
         </div>
       )}
-      {isLoading ? (
+      {loading ? (
         <TableSkeleton
           label="Cargando citas..."
           mobileTitleColumn={2}
@@ -129,40 +98,32 @@ export const Appointments = () => {
           description={
             filtersActive ? 'Probá con otros filtros o seleccioná otra fecha.' : 'Prueba a seleccionar otra fecha para ver las citas.'
           }
-        >
-          {page > 0 && (
-            <Button variant="secondary" size="sm" onClick={() => setPage(0)}>
-              Volver al inicio
-            </Button>
-          )}
-        </EmptyState>
+        />
       ) : (
         <>
-          <div className="block md:hidden">
-            <AppointmentList
-              appointments={appointments}
-              selectedDate={selectedDate}
-              onNext={onNext}
-              onPrevious={onPrevious}
-              onToday={onToday}
-            />
-          </div>
-          <div className="hidden md:block">
-            <AppointmentTable appointments={appointments} />
+          {isFetching && (
+            <p className="text-sm text-gray-500" role="status">
+              Actualizando citas...
+            </p>
+          )}
+          <div aria-busy={isFetching}>
+            {desktop ? <AppointmentTable appointments={appointments} /> : <AppointmentList appointments={appointments} />}
           </div>
           {total > PAGE_SIZE && (
             <div className="flex flex-wrap items-center justify-end gap-3">
               <Text className="text-sm text-gray-500">
-                {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} de {total} citas
+                {isPlaceholderData
+                  ? 'Cargando página...'
+                  : `${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, total)} de ${total} citas`}
               </Text>
-              <Button variant="secondary" size="sm" disabled={page === 0} onClick={() => setPage((current) => current - 1)}>
+              <Button variant="secondary" size="sm" disabled={page === 0 || isPlaceholderData} onClick={() => setPage(page - 1)}>
                 Anterior
               </Button>
               <Button
                 variant="secondary"
                 size="sm"
-                disabled={(page + 1) * PAGE_SIZE >= total}
-                onClick={() => setPage((current) => current + 1)}
+                disabled={(page + 1) * PAGE_SIZE >= total || isPlaceholderData}
+                onClick={() => setPage(page + 1)}
               >
                 Siguiente
               </Button>
@@ -172,4 +133,4 @@ export const Appointments = () => {
       )}
     </div>
   );
-};
+}

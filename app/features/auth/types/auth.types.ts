@@ -1,3 +1,4 @@
+import type { Permission } from '@/core/auth/permissions';
 import type { Role } from '@/shared/types';
 
 export interface UserSessionContext {
@@ -30,6 +31,7 @@ export interface ActiveTenant {
   role: Role;
   onboardingStatus: OnboardingStatus;
   professionalId: string | null;
+  permissions?: readonly Permission[];
   timeZone?: string | null;
   subscription: Subscription | null;
 }

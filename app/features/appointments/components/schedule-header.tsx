@@ -1,14 +1,14 @@
+import { usePermissions } from '@/core/auth/use-permissions';
 import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
 import { Button } from '@/shared/components/ui';
 import { Select } from '@/shared/components/ui/select';
 import { BarsArrowUpIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, UserIcon, FunnelIcon } from '@heroicons/react/20/solid';
 import { formatDateFull } from '@/shared/utils/date';
 import { useOverlay } from '@/shared/hooks/use-overlay';
-import type { AppointmentStatus } from '../types/appointments-types';
+import { parseISO } from 'date-fns';
+import type { AgendaFilters, CalendarState, CalendarOrder } from '../types/agenda.types';
+export type { CalendarState, CalendarOrder } from '../types/agenda.types';
 import type { ProfessionalBasic } from '@/features/professionals/types/professional.types';
-
-export type CalendarState = AppointmentStatus | 'all';
-export type CalendarOrder = 'latest' | 'hour-asc' | 'hour-desc';
 
 interface Props {
   state: CalendarState;
@@ -16,10 +16,8 @@ interface Props {
   professionalId: string;
   professionals: ProfessionalBasic[];
   professionalsLoading: boolean;
-  onStateChange: (value: CalendarState) => void;
-  onOrderChange: (value: CalendarOrder) => void;
-  onProfessionalChange: (value: string) => void;
-  selectedDate: Date;
+  onFiltersChange: (filters: AgendaFilters) => void;
+  selectedDate: string;
   onNext: () => void;
   onPrevious: () => void;
   onToday: () => void;
@@ -35,11 +33,10 @@ export const ScheduleHeader = ({
   professionalId,
   professionals,
   professionalsLoading,
-  onStateChange,
-  onOrderChange,
-  onProfessionalChange,
+  onFiltersChange,
 }: Props) => {
   const { open } = useOverlay('create-appointment-drawer');
+  const { can } = usePermissions();
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -55,21 +52,28 @@ export const ScheduleHeader = ({
             <ChevronRightIcon className="size-5" />
           </Button>
         </div>
-        <div className="text-sm font-medium text-gray-700">{formatDateFull(selectedDate)}</div>
+        <div className="text-sm font-medium text-gray-700">{formatDateFull(parseISO(selectedDate))}</div>
       </div>
 
       <ResponsiveFilters
         active={state !== 'all' || order !== 'latest' || professionalId !== 'all'}
+        onApply={(values) =>
+          onFiltersChange({
+            state: (values.Estado ?? state) as CalendarState,
+            order: (values['Ordenar por'] ?? order) as CalendarOrder,
+            professionalId: values.Profesional ?? professionalId,
+          })
+        }
         action={
-          <Button variant="primary" className="shrink-0" onClick={() => open({ defaultDate: selectedDate.toISOString().split('T')[0] })}>
+          can('appointment:create') ? <Button variant="primary" className="shrink-0" onClick={() => open({ defaultDate: selectedDate })}>
             <PlusIcon className="size-5" /> Nueva Reserva
-          </Button>
+          </Button> : null
         }
       >
         <Select
           label="Estado"
           value={state}
-          onValueChange={(value) => onStateChange(value as CalendarState)}
+          onValueChange={(value) => onFiltersChange({ state: value as CalendarState, order, professionalId })}
           icon={<FunnelIcon className="size-4" />}
           className="flex-1 sm:flex-none"
           options={[
@@ -84,7 +88,7 @@ export const ScheduleHeader = ({
         <Select
           label="Ordenar por"
           value={order}
-          onValueChange={(value) => onOrderChange(value as CalendarOrder)}
+          onValueChange={(value) => onFiltersChange({ state, order: value as CalendarOrder, professionalId })}
           icon={<BarsArrowUpIcon className="size-4" />}
           className="flex-1 sm:flex-none"
           options={[
@@ -93,10 +97,10 @@ export const ScheduleHeader = ({
             { value: 'hour-desc', label: 'Hora: primero las más tardías' },
           ]}
         />
-        <Select
+        {can('appointment:read_others') && <Select
           label="Profesional"
           value={professionalId}
-          onValueChange={onProfessionalChange}
+          onValueChange={(value) => onFiltersChange({ state, order, professionalId: value })}
           disabled={professionalsLoading}
           icon={<UserIcon className="size-4" />}
           className="flex-1 sm:flex-none"
@@ -104,7 +108,7 @@ export const ScheduleHeader = ({
             { value: 'all', label: 'Todos los profesionales' },
             ...professionals.map((professional) => ({ value: professional.id, label: professional.name })),
           ]}
-        />
+        />}
       </ResponsiveFilters>
     </div>
   );

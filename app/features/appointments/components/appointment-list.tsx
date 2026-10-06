@@ -1,7 +1,6 @@
+import { appointmentDisplayDate, appointmentDisplayTime } from '../utils/appointment-display';
 import type { Appointment } from '../types/appointments-types';
 import { StatusBadge } from './status-badge';
-import { formatDateDMY } from '@/shared/utils/date';
-import { formatTime } from '../utils/date-helpers';
 import { formatCurrency } from '@/shared/utils/currency';
 import { formatPhoneForDisplay } from '@/shared/utils/format-phone';
 import { AppointmentActions } from './ui/appointment-actions';
@@ -9,13 +8,9 @@ import { CalendarDaysIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface Props {
   appointments: Appointment[];
-  selectedDate: Date;
-  onNext: () => void;
-  onPrevious: () => void;
-  onToday: () => void;
 }
 
-export const AppointmentList = ({ appointments, selectedDate, onNext, onPrevious, onToday }: Props) => {
+export const AppointmentList = ({ appointments }: Props) => {
   if (appointments.length === 0) return null;
 
   return (
@@ -30,10 +25,11 @@ export const AppointmentList = ({ appointments, selectedDate, onNext, onPrevious
               </div>
               <div className="mt-1.5 flex flex-row flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
                 <span className="flex items-center gap-1.5 font-medium">
-                  <CalendarDaysIcon className="size-4 shrink-0 text-gray-400" /> {formatDateDMY(appt.startsAt)}
+                  <CalendarDaysIcon className="size-4 shrink-0 text-gray-400" /> {appointmentDisplayDate(appt.startsAt, appt.timeZone)}
                 </span>
                 <span className="flex items-center gap-1.5 font-medium">
-                  <ClockIcon className="size-4 shrink-0 text-gray-400" /> {formatTime(appt.startsAt)} - {formatTime(appt.endsAt)}
+                  <ClockIcon className="size-4 shrink-0 text-gray-400" /> {appointmentDisplayTime(appt.startsAt, appt.timeZone)} -{' '}
+                  {appointmentDisplayTime(appt.endsAt, appt.timeZone)}
                 </span>
               </div>
             </div>
