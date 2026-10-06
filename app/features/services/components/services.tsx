@@ -1,9 +1,12 @@
+import { usePermissions } from '@/core/auth/use-permissions';
 import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
-import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useOverlay } from '@/shared/hooks/use-overlay';
-import { useServices } from '../hooks/use-services';
+import { useServicesPage } from '../hooks/use-services-page';
+import { SERVICES_PAGE_SIZE as PAGE_SIZE } from '../utils/services-page-model';
 import { ServiceCard } from './grid/service-card';
 import { ServicesTable } from './table/services-table';
 import { Button } from '@/shared/components/ui';
@@ -11,68 +14,20 @@ import { TableSkeleton } from '@/shared/components/ui/table';
 import { Select } from '@/shared/components/ui/select';
 import { BarsArrowUpIcon, FunnelIcon, MagnifyingGlassIcon, PlusIcon, ClockIcon, TagIcon } from '@heroicons/react/20/solid';
 import { Input } from '@/shared/components/form/input';
-import { useDebounce } from '@/shared/hooks/useDebounce';
-import type { GetAllServicesParams } from '../types/services.types';
-
-const PAGE_SIZE = 24;
-const sorts: Record<string, { orderBy: string; order: 'asc' | 'desc' }> = {
-  name: { orderBy: 'name', order: 'asc' },
-  newest: { orderBy: 'createdAt', order: 'desc' },
-  'price-asc': { orderBy: 'price', order: 'asc' },
-  'price-desc': { orderBy: 'price', order: 'desc' },
-  duration: { orderBy: 'durationMinutes', order: 'asc' },
+export const Services = () => {
+  const tenantId = useAuthStore((state) => state.session?.activeTenant?.id);
+  if (!tenantId) return <TableSkeleton label="Cargando servicios..." columns={[{ label: 'Servicios' }]} />;
+  return <ServicesPage key={tenantId} />;
 };
 
-export const Services = () => {
+function ServicesPage() {
   const { open } = useOverlay('create-service-modal');
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('all');
-  const [duration, setDuration] = useState('all');
-  const [discount, setDiscount] = useState('all');
-  const [sort, setSort] = useState('name');
-  const [page, setPage] = useState(0);
-  const trimmedSearch = search.trim();
-  const searchQuery = trimmedSearch.length > 3 ? trimmedSearch : '';
-  const query = useDebounce(searchQuery, 300);
-  const [previousQuery, setPreviousQuery] = useState(query);
-  if (query !== previousQuery) {
-    setPreviousQuery(query);
-    setPage(0);
-  }
-  const {
-    data: response,
-    isLoading,
-    isError,
-    refetch,
-  } = useServices({
-    query: query || undefined,
-    isActive: status === 'all' ? undefined : status === 'active',
-    duration: duration === 'all' ? undefined : (duration as GetAllServicesParams['duration']),
-    discount: discount === 'all' ? undefined : (discount as GetAllServicesParams['discount']),
-    ...sorts[sort],
-    count: true,
-    skip: page * PAGE_SIZE,
-    take: PAGE_SIZE,
-  });
-  const services = response?.data ?? [];
-  const total = response?.meta.total ?? 0;
-  const active = search !== '' || status !== 'all' || duration !== 'all' || discount !== 'all' || sort !== 'name';
-  const loading = isLoading || query !== searchQuery;
-  useEffect(() => {
-    if (response && page > 0 && page * PAGE_SIZE >= total) setPage(Math.max(0, Math.ceil(total / PAGE_SIZE) - 1));
-  }, [response, total, page]);
-  const clear = () => {
-    setSearch('');
-    setStatus('all');
-    setDuration('all');
-    setDiscount('all');
-    setSort('name');
-    setPage(0);
-  };
-  const change = (setter: (value: string) => void) => (value: string) => {
-    setter(value);
-    setPage(0);
-  };
+  const { can } = usePermissions();
+  const desktop = useMediaQuery('(min-width: 768px)');
+  const model = useServicesPage();
+  const { search, status, duration, discount, sort, page, services, total, active, loading, setSearch, setPage, clear } = model;
+  const { isError, isFetching, isPlaceholderData, refetch } = model.query;
+  const filters = { status, duration, discount, sort };
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -88,17 +43,25 @@ export const Services = () => {
           />
         </div>
         <ResponsiveFilters
-          active={status !== 'all' || duration !== 'all' || discount !== 'all' || sort !== 'name'}
+          active={model.filtersActive}
+          onApply={(values) =>
+            model.applyFilters({
+              status: values.Estado ?? status,
+              duration: values['Duración'] ?? duration,
+              discount: values.Descuento ?? discount,
+              sort: values['Ordenar por'] ?? sort,
+            })
+          }
           action={
-            <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
+            can('service:create') ? <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
               Nuevo Servicio
-            </Button>
+            </Button> : null
           }
         >
           <Select
             label="Estado"
             value={status}
-            onValueChange={change(setStatus)}
+            onValueChange={(value) => model.applyFilters({ ...filters, status: value })}
             icon={<FunnelIcon className="size-4" />}
             options={[
               { value: 'all', label: 'Todos los estados' },
@@ -109,7 +72,7 @@ export const Services = () => {
           <Select
             label="Duración"
             value={duration}
-            onValueChange={change(setDuration)}
+            onValueChange={(value) => model.applyFilters({ ...filters, duration: value })}
             icon={<ClockIcon className="size-4" />}
             options={[
               { value: 'all', label: 'Todas las duraciones' },
@@ -121,7 +84,7 @@ export const Services = () => {
           <Select
             label="Descuento"
             value={discount}
-            onValueChange={change(setDiscount)}
+            onValueChange={(value) => model.applyFilters({ ...filters, discount: value })}
             icon={<TagIcon className="size-4" />}
             options={[
               { value: 'all', label: 'Todos los descuentos' },
@@ -132,7 +95,7 @@ export const Services = () => {
           <Select
             label="Ordenar por"
             value={sort}
-            onValueChange={change(setSort)}
+            onValueChange={(value) => model.applyFilters({ ...filters, sort: value })}
             icon={<BarsArrowUpIcon className="size-4" />}
             options={[
               { value: 'name', label: 'Nombre A–Z' },
@@ -148,9 +111,11 @@ export const Services = () => {
         <p className="text-sm text-gray-500" role="status">
           {loading
             ? 'Buscando servicios...'
-            : isError
-              ? 'Resultados no disponibles'
-              : `${total} ${total === 1 ? 'servicio encontrado' : 'servicios encontrados'}`}
+            : isPlaceholderData
+              ? 'Cargando resultados...'
+              : isError
+                ? 'Resultados no disponibles'
+                : `${total} ${total === 1 ? 'servicio encontrado' : 'servicios encontrados'}`}
         </p>
         {active && (
           <Button variant="secondary" size="sm" onClick={clear}>
@@ -186,23 +151,38 @@ export const Services = () => {
         />
       ) : (
         <>
-          <div className="hidden md:block">
-            <ServicesTable services={services} />
-          </div>
-          <div className="space-y-3 md:hidden">
-            {services.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
+          {isFetching && (
+            <p className="text-sm text-gray-500" role="status">
+              Actualizando servicios...
+            </p>
+          )}
+          <div aria-busy={isFetching}>
+            {desktop ? (
+              <ServicesTable services={services} />
+            ) : (
+              <div className="space-y-3">
+                {services.map((service) => (
+                  <ServiceCard key={service.id} service={service} />
+                ))}
+              </div>
+            )}
           </div>
           {total > PAGE_SIZE && (
             <div className="flex flex-wrap items-center justify-end gap-3">
               <p className="text-sm text-gray-500">
-                {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} de {total} servicios
+                {isPlaceholderData
+                  ? 'Cargando página...'
+                  : `${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, total)} de ${total} servicios`}
               </p>
-              <Button variant="secondary" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
+              <Button variant="secondary" size="sm" disabled={page === 0 || isPlaceholderData} onClick={() => setPage(page - 1)}>
                 Anterior
               </Button>
-              <Button variant="secondary" size="sm" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(page + 1)}>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={(page + 1) * PAGE_SIZE >= total || isPlaceholderData}
+                onClick={() => setPage(page + 1)}
+              >
                 Siguiente
               </Button>
             </div>
@@ -211,4 +191,4 @@ export const Services = () => {
       )}
     </div>
   );
-};
+}

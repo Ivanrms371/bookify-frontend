@@ -3,7 +3,8 @@ import type { GetAllServicesParams, GetAllServicesResponse, Service, CreateServi
 import type { ProfessionalBasic } from '@/features/professionals/types/professional.types';
 
 export const servicesApi = {
-  getAll: (params?: GetAllServicesParams) => httpClient.get<GetAllServicesResponse>(`/services`, { params }),
+  getAll: (params?: GetAllServicesParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
+    httpClient.get<GetAllServicesResponse>(`/services`, { params, signal: options.signal, expectedTenantId: options.tenantId }),
 
   getById: (id: string) => httpClient.get<Service>(`/services/${id}`),
 
