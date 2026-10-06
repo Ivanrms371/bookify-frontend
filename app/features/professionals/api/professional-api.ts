@@ -12,8 +12,12 @@ export const professionalApi = {
   getAll: async (params?: GetProfessionalsParams): Promise<ProfessionalBasic[]> =>
     httpClient.get<ProfessionalBasic[]>('/professionals', { params }),
 
-  getListing: (params: GetProfessionalsParams) =>
-    httpClient.get<ProfessionalsListing>('/professionals', { params: { ...params, count: true } }),
+  getListing: (params: GetProfessionalsParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
+    httpClient.get<ProfessionalsListing>('/professionals', {
+      params: { ...params, count: true },
+      signal: options.signal,
+      expectedTenantId: options.tenantId,
+    }),
 
   getByIdWithDetails: async (id: string): Promise<ProfessionalWithDetails> =>
     httpClient.get<ProfessionalWithDetails>(`/professionals/${id}/details`),

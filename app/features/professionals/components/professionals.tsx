@@ -1,160 +1,59 @@
+import { can } from '@/core/auth/permissions';
 import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { UsersIcon } from '@heroicons/react/24/outline';
-import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
 import { useAuthStore } from '@/core/auth/use-auth-store';
-import { useEffect, useState } from 'react';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useOverlay } from '@/shared/hooks/use-overlay';
-import { useQuery } from '@tanstack/react-query';
-import { professionalApi } from '../api/professional-api';
-import { servicesApi } from '@/features/services/api/services-api';
 import { ProfessionalsCard } from './list/professionals-card';
 import { ProfessionalsTable } from './table/professionals-table';
 import { Button } from '@/shared/components/ui';
 import { TableSkeleton } from '@/shared/components/ui/table';
-import { Select } from '@/shared/components/ui/select';
-import { BarsArrowUpIcon, FunnelIcon, MagnifyingGlassIcon, PlusIcon, TagIcon } from '@heroicons/react/20/solid';
-import { Input } from '@/shared/components/form/input';
-import { useDebounce } from '@/shared/hooks/useDebounce';
 
-const PAGE_SIZE = 24;
+import { PROFESSIONALS_PAGE_SIZE as PAGE_SIZE } from '../utils/professionals-page-model';
+import { useProfessionalsPage } from '../hooks/use-professionals-page';
+import { useProfessionalServiceOptions } from '../hooks/use-professional-service-options';
+import { ProfessionalsHeader } from './professionals-header';
 
 export const Professionals = () => {
+  const tenantId = useAuthStore((state) => state.session?.activeTenant?.id);
+  if (!tenantId) return <TableSkeleton label="Cargando profesionales..." columns={[{ label: 'Profesionales' }]} />;
+  return <ProfessionalsPage key={tenantId} />;
+};
+
+function ProfessionalsPage() {
   const tenant = useAuthStore((state) => state.session?.activeTenant);
-  const canCreate = tenant && ['OWNER', 'ADMIN'].includes(tenant.role);
+  const canCreate = can(tenant, 'professional:create');
   const { open } = useOverlay('create-professional-modal');
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('all');
-  const [serviceId, setServiceId] = useState('all');
-  const serviceOptions = useQuery({
-    queryKey: ['services', tenant?.id, 'professional-filter'],
-    enabled: !!tenant?.id,
-    queryFn: async ({ signal }) => {
-      const services: import('@/features/services/types/services.types').Service[] = [];
-      for (let skip = 0; ; skip += PAGE_SIZE) {
-        if (signal.aborted || useAuthStore.getState().session?.activeTenant?.id !== tenant?.id) throw new Error('El espacio cambió.');
-        const result = await servicesApi.getAll({ skip, take: PAGE_SIZE, orderBy: 'name', order: 'asc' });
-        if (signal.aborted || useAuthStore.getState().session?.activeTenant?.id !== tenant?.id) throw new Error('El espacio cambió.');
-        services.push(...result.data);
-        if (result.data.length < PAGE_SIZE) return services;
-      }
-    },
-  });
-  const [sort, setSort] = useState('name');
-  const [page, setPage] = useState(0);
-  const trimmedSearch = search.trim();
-  const searchQuery = trimmedSearch.length > 3 ? trimmedSearch : '';
-  const query = useDebounce(searchQuery, 300);
-  const [previousQuery, setPreviousQuery] = useState(query);
-  if (query !== previousQuery) {
-    setPreviousQuery(query);
-    setPage(0);
-  }
-  const {
-    data: response,
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ['professionals', tenant?.id, { query, status, serviceId, sort, page }],
-    enabled: !!tenant?.id,
-    queryFn: () =>
-      professionalApi.getListing({
-        query: query || undefined,
-        isActive: status === 'all' ? undefined : status === 'active',
-        serviceId: serviceId === 'all' ? undefined : serviceId,
-        orderBy: sort === 'name' ? 'name' : 'createdAt',
-        sortOrder: sort === 'name' ? 'asc' : 'desc',
-        skip: page * PAGE_SIZE,
-        take: PAGE_SIZE,
-      }),
-  });
-  const professionals = response?.data ?? [];
-  const total = response?.meta.total ?? 0;
-  const active = search !== '' || status !== 'all' || serviceId !== 'all' || sort !== 'name';
-  const loading = isLoading || query !== searchQuery;
-  useEffect(() => {
-    if (response && page > 0 && page * PAGE_SIZE >= total) setPage(Math.max(0, Math.ceil(total / PAGE_SIZE) - 1));
-  }, [response, total, page]);
-  const clear = () => {
-    setSearch('');
-    setStatus('all');
-    setServiceId('all');
-    setSort('name');
-    setPage(0);
-  };
-  const change = (setter: (value: string) => void) => (value: string) => {
-    setter(value);
-    setPage(0);
-  };
+  const desktop = useMediaQuery('(min-width: 768px)');
+  const serviceOptions = useProfessionalServiceOptions();
+  const model = useProfessionalsPage();
+  const { search, status, serviceId, sort, page, professionals, total, active, loading, setSearch, setPage, clear } = model;
+  const { isError, isFetching, isPlaceholderData, refetch } = model.query;
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="w-full md:min-w-64 md:flex-1">
-          <Input
-            type="search"
-            aria-label="Buscar profesionales por nombre o email"
-            placeholder="Buscar por nombre o email..."
-            maxLength={200}
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            leftIcon={<MagnifyingGlassIcon className="size-4 text-gray-500" />}
-          />
-        </div>
-        <ResponsiveFilters
-          active={status !== 'all' || serviceId !== 'all' || sort !== 'name'}
-          action={
-            canCreate ? (
-              <Button variant="primary" onClick={open} icon={<PlusIcon className="size-5" />} iconPosition="left">
-                Nuevo Profesional
-              </Button>
-            ) : null
-          }
-        >
-          <Select
-            label="Estado"
-            value={status}
-            onValueChange={change(setStatus)}
-            icon={<FunnelIcon className="size-4" />}
-            options={[
-              { value: 'all', label: 'Todos los estados' },
-              { value: 'active', label: 'Activos' },
-              { value: 'inactive', label: 'Inactivos' },
-            ]}
-          />
-          <Select
-            label="Servicio asignado"
-            value={serviceId}
-            onValueChange={change(setServiceId)}
-            icon={<TagIcon className="size-4" />}
-            options={[
-              { value: 'all', label: 'Todos los servicios' },
-              ...(serviceOptions.data ?? []).map((service) => ({ value: service.id, label: service.name })),
-            ]}
-          />
-          {serviceOptions.isError && (
-            <Button variant="secondary" size="sm" onClick={() => void serviceOptions.refetch()}>
-              Reintentar servicios
-            </Button>
-          )}
-          <Select
-            label="Ordenar por"
-            value={sort}
-            onValueChange={change(setSort)}
-            icon={<BarsArrowUpIcon className="size-4" />}
-            options={[
-              { value: 'name', label: 'Nombre A–Z' },
-              { value: 'newest', label: 'Más recientes' },
-            ]}
-          />
-        </ResponsiveFilters>
-      </div>
+      <ProfessionalsHeader
+        search={search}
+        status={status}
+        serviceId={serviceId}
+        sort={sort}
+        services={serviceOptions.data ?? []}
+        servicesLoading={serviceOptions.isLoading}
+        servicesError={serviceOptions.isError}
+        canCreate={canCreate}
+        onSearchChange={setSearch}
+        onFiltersChange={model.applyFilters}
+        onRetryServices={() => void serviceOptions.refetch()}
+        onCreate={open}
+      />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500" role="status">
           {loading
             ? 'Buscando profesionales...'
-            : isError
-              ? 'Resultados no disponibles'
-              : `${total} ${total === 1 ? 'profesional encontrado' : 'profesionales encontrados'}`}
+            : isPlaceholderData
+              ? 'Cargando resultados...'
+              : isError
+                ? 'Resultados no disponibles'
+                : `${total} ${total === 1 ? 'profesional encontrado' : 'profesionales encontrados'}`}
         </p>
         {active && (
           <Button variant="secondary" size="sm" onClick={clear}>
@@ -190,23 +89,38 @@ export const Professionals = () => {
         />
       ) : (
         <>
-          <div className="hidden md:block">
-            <ProfessionalsTable professionals={professionals} />
-          </div>
-          <div className="space-y-3 md:hidden">
-            {professionals.map((professional) => (
-              <ProfessionalsCard key={professional.id} professional={professional} />
-            ))}
+          {isFetching && (
+            <p className="text-sm text-gray-500" role="status">
+              Actualizando profesionales...
+            </p>
+          )}
+          <div aria-busy={isFetching}>
+            {desktop ? (
+              <ProfessionalsTable professionals={professionals} />
+            ) : (
+              <div className="space-y-3">
+                {professionals.map((professional) => (
+                  <ProfessionalsCard key={professional.id} professional={professional} />
+                ))}
+              </div>
+            )}
           </div>
           {total > PAGE_SIZE && (
             <div className="flex flex-wrap items-center justify-end gap-3">
               <p className="text-sm text-gray-500">
-                {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} de {total} profesionales
+                {isPlaceholderData
+                  ? 'Cargando página...'
+                  : `${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, total)} de ${total} profesionales`}
               </p>
-              <Button variant="secondary" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
+              <Button variant="secondary" size="sm" disabled={page === 0 || isPlaceholderData} onClick={() => setPage(page - 1)}>
                 Anterior
               </Button>
-              <Button variant="secondary" size="sm" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(page + 1)}>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={(page + 1) * PAGE_SIZE >= total || isPlaceholderData}
+                onClick={() => setPage(page + 1)}
+              >
                 Siguiente
               </Button>
             </div>
@@ -215,4 +129,4 @@ export const Professionals = () => {
       )}
     </div>
   );
-};
+}
