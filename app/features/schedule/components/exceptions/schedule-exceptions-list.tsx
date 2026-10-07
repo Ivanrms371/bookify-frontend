@@ -1,8 +1,12 @@
-import React from 'react';
+import { can } from '@/core/auth/permissions';
+import { useContext } from 'react';
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import { SettingsDraftContext } from '@/features/settings/hooks/use-settings-draft';
+import { SettingsLoadState } from '@/features/settings/components/settings-load-state';
 import { Button } from '@/shared/components/ui/button';
 import { TrashIcon, PencilIcon } from '@heroicons/react/24/outline';
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
-import { Text } from '@/shared/components/typography';
+import { Heading, Text } from '@/shared/components/typography';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { useScheduleExceptions } from '../../hooks/exceptions/use-schedule-exceptions';
 import { formatExceptionDates } from '../../utils/format-exceptions';
@@ -10,7 +14,10 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/shared/utils';
 
 export const ScheduleExceptionsList = () => {
-  const { data: exceptions, isLoading } = useScheduleExceptions();
+  const { data: exceptions, isLoading, isError, refetch } = useScheduleExceptions();
+  const tenant = useAuthStore((state) => state.session?.activeTenant);
+  const draftContext = useContext(SettingsDraftContext);
+  const canEdit = can(tenant, 'schedule_exception:update');
 
   const addExceptionModal = useOverlay('add-exception-modal');
   const updateExceptionModal = useOverlay('update-exception-modal');
@@ -23,18 +30,31 @@ export const ScheduleExceptionsList = () => {
       </div>
     );
   }
+  if (isError || !Array.isArray(exceptions)) return <SettingsLoadState retry={() => void refetch()} />;
 
   return (
     <div className="bg-white rounded-3xl shadow-sm p-6 md:p-8">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start pb-6 border-b border-gray-100 mb-6 gap-4">
         <div className="flex-1">
-          <Text className="text-xl font-bold text-gray-800">Excepciones y Feriados</Text>
-          <Text className="text-gray-500">Fechas específicas en las que el horario cambia o el negocio está cerrado.</Text>
+          <Heading as="h2" className="text-xl md:text-2xl font-bold text-gray-800">
+            Excepciones y Feriados
+          </Heading>
+          <Text size="base" className="text-gray-500">
+            Fechas específicas en las que el horario cambia o el negocio está cerrado.
+          </Text>
         </div>
         <div>
-          <Button type="button" variant="secondary" size="sm" className="w-full sm:w-auto" onClick={addExceptionModal.open}>
-            + Agregar fecha
-          </Button>
+          {canEdit && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="w-full sm:w-auto"
+              onClick={() => addExceptionModal.open({ tenantId: tenant!.id, draftContext })}
+            >
+              + Agregar fecha
+            </Button>
+          )}
         </div>
       </div>
 
@@ -76,26 +96,30 @@ export const ScheduleExceptionsList = () => {
                   {exception.reason && <Text className="text-sm text-gray-500 mt-1">Mótivo: {exception.reason}</Text>}
                   <Text className="text-sm text-gray-400 mt-1">Aplica a: {exception.professionals.map((p) => p.name).join(', ')}</Text>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="text-gray-400 hover:text-gray-600 hover:bg-gray-50"
-                    onClick={() => updateExceptionModal.open({ exception })}
-                  >
-                    <PencilIcon className="size-5" />
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-400 hover:bg-red-50 hover:text-red-600"
-                    onClick={() => deleteExceptionModal.open({ exception })}
-                  >
-                    <TrashIcon className="size-5" />
-                  </Button>
-                </div>
+                {canEdit && (
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                      aria-label="Editar excepción"
+                      onClick={() => updateExceptionModal.open({ exception, tenantId: tenant!.id, draftContext })}
+                    >
+                      <PencilIcon className="size-5" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-400 hover:bg-red-50 hover:text-red-600"
+                      aria-label="Eliminar excepción"
+                      onClick={() => deleteExceptionModal.open({ exception, tenantId: tenant!.id })}
+                    >
+                      <TrashIcon className="size-5" />
+                    </Button>
+                  </div>
+                )}
               </div>
             );
           })

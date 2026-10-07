@@ -3,16 +3,20 @@ import { workingHoursSchema, type SaveWorkingHours } from '../schemas/schedule-f
 import { DEFAULT_SCHEDULE } from '@/shared/constants/week-days';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DayScheduleRow } from './day-schedule-row';
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { FloatingSaveBar } from '@/shared/components/form/floating-save-bar';
+import { useSettingsDraft } from '@/features/settings/hooks/use-settings-draft';
 
 interface Props {
   id?: string;
   defaultValues?: SaveWorkingHours | null;
   onSubmit: (data: SaveWorkingHours) => void | Promise<void>;
   children?: ReactNode;
+  showSaveBar?: boolean;
+  readOnly?: boolean;
 }
 
-export const ScheduleForm = ({ id = 'schedule-form', defaultValues, onSubmit, children }: Props) => {
+export const ScheduleForm = ({ id = 'schedule-form', defaultValues, onSubmit, children, showSaveBar = false, readOnly = false }: Props) => {
   const initialValues: SaveWorkingHours = defaultValues ?? {
     workingHours: DEFAULT_SCHEDULE,
   };
@@ -21,6 +25,22 @@ export const ScheduleForm = ({ id = 'schedule-form', defaultValues, onSubmit, ch
     defaultValues: initialValues,
     resolver: zodResolver(workingHoursSchema),
   });
+  const { isDirty, isSubmitting } = methods.formState;
+  const { reset } = methods;
+  const dirtyRef = useRef(isDirty);
+  dirtyRef.current = isDirty;
+  useSettingsDraft(id, isDirty, isSubmitting);
+  useEffect(() => {
+    if (defaultValues && !dirtyRef.current) reset(defaultValues);
+  }, [defaultValues, reset]);
+  const submit = async (values: SaveWorkingHours) => {
+    try {
+      await onSubmit(values);
+      reset(values);
+    } catch {
+      // The owner of the save action renders its failure; retain edits for retry.
+    }
+  };
 
   const { fields } = useFieldArray({
     control: methods.control,
@@ -29,13 +49,16 @@ export const ScheduleForm = ({ id = 'schedule-form', defaultValues, onSubmit, ch
 
   return (
     <FormProvider {...methods}>
-      <form id={id} onSubmit={methods.handleSubmit(onSubmit)} className="relative">
-        <div className="@container pl-0.5 pr-2 space-y-5 overflow-x-hidden custom-scrollbar">
+      <form id={id} onSubmit={methods.handleSubmit(submit)} className="relative">
+        <fieldset disabled={readOnly || isSubmitting} className="@container pl-0.5 pr-2 space-y-5 overflow-x-hidden custom-scrollbar">
           {fields.map((field, index) => (
             <DayScheduleRow key={field.id} dayIndex={index} />
           ))}
-        </div>
+        </fieldset>
         {children}
+        {showSaveBar && !readOnly && (
+          <FloatingSaveBar isDirty={isDirty} isSubmitting={isSubmitting} onReset={() => reset(defaultValues ?? initialValues)} />
+        )}
       </form>
     </FormProvider>
   );

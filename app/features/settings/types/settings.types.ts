@@ -25,9 +25,9 @@ export interface TenantSettingsResponse {
     timeZone: string;
   } | null;
   tenantWorkingHours: Array<{
-    dayOfWeek: number;
-    opensAt: number;
-    closesAt: number;
+    day: string;
+    isActive: boolean;
+    intervals: Array<{ opens: string; closes: string }>;
   }>;
 }
 

@@ -3,6 +3,9 @@ import { fieldErrorBorderClassName } from '@/shared/components/form/field-error-
 import { cn } from '@/shared/utils/cn';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { useEffect, useRef, useState } from 'react';
+import type { ImageInputProps } from './image-input/image-input.types';
+
+type Props = Omit<ImageInputProps, 'variant'>;
 
 const ACCEPT = 'image/png,image/jpeg,image/jpg,image/webp,image/avif';
 

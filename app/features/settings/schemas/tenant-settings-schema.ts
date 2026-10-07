@@ -1,8 +1,12 @@
 import { z } from 'zod';
 
 export const tenantGeneralSettingsSchema = z.object({
-  name: z.string().min(1, 'El nombre es requerido'),
-  slug: z.string().min(1, 'La URL es requerida'),
+  name: z.string().trim().min(1, 'El nombre es requerido'),
+  slug: z
+    .string()
+    .trim()
+    .min(1, 'La URL es requerida')
+    .regex(/^[^\s/?#]+$/, 'La URL no puede contener espacios, barras ni parámetros'),
   timeZone: z.string().min(1, 'La zona horaria es requerida'),
   phoneNumber: z.string().optional(),
   addressLine1: z.string().optional(),

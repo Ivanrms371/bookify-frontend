@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { scheduleExceptionApi } from '../../api/schedule-exception-api';
-import type { ScheduleException } from '../../types/schedule-exception.types';
-
-export const SCHEDULE_EXCEPTIONS_QUERY_KEY = ['schedule-exceptions'] as const;
-
-export const useScheduleExceptions = () => {
-  return useQuery<ScheduleException[]>({
-    queryKey: SCHEDULE_EXCEPTIONS_QUERY_KEY,
-    queryFn: () => scheduleExceptionApi.getAll(),
+export const scheduleExceptionsKey = (tenantId?: string) => ['schedule-exceptions', tenantId] as const;
+export function useScheduleExceptions() {
+  const tenantId = useAuthStore((state) => state.session?.activeTenant?.id);
+  return useQuery({
+    queryKey: scheduleExceptionsKey(tenantId),
+    enabled: !!tenantId,
+    queryFn: ({ signal }) => scheduleExceptionApi.getAll(tenantId!, signal),
   });
-};
+}

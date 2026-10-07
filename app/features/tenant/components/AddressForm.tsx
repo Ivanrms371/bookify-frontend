@@ -1,4 +1,3 @@
-import { StepNavigation } from '@/features/onboarding/components/StepNavigation';
 import { FormField } from '@/shared/components/form/form-field';
 import { Input } from '@/shared/components/form/input';
 import { Label } from '@/shared/components/form/Label';
@@ -59,13 +58,11 @@ export const AddressForm = ({ onSuccess, onBack, initialData, children }: Addres
       <div className="grid grid-cols-2 gap-4">
         <FormField>
           <Label htmlFor="department">Departamento</Label>
-          <Select defaultValue={URUGUAY_DEPARTMENTS[5]}>
-            {URUGUAY_DEPARTMENTS.map((department) => (
-              <option key={department} value={department}>
-                {department}
-              </option>
-            ))}
-          </Select>
+          <Select
+            id="department"
+            {...register('province')}
+            options={URUGUAY_DEPARTMENTS.map((department) => ({ value: department, label: department }))}
+          />
         </FormField>
         <FormField>
           <Label htmlFor="city">Ciudad</Label>

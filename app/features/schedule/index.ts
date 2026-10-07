@@ -1,1 +1,1 @@
-export * from './hooks';
+export { ScheduleForm } from './components/schedule-form';

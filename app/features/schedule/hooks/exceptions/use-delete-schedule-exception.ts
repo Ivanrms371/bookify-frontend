@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { scheduleExceptionApi } from '../../api/schedule-exception-api';
-import { SCHEDULE_EXCEPTIONS_QUERY_KEY } from './use-schedule-exceptions';
-
-export const useDeleteScheduleException = () => {
-  const queryClient = useQueryClient();
-
+import { scheduleExceptionsKey } from './use-schedule-exceptions';
+export function useDeleteScheduleException(tenantId: string) {
+  const queries = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => scheduleExceptionApi.delete(id),
+    retry: false,
+    mutationFn: (id: string) => scheduleExceptionApi.delete(id, tenantId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: SCHEDULE_EXCEPTIONS_QUERY_KEY });
+      void queries.invalidateQueries({ queryKey: scheduleExceptionsKey(tenantId) });
+      void queries.invalidateQueries({ queryKey: ['appointments', tenantId] });
     },
   });
-};
+}

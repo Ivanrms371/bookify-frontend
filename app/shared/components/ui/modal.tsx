@@ -9,6 +9,13 @@ import { Heading } from '../typography';
 import { DrawerHeader, DrawerTitle } from './drawer';
 
 const EXIT_MS = 300;
+let scrollLocks = 0;
+let originalOverflow = '';
+
+function isTopModal(dialog: HTMLDivElement | null) {
+  const dialogs = document.querySelectorAll('[data-modal-layer]');
+  return dialogs[dialogs.length - 1] === dialog;
+}
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full';
 
@@ -37,6 +44,7 @@ type ModalProps = {
   footer?: ReactNode;
   closeDisabled?: boolean;
   manageFocus?: boolean;
+  onClose?: () => void;
 };
 
 export const Modal = ({
@@ -50,16 +58,21 @@ export const Modal = ({
   footer,
   closeDisabled = false,
   manageFocus = false,
+  onClose,
 }: ModalProps) => {
-  const { close, isVisible, shouldRender } = useOverlay(overlayKey);
+  const { close: closeOverlay, isVisible, shouldRender } = useOverlay(overlayKey);
+  const close = onClose ?? closeOverlay;
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
 
   useEffect(() => {
     if (!shouldRender || !manageFocus) return;
     const previousFocus = document.activeElement as HTMLElement | null;
-    const frame = requestAnimationFrame(() => dialogRef.current?.focus());
+    const frame = requestAnimationFrame(() => {
+      if (isTopModal(dialogRef.current)) dialogRef.current?.focus();
+    });
     const containFocus = (event: FocusEvent) => {
+      if (!isTopModal(dialogRef.current)) return;
       if (event.target instanceof Node && !dialogRef.current?.contains(event.target)) dialogRef.current?.focus();
     };
     document.addEventListener('focusin', containFocus);
@@ -74,11 +87,12 @@ export const Modal = ({
     if (!shouldRender) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isTopModal(dialogRef.current)) return;
       if (event.key === 'Escape' && !closeDisabled) close();
       if (event.key === 'Tab' && manageFocus) {
         const items = Array.from(
           dialogRef.current?.querySelectorAll<HTMLElement>(
-            'button:not(:disabled), textarea:not(:disabled), input:not(:disabled), a[href], [tabindex="0"]',
+            'button:not(:disabled), textarea:not(:disabled), select:not(:disabled), input:not(:disabled), a[href], [tabindex="0"]',
           ) ?? [],
         );
         const first = items[0];
@@ -103,10 +117,10 @@ export const Modal = ({
   useEffect(() => {
     if (!shouldRender) return;
 
-    const previousOverflow = document.body.style.overflow;
+    if (scrollLocks++ === 0) originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = previousOverflow;
+      if (--scrollLocks === 0) document.body.style.overflow = originalOverflow;
     };
   }, [shouldRender]);
 
@@ -129,6 +143,7 @@ export const Modal = ({
         ref={dialogRef}
         tabIndex={manageFocus ? -1 : undefined}
         role="dialog"
+        data-modal-layer={overlayKey}
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
         className={cn(

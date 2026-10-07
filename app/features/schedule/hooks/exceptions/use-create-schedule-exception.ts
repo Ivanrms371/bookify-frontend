@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { scheduleExceptionApi } from '../../api/schedule-exception-api';
-import { SCHEDULE_EXCEPTIONS_QUERY_KEY } from './use-schedule-exceptions';
+import { scheduleExceptionsKey } from './use-schedule-exceptions';
 import type { ScheduleExceptionFormData } from '../../schemas/schedule-exception-form-schema';
-
-export const useCreateScheduleException = () => {
-  const queryClient = useQueryClient();
-
+export function useCreateScheduleException(tenantId: string) {
+  const queries = useQueryClient();
   return useMutation({
-    mutationFn: (data: ScheduleExceptionFormData) => scheduleExceptionApi.create(data),
+    retry: false,
+    mutationFn: (data: ScheduleExceptionFormData) => scheduleExceptionApi.create(data, tenantId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: SCHEDULE_EXCEPTIONS_QUERY_KEY });
+      void queries.invalidateQueries({ queryKey: scheduleExceptionsKey(tenantId) });
+      void queries.invalidateQueries({ queryKey: ['appointments', tenantId] });
     },
   });
-};
+}

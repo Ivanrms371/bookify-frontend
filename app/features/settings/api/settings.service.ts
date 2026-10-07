@@ -2,8 +2,10 @@ import { httpClient } from '@/core/http/httpClient';
 import type { TenantSettingsResponse, UpdateGeneralSettingsPayload, UpdateAppointmentSettingsPayload } from '../types/settings.types';
 
 export const SettingsService = {
-  getSettings: async (): Promise<TenantSettingsResponse> => httpClient.get<TenantSettingsResponse>('/settings'),
-  updateGeneralSettings: async (data: UpdateGeneralSettingsPayload): Promise<void> => httpClient.patch('/settings/general', data),
-  updateAppointmentSettings: async (data: UpdateAppointmentSettingsPayload): Promise<void> =>
-    httpClient.patch('/settings/appointments', data),
+  getSettings: (tenantId: string, signal?: AbortSignal): Promise<TenantSettingsResponse> =>
+    httpClient.get<TenantSettingsResponse>('/settings', { expectedTenantId: tenantId, signal }),
+  updateGeneralSettings: (data: UpdateGeneralSettingsPayload, tenantId: string): Promise<void> =>
+    httpClient.patch('/settings/general', data, { expectedTenantId: tenantId, skipAuthRetry: true }),
+  updateAppointmentSettings: (data: UpdateAppointmentSettingsPayload, tenantId: string): Promise<void> =>
+    httpClient.patch('/settings/appointments', data, { expectedTenantId: tenantId, skipAuthRetry: true }),
 };
