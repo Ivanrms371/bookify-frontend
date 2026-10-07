@@ -1,4 +1,4 @@
-import { CreditCardIcon } from '@heroicons/react/24/outline';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { Link, useParams } from 'react-router';
 import { cn } from '@/shared/utils';
 import { useSubscriptionAccess } from '../hooks/use-billing-subscription';
@@ -7,15 +7,14 @@ import { useSubscriptionNotice } from '../hooks/use-subscription-notice';
 export function SidebarSubscriptionCard() {
   const { slug } = useParams();
   const access = useSubscriptionAccess();
+  const { can } = usePermissions();
   const notice = useSubscriptionNotice(access.data);
 
-  if (!slug || access.isPending) return null;
+  if (!can('billing:read') || !slug || access.isPending) return null;
   if (access.isError || !access.data) return null;
 
   const isTrial = access.data.state === 'trial' && !notice?.needsPlan;
-  if (!notice) {
-    return access.data.canManageBilling ? <BillingLink slug={slug} /> : null;
-  }
+  if (!notice) return null;
 
   const isUrgent = notice.tone === 'warning';
   const showPlans = isTrial || notice.needsPlan;
@@ -32,7 +31,7 @@ export function SidebarSubscriptionCard() {
       <p className="mb-3 text-sm font-medium text-gray-700">
         {isTrial ? 'Explora las funcionalidades durante tus 14 días de prueba.' : notice.message}
       </p>
-      {(showPlans || access.data.canManageBilling) && (
+      {can('billing:read') && (showPlans || access.data.canManageBilling) && (
         <Link
           to={`/${slug}/billing${showPlans ? '/plans' : ''}`}
           className={cn(
@@ -44,17 +43,5 @@ export function SidebarSubscriptionCard() {
         </Link>
       )}
     </div>
-  );
-}
-
-function BillingLink({ slug }: { slug: string }) {
-  return (
-    <Link
-      to={`/${slug}/billing`}
-      className="flex items-center gap-2 rounded-lg px-4 h-10 font-medium text-gray-800 transition-colors duration-300 hover:bg-indigo-500 hover:text-white "
-    >
-      <CreditCardIcon aria-hidden="true" className="size-5" />
-      Facturación
-    </Link>
   );
 }

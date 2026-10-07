@@ -2,15 +2,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { billingApi } from '../api/billing-api';
-import type { CheckoutSelection } from '../types/billing.types';
-import type { PlanChangeAction } from '../types/plan-change.types';
+import type { PlanChangeAction, PlanChangeSelection } from '../types/plan-change.types';
 
-export function useChangeEligibility(selection: CheckoutSelection, canManage: boolean) {
+export function useChangeEligibility(selection: PlanChangeSelection, canManage: boolean) {
   const { slug } = useParams();
   const tenant = useAuthStore((state) => state.session?.activeTenant);
   return useQuery({
     queryKey: ['billing', tenant?.id, 'change-eligibility', selection.planId, selection.cycle],
-    queryFn: ({ signal }) => billingApi.getChangeEligibility(selection, signal),
+    queryFn: ({ signal }) => billingApi.getChangeEligibility(selection, signal, tenant?.id),
     enabled: Boolean(canManage && tenant?.id && tenant.slug === slug),
     staleTime: 0,
     retry: false,
@@ -33,15 +32,21 @@ export function usePlanChange() {
       checkTenant();
       const result =
         request.action === 'cancel'
-          ? await billingApi.cancelPlanChange()
+          ? await billingApi.cancelPlanChange(tenantId)
           : request.action === 'refresh'
-            ? await billingApi.refreshPlanChange()
-            : await billingApi.changePlan(request.selection);
+            ? await billingApi.refreshPlanChange(tenantId)
+            : await billingApi.changePlan(request.selection, tenantId);
       checkTenant();
       return result;
     },
-    onSettled: async () => {
-      await queries.invalidateQueries({ queryKey: ['billing', tenantId] });
+    onSettled: () => {
+      for (const key of [
+        ['billing', tenantId],
+        ['services', tenantId],
+        ['professionals', tenantId],
+      ]) {
+        void queries.invalidateQueries({ queryKey: key });
+      }
     },
   });
 }

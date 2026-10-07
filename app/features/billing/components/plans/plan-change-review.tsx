@@ -11,7 +11,9 @@ export function PlanChangeReview({ selection, canManage }: PlanChangeReviewProps
   if (!canManage) return null;
   return (
     <section aria-label="Cambio de plan" className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
-      <h2 className="font-semibold">Revisa el cambio a {selection.planId === 'pro_plus' ? 'Pro+' : 'Pro'}</h2>
+      <h2 className="font-semibold">
+        Revisa el cambio a {selection.planId === 'free' ? 'Free' : selection.planId === 'pro_plus' ? 'Pro+' : 'Pro'}
+      </h2>
       {eligibility.isPending || eligibility.isFetching ? (
         <p role="status" className="mt-3">
           Comprobando el cambio…
@@ -37,16 +39,33 @@ export function PlanChangeReview({ selection, canManage }: PlanChangeReviewProps
               )}
             </div>
           ))}
+          {selection.planId === 'free' && eligibility.data.usage && (
+            <p className="mt-3 text-sm text-gray-600">
+              {eligibility.data.usage.professionals} de 1 profesional · {eligibility.data.usage.services} de 10 servicios. Los recursos
+              inactivos también cuentan. No se eliminará ningún recurso automáticamente.
+            </p>
+          )}
+          {eligibility.data.blockers.some((blocker) => blocker.resource === 'provider') && (
+            <Link className="mt-3 block text-sm underline" to={`/${slug}/billing`}>
+              Gestionar suscripción
+            </Link>
+          )}
           {eligibility.data.eligible && (
             <>
               <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
-                {eligibility.data.kind === 'upgrade'
-                  ? 'Lemon Squeezy cobrará ahora la diferencia proporcional. Tu nuevo plan se activará cuando el pago se confirme.'
-                  : eligibility.data.kind === 'cycle'
-                    ? `Cambiarás al pago ${selection.cycle === 'ANNUAL' ? 'anual' : 'mensual'} el ${formatBillingDate(eligibility.data.effectiveAt!)}. No se cobrará hoy. Tu plan y sus beneficios se mantienen.`
-                    : eligibility.data.kind === 'undo'
-                      ? 'Cancelarás el cambio programado y conservarás tu plan actual. No se cobrará una mejora nueva.'
-                      : `Conservarás todos los beneficios y límites actuales hasta ${formatBillingDate(eligibility.data.effectiveAt!)}. Después se aplicará el plan seleccionado y su precio de renovación.`}
+                {selection.planId === 'free'
+                  ? eligibility.data.effectiveAt
+                    ? `Conservarás tu plan hasta el ${formatBillingDate(eligibility.data.effectiveAt)}. Después pasarás a Free y tu suscripción dejará de renovarse. Desde ahora, el negocio deberá mantenerse dentro de 1 profesional y 10 servicios.`
+                    : eligibility.data.endsTrial
+                      ? 'Free se activará ahora. Perderás los días restantes y los beneficios de la prueba; no recibirás una nueva prueba. No se requiere tarjeta ni se realizará ningún cobro.'
+                      : 'Free se activará ahora, sin tarjeta ni cobros. Permite 1 profesional y 10 servicios.'
+                  : eligibility.data.kind === 'upgrade'
+                    ? 'Lemon Squeezy cobrará ahora la diferencia proporcional. Tu nuevo plan se activará cuando el pago se confirme.'
+                    : eligibility.data.kind === 'cycle'
+                      ? `Cambiarás al pago ${selection.cycle === 'ANNUAL' ? 'anual' : 'mensual'} el ${formatBillingDate(eligibility.data.effectiveAt!)}. No se cobrará hoy. Tu plan y sus beneficios se mantienen.`
+                      : eligibility.data.kind === 'undo'
+                        ? 'Cancelarás el cambio programado y conservarás tu plan actual. No se cobrará una mejora nueva.'
+                        : `Conservarás todos los beneficios y límites actuales hasta ${formatBillingDate(eligibility.data.effectiveAt!)}. Después se aplicará el plan seleccionado y su precio de renovación.`}
               </p>
               <Button
                 variant="primary"
@@ -56,13 +75,17 @@ export function PlanChangeReview({ selection, canManage }: PlanChangeReviewProps
               >
                 {change.isPending
                   ? 'Confirmando…'
-                  : eligibility.data.kind === 'upgrade'
-                    ? 'Confirmar mejora y pagar diferencia'
-                    : eligibility.data.kind === 'cycle'
-                      ? 'Programar cambio de ciclo'
-                      : eligibility.data.kind === 'undo'
-                        ? 'Cancelar cambio programado'
-                        : 'Programar reducción'}
+                  : selection.planId === 'free'
+                    ? eligibility.data.effectiveAt
+                      ? 'Programar cambio a Free'
+                      : 'Activar Free'
+                    : eligibility.data.kind === 'upgrade'
+                      ? 'Confirmar mejora y pagar diferencia'
+                      : eligibility.data.kind === 'cycle'
+                        ? 'Programar cambio de ciclo'
+                        : eligibility.data.kind === 'undo'
+                          ? 'Cancelar cambio programado'
+                          : 'Programar reducción'}
               </Button>
             </>
           )}

@@ -39,6 +39,7 @@ export interface BillingSummary {
     endsAt: string | null;
     cancelledAt: string | null;
     paymentMethod: string | null;
+    planChangeUndoRequestedAt: string | null;
     pendingPlanId: string | null;
     pendingBillingCycle: 'MONTHLY' | 'ANNUAL' | null;
     planChangesAt: string | null;

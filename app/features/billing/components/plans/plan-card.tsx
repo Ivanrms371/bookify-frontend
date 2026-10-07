@@ -8,7 +8,7 @@ interface Props {
   plan: Plan;
   isAnnual: boolean;
   isCurrent?: boolean;
-  canManage: boolean;
+  canManage: boolean | undefined;
   pending: boolean;
   onSelect: () => void;
 }
@@ -16,11 +16,11 @@ interface Props {
 export const PlanCard = ({ plan, isAnnual, isCurrent, canManage, pending, onSelect }: Props): React.JSX.Element => {
   const { isPopular, description, features, pricing, title, cta } = plan;
 
-  const available = plan.availability[isAnnual ? 'ANNUAL' : 'MONTHLY'];
-  const disabledReason = !canManage
+  const available = plan.id === 'free' || plan.availability[isAnnual ? 'ANNUAL' : 'MONTHLY'];
+  const disabledReason = canManage === false
     ? 'Solo el propietario puede gestionar la suscripción'
-    : plan.id === 'free'
-      ? 'Selección de Free pendiente'
+    : plan.id === 'free' && isCurrent
+      ? 'Ya tienes Free'
       : !available
         ? 'Ciclo de pago no disponible'
         : undefined;
@@ -112,14 +112,14 @@ export const PlanCard = ({ plan, isAnnual, isCurrent, canManage, pending, onSele
           </Text>
         ) : null}
         <Button
-          disabled={pending || Boolean(disabledReason)}
+          disabled={pending || canManage !== true || Boolean(disabledReason)}
           title={disabledReason}
           onClick={onSelect}
           size="md"
           variant={isPopular ? 'primary' : 'secondary'}
           fullWidth
         >
-          {isCurrent ? 'Elegir este plan' : cta}
+          {plan.id === 'free' ? (isCurrent ? 'Tu plan actual' : 'Elegir Free') : isCurrent ? 'Elegir este plan' : cta}
           <ArrowRightIcon className="size-4.5 transition-transform duration-300 group-hover:translate-x-1" />
         </Button>
 

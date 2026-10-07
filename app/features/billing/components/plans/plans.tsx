@@ -1,3 +1,4 @@
+import { planSelection } from '../../utils/plan-selection';
 import { useCheckout } from '../../hooks/use-checkout';
 import { PlanCheckout } from './plan-checkout';
 import type { Plan } from '../../types/billing.types';
@@ -25,7 +26,7 @@ export function Plans() {
     !(subscription.status === 'CANCELLED' && subscription.endsAt && new Date(subscription.endsAt) <= new Date()),
   );
   const annual = isAnnual ?? (paidChange ? subscription?.cycle === 'ANNUAL' : true);
-  const selection = selectedPlanId ? { planId: selectedPlanId, cycle: annual ? ('ANNUAL' as const) : ('MONTHLY' as const) } : null;
+  const selection = selectedPlanId ? planSelection(selectedPlanId, annual) : null;
 
   return (
     <>
@@ -34,6 +35,14 @@ export function Plans() {
         <p role="status" className="mb-4 text-center text-sm text-gray-500">
           Consultando tu suscripción…
         </p>
+      )}
+      {access.isError && (
+        <div role="alert" className="mb-4 text-center">
+          <p>No pudimos comprobar tu acceso a facturación. {access.error.message}</p>
+          <Button variant="secondary" onClick={() => access.refetch()}>
+            Reintentar
+          </Button>
+        </div>
       )}
 
       <BillingCycleToggle
@@ -76,9 +85,9 @@ export function Plans() {
           plans={query.data}
           isAnnual={annual}
           currentPlanId={access.data?.effectivePlanId}
-          canManage={Boolean(access.data?.canManageBilling)}
+          canManage={access.isSuccess ? access.data.canManageBilling : undefined}
           pending={
-            checkout.isPending || access.isPending || (Boolean(access.data?.canManageBilling) && (summary.isPending || summary.isError))
+            checkout.isPending || !access.isSuccess || (Boolean(access.data?.canManageBilling) && (summary.isPending || summary.isError))
           }
           onSelect={(id) => {
             checkout.reset();
@@ -89,7 +98,7 @@ export function Plans() {
       {selection &&
         !summary.isPending &&
         !summary.isError &&
-        (paidChange ? (
+        (selection.planId === 'free' || paidChange ? (
           <PlanChangeReview key={`${selectedPlanId}-${annual}`} selection={selection} canManage={Boolean(access.data?.canManageBilling)} />
         ) : (
           <PlanCheckout
@@ -101,7 +110,7 @@ export function Plans() {
             onCheckout={() => checkout.mutate(selection)}
           />
         ))}
-      {access.data && !access.data.canManageBilling && (
+      {access.isSuccess && access.data.canManageBilling === false && (
         <p className="mt-6 text-center text-sm text-gray-500">Solo el propietario puede gestionar la suscripción.</p>
       )}
     </>

@@ -12,7 +12,7 @@ export function PlanGrid({
   plans: Plan[];
   isAnnual: boolean;
   currentPlanId?: string | null;
-  canManage: boolean;
+  canManage: boolean | undefined;
   pending: boolean;
   onSelect: (id: Plan['id']) => void;
 }) {
