@@ -28,8 +28,8 @@ export const RevenueChart = () => {
   return (
     <Card className="flex h-full min-h-0 w-full flex-1 flex-col">
       <div className="mb-4 shrink-0 sm:mb-6">
-        <Text className="mb-2 text-sm font-medium text-gray-800">Ganancias últimos 30 días</Text>
-        <Text className=" text-4xl text-gray-900 dark:text-white">{formatCompactUYU(totalRevenue)}</Text>
+        <Text className="mb-2 font-display text-sm font-medium text-gray-800">Ganancias últimos 30 días</Text>
+        <Text className="font-display text-4xl font-bold text-gray-800">{formatCompactUYU(totalRevenue)}</Text>
       </div>
 
       <div className="min-h-0 flex-1">

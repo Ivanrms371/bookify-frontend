@@ -1,19 +1,12 @@
 import { useAuthStore } from '@/core/auth/use-auth-store';
-import { Heading, Text } from '@/shared/components/typography';
+import { ReportsOverview } from '@/features/reports/components/reports-overview';
 
 const ReportsPage = () => {
-  const tenant = useAuthStore((s) => s.tenant);
+  const tenant = useAuthStore((s) => s.session?.activeTenant);
 
   if (!tenant) return null;
 
-  return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Heading as="h1" className="text-xl font-medium text-gray-600 lg:text-2xl xl:text-3xl">
-        Reportes
-      </Heading>
-      <Text className="mt-1 text-base md:text-lg">Consulta métricas y estadísticas de tu negocio.</Text>
-    </div>
-  );
+  return <ReportsOverview />;
 };
 
 export default ReportsPage;

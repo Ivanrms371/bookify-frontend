@@ -1,5 +1,11 @@
 import { useDashboard } from '../hooks/useDashboard';
 import { StatsCard } from './StatsCard';
+import { formatMonthlyTrend } from '../utils/format-monthly-trend';
+
+const formatDailyTrend = (trend: string) => {
+  if (trend === 'Igual que ayer') return '0 vs ayer';
+  return trend.replace(/^(\d+) más que ayer$/, '+$1 vs ayer').replace(/^(\d+) menos que ayer$/, '−$1 vs ayer');
+};
 import { formatUYU, formatCompactUYU } from '@/shared/utils/currency';
 
 export const StatsGrid = () => {
@@ -22,21 +28,21 @@ export const StatsGrid = () => {
       <StatsCard
         title="Ingresos este mes"
         value={formatCompactUYU(stats.revenue.current)}
-        trend={stats.revenue.trend}
+        trend={formatMonthlyTrend(stats.revenue.trend)}
         color="indigo"
         className="order-1"
       />
       <StatsCard
         title="Turnos hoy"
         value={stats.appointmentsToday.current.toString()}
-        trend={stats.appointmentsToday.trend}
+        trend={formatDailyTrend(stats.appointmentsToday.trend)}
         color="gray"
         className="order-2 lg:order-2"
       />
       <StatsCard
         title="Clientes nuevos"
         value={stats.newCustomers.current.toString()}
-        trend={stats.newCustomers.trend}
+        trend={formatMonthlyTrend(stats.newCustomers.trend)}
         color="indigo"
         className="order-4 lg:order-3"
       />
