@@ -9,8 +9,8 @@ import type { CreateProfessionalValues } from '../schemas/create-professional-sc
 import type { UpdateProfessionalValues } from '../schemas/update-professional-schema';
 
 export const professionalApi = {
-  getAll: async (params?: GetProfessionalsParams): Promise<ProfessionalBasic[]> =>
-    httpClient.get<ProfessionalBasic[]>('/professionals', { params }),
+  getAll: async (params?: GetProfessionalsParams, options: { signal?: AbortSignal; tenantId?: string } = {}): Promise<ProfessionalBasic[]> =>
+    httpClient.get<ProfessionalBasic[]>('/professionals', { params, signal: options.signal, expectedTenantId: options.tenantId }),
 
   getListing: (params: GetProfessionalsParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
     httpClient.get<ProfessionalsListing>('/professionals', {

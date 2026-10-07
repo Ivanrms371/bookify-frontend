@@ -8,6 +8,7 @@ export const useToggleServiceStatus = () => {
   return useMutation({
     mutationFn: (id: string) => servicesApi.toggleStatus(id),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['reports'] });
       queryClient.invalidateQueries({ queryKey: ['services'] });
       toast.success('Estado del servicio actualizado');
     },

@@ -1,4 +1,6 @@
 import { can } from '@/core/auth/permissions';
+import { useBillingSummary } from '@/features/billing/hooks/use-billing-subscription';
+import { hasFreeResourceLimit } from '@/features/billing/utils/resource-limit';
 import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { UsersIcon } from '@heroicons/react/24/outline';
 import { useAuthStore } from '@/core/auth/use-auth-store';
@@ -24,6 +26,13 @@ function ProfessionalsPage() {
   const tenant = useAuthStore((state) => state.session?.activeTenant);
   const canCreate = can(tenant, 'professional:create');
   const { open } = useOverlay('create-professional-modal');
+  const planLimit = useOverlay('plan-limit-modal');
+  const billing = useBillingSummary(can(tenant, 'billing:read'));
+  const addProfessional = () => {
+    if (tenant && hasFreeResourceLimit(billing.data, 'professionals')) {
+      planLimit.open({ resource: 'professionals', tenantId: tenant.id });
+    } else open();
+  };
   const desktop = useMediaQuery('(min-width: 768px)');
   const serviceOptions = useProfessionalServiceOptions();
   const model = useProfessionalsPage();
@@ -43,7 +52,7 @@ function ProfessionalsPage() {
         onSearchChange={setSearch}
         onFiltersChange={model.applyFilters}
         onRetryServices={() => void serviceOptions.refetch()}
-        onCreate={open}
+        onCreate={addProfessional}
       />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500" role="status">

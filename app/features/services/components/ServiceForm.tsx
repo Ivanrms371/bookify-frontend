@@ -76,17 +76,12 @@ export const ServiceForm = ({ methods, imageInputKey }: Props) => {
             render={({ field }) => (
               <Select
                 id="durationMinutes"
-                value={field.value}
+                value={String(field.value)}
                 onChange={(e) => field.onChange(Number(e.target.value))}
                 onBlur={field.onBlur}
                 hasError={!!errors.durationMinutes}
-              >
-                {SERVICE_DURATION_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </Select>
+                options={SERVICE_DURATION_OPTIONS.map(({ value, label }) => ({ value: value.trim(), label }))}
+              />
             )}
           />
           {errors.durationMinutes?.message && <Alert message={errors.durationMinutes.message} variant="error" />}

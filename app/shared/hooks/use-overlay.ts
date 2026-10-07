@@ -1,3 +1,5 @@
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import { canOpenOverlay } from '@/core/auth/overlay-permissions';
 import { useCallback } from 'react';
 import { useOverlayStore } from '@/shared/store/use-overlay-store';
 import type { OverlayKey, OverlayPropsMap } from '@/shared/components/overlays/overlay-registry';
@@ -9,7 +11,7 @@ export function useOverlay<K extends OverlayKey>(key: K) {
 
   const open = useCallback(
     (props?: OverlayPropsMap[K]) => {
-      openOverlay(key, props);
+      if (canOpenOverlay(useAuthStore.getState().session?.activeTenant, key, props)) openOverlay(key, props);
     },
     [key, openOverlay],
   );

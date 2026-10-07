@@ -1,13 +1,16 @@
+import { canAccessArea } from '@/core/auth/permissions';
 import {
   CalendarDaysIcon,
   ChartBarIcon,
   ClipboardDocumentListIcon,
+  CreditCardIcon,
   Squares2X2Icon,
   UserGroupIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline';
 import { Link, useLocation, useParams } from 'react-router';
 import { cn } from '@/shared/utils/cn';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 
 const getSidebarItems = (slug: string) => [
   {
@@ -46,12 +49,22 @@ const getSidebarItems = (slug: string) => [
 export const SidebarMainNav = () => {
   const { slug } = useParams();
   const location = useLocation();
+  const tenant = useAuthStore((state) => state.session?.activeTenant);
 
   if (!slug) return null;
 
+  const items = getSidebarItems(slug).filter((item) => canAccessArea(tenant, item.href.split('/')[2] ?? ''));
+  if (tenant?.slug === slug && canAccessArea(tenant, 'billing')) {
+    items.push({
+      label: 'Facturación',
+      href: `/${slug}/billing`,
+      icon: <CreditCardIcon className="size-5" />,
+    });
+  }
+
   return (
     <ul className="flex flex-col gap-1">
-      {getSidebarItems(slug).map((item) => {
+      {items.map((item) => {
         const isActive = item.end ? location.pathname === item.href : location.pathname.startsWith(item.href);
 
         return (

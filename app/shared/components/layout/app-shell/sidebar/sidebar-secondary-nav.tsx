@@ -1,3 +1,4 @@
+import { usePermissions } from '@/core/auth/use-permissions';
 import { ArrowRightStartOnRectangleIcon, Cog6ToothIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { Link, useParams } from 'react-router';
 import { useLogout } from '@/features/auth/hooks/use-logout';
@@ -18,8 +19,9 @@ const getSidebarItems = (slug: string) => [
 export const SidebarSecondaryNav = () => {
   const { slug } = useParams();
   const logout = useLogout();
+  const { canAccessArea } = usePermissions();
   if (!slug) return null;
-  const SIDEBAR_ITEMS = getSidebarItems(slug);
+  const SIDEBAR_ITEMS = getSidebarItems(slug).filter((item) => item.href === '/help' || canAccessArea('settings'));
   return (
     <ul className="flex flex-col gap-1">
       {SIDEBAR_ITEMS.map((item) => (

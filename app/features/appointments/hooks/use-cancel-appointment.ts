@@ -10,6 +10,7 @@ export const useCancelAppointment = (id: string) => {
         queryClient.invalidateQueries({ queryKey: ['appointments'] }),
         queryClient.invalidateQueries({ queryKey: ['availability'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboard-overview'] }),
+        queryClient.invalidateQueries({ queryKey: ['reports'] }),
       ]);
     },
   });

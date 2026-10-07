@@ -13,6 +13,7 @@ export const useUpdateService = () => {
   return useMutation({
     mutationFn: ({ id, data }: UpdateServiceParams) => servicesApi.update(id, data),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['reports'] });
       queryClient.invalidateQueries({ queryKey: ['services'] });
     },
   });

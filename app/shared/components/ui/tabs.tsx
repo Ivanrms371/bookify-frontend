@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<React.ElementRef<typeof TabsPrimitive.List>, R
     />
   ),
 );
-TabsList.name = TabsPrimitive.List.name;
+TabsList.displayName = 'TabsList';
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
@@ -28,7 +28,7 @@ const TabsTrigger = React.forwardRef<
     {...props}
   />
 ));
-TabsTrigger.name = TabsPrimitive.Trigger.name;
+TabsTrigger.displayName = 'TabsTrigger';
 
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
@@ -36,6 +36,6 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content ref={ref} className={cn('mt-8 outline-none focus:ring-0', className)} {...props} />
 ));
-TabsContent.name = TabsPrimitive.Content.name;
+TabsContent.displayName = 'TabsContent';
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };

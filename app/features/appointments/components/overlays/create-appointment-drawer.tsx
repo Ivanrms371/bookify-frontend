@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import { can, canManageAppointment } from '@/core/auth/permissions';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { PhotoIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Button, Drawer } from '@/shared/components/ui';
@@ -37,6 +40,13 @@ export const CreateAppointmentDrawer = ({
   defaultStartsAt,
 }: CreateAppointmentDrawerProps) => {
   const { close } = useOverlay(OVERLAY_KEY);
+  const tenant = useAuthStore((state) => state.session?.activeTenant);
+  const ownOnly = !can(tenant, 'appointment:create_others');
+  const initialTenantId = useRef(tenant?.id).current;
+  const { pathname } = useLocation();
+  const initialPath = useRef(pathname).current;
+  const stale = tenant?.id !== initialTenantId || pathname !== initialPath;
+  useEffect(() => { if (stale) close(); }, [stale, close]);
   const { open: openCreateCustomer } = useOverlay('create-customer-modal');
   const [customerQuery, setCustomerQuery] = useState('');
   const [customerMode, setCustomerMode] = useState<CustomerMode>(defaultCustomerId ? 'with-customer' : 'walk-in');
@@ -51,37 +61,43 @@ export const CreateAppointmentDrawer = ({
       : null,
   );
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(defaultServiceId ?? null);
-  const [selectedProfessionalId, setSelectedProfessionalId] = useState<string | null>(defaultProfessionalId ?? null);
+  const [selectedProfessionalId, setSelectedProfessionalId] = useState<string | null>((ownOnly ? tenant?.professionalId : defaultProfessionalId) ?? null);
+  const professionalId = ownOnly ? tenant?.professionalId ?? null : selectedProfessionalId;
+  const servicesQuery = useServices(
+    ownOnly ? { professionalId: tenant?.professionalId ?? undefined, isActive: true } : { isActive: true },
+    !ownOnly || Boolean(tenant?.professionalId),
+  );
+  const { data: servicesData, isLoading: isLoadingServices } = servicesQuery;
+  const services = servicesData?.data ?? [];
+  const selectedService = services.find((service) => service.id === selectedServiceId) ?? null;
   const schedule = useAppointmentDrawerSchedule({
-    serviceId: selectedServiceId,
-    professionalId: selectedProfessionalId,
+    serviceId: selectedService ? selectedServiceId : null,
+    professionalId,
     initialDate: defaultDate,
     initialStartsAt: defaultStartsAt,
   });
   const { selectedDate, selectedSlot, clearSelection } = schedule;
-  const { data: servicesData, isLoading: isLoadingServices } = useServices();
-  const services = servicesData?.data ?? [];
-  const { data: professionals = [], isLoading: isLoadingProfessionals } = useServiceProfessionals(selectedServiceId);
+  const { data: allProfessionals = [], isLoading: isLoadingProfessionals } = useServiceProfessionals(selectedServiceId, !ownOnly);
   const { data: customers = [], isLoading: isSearchingCustomers } = useCustomerSearch(
     customerMode === 'with-customer' ? customerQuery : '',
   );
   const { mutate: createAppointment, isPending } = useCreateAppointment();
 
-  const selectedService = services.find((service) => service.id === selectedServiceId) ?? null;
+  const professionals = allProfessionals;
   const selectedProfessional = professionals.find((professional) => professional.id === selectedProfessionalId) ?? null;
-  const canSubmit = schedule.hasValidSelection;
+  const canSubmit = Boolean(selectedService) && schedule.hasValidSelection && canManageAppointment(tenant, 'create', professionalId);
 
   useEffect(() => {
-    if (!selectedProfessionalId || professionals.length === 0) return;
+    if (ownOnly || !selectedProfessionalId || professionals.length === 0) return;
     if (!professionals.some((professional) => professional.id === selectedProfessionalId)) {
       setSelectedProfessionalId(null);
       clearSelection();
     }
-  }, [professionals, selectedProfessionalId, clearSelection]);
+  }, [ownOnly, professionals, selectedProfessionalId, clearSelection]);
 
   const handleSelectService = (serviceId: string) => {
     setSelectedServiceId(serviceId);
-    setSelectedProfessionalId(null);
+    setSelectedProfessionalId(ownOnly ? tenant?.professionalId ?? null : null);
     clearSelection();
   };
 
@@ -99,14 +115,14 @@ export const CreateAppointmentDrawer = ({
   };
 
   const handleSubmit = () => {
-    if (!selectedServiceId || !selectedProfessionalId || !selectedSlot) return;
-    if (!canSubmit) return;
+    if (!selectedServiceId || !professionalId || !selectedSlot) return;
+    if (!canSubmit || stale) return;
 
     console.log(selectedSlot.startsAt);
 
     const result = createAppointmentSchema.safeParse({
       serviceId: selectedServiceId,
-      professionalId: selectedProfessionalId,
+      professionalId,
       startsAt: selectedSlot.startsAt,
       ...(selectedCustomer ? { customerId: selectedCustomer.id } : {}),
     });
@@ -134,6 +150,7 @@ export const CreateAppointmentDrawer = ({
     });
   };
 
+  if (stale) return null;
   return (
     <Drawer overlayKey={OVERLAY_KEY} size="3xl" closeOnBackdrop title="Nueva reserva" titleClassName="text-3xl sm:text-xl">
       <div className="flex h-full min-h-0 flex-col">
@@ -159,8 +176,15 @@ export const CreateAppointmentDrawer = ({
           </section>
 
           <section className="space-y-3">
-            <SectionHeader title="Seleccionar servicio" description="Elegí qué se va a reservar." />
-            {isLoadingServices ? (
+            <SectionHeader title="Seleccionar servicio" description={ownOnly ? 'Elegí uno de tus servicios asignados.' : 'Elegí qué se va a reservar.'} />
+            {ownOnly && !tenant?.professionalId ? (
+              <p role="alert" className="text-sm text-gray-600">No tienes un perfil profesional vinculado. Contacta al administrador para crear reservas.</p>
+            ) : servicesQuery.isError ? (
+              <div role="alert" className="space-y-2">
+                <p className="text-sm text-gray-600">No se pudieron cargar los servicios.</p>
+                <Button variant="secondary" onClick={() => void servicesQuery.refetch()}>Reintentar</Button>
+              </div>
+            ) : isLoadingServices ? (
               <Spinner />
             ) : services.length > 0 ? (
               <div className="grid gap-2 sm:grid-cols-2">
@@ -174,11 +198,11 @@ export const CreateAppointmentDrawer = ({
                 ))}
               </div>
             ) : (
-              <EmptyInline icon={<PhotoIcon className="size-5" />} text="No hay servicios disponibles." />
+              <EmptyInline icon={<PhotoIcon className="size-5" />} text={ownOnly ? 'No tienes servicios asignados disponibles. Contacta al administrador.' : 'No hay servicios disponibles.'} />
             )}
           </section>
 
-          <section className="space-y-3">
+          {!ownOnly && <section className="space-y-3">
             <SectionHeader title="Seleccionar profesional" description="La lista se filtra según el servicio seleccionado." />
             {!selectedServiceId ? (
               <EmptyInline icon={<UserIcon className="size-5" />} text="Seleccioná un servicio para ver profesionales." />
@@ -198,7 +222,7 @@ export const CreateAppointmentDrawer = ({
             ) : (
               <EmptyInline icon={<UserIcon className="size-5" />} text="No hay profesionales para este servicio." />
             )}
-          </section>
+          </section>}
 
           <section className="space-y-3">
             <AppointmentDrawerScheduleSection
@@ -210,7 +234,7 @@ export const CreateAppointmentDrawer = ({
               selectedStartsAt={selectedSlot?.startsAt ?? null}
               isLoading={schedule.availability.isFetching}
               interactionDisabled={isPending}
-              isDisabled={!selectedServiceId || !selectedProfessionalId}
+              isDisabled={!selectedService || !professionalId}
               missingSelection={!selectedServiceId ? 'service' : 'professional'}
               onSelectDate={schedule.selectDate}
               onSelectSlot={schedule.selectSlot}
@@ -221,7 +245,7 @@ export const CreateAppointmentDrawer = ({
         <DrawerFooter>
           <AppointmentSelectionSummary
             serviceName={selectedService?.name}
-            professionalName={selectedProfessional?.name}
+            professionalName={ownOnly ? 'Tú' : selectedProfessional?.name}
             date={selectedDate}
             time={selectedSlot?.time}
           />

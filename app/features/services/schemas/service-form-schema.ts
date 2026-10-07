@@ -3,7 +3,10 @@ import z from 'zod';
 export const serviceFormSchema = z
   .object({
     name: z.string().min(1, 'El nombre del servicio es requerido'),
-    image: z.any().nullable().optional(),
+    image: z
+      .custom<File>((value) => typeof File !== 'undefined' && value instanceof File, { error: 'Seleccioná un archivo válido' })
+      .nullable()
+      .optional(),
     description: z.string().nullable().optional(),
 
     durationMinutes: z

@@ -9,7 +9,6 @@ import { Input } from '@/shared/components/form/input';
 import { PhoneCountryCode } from '@/shared/components/form/phone-country-code';
 import { Switch } from '@/shared/components/form/Switch';
 import { Button, Callout } from '@/shared/components/ui';
-import { ColorPicker } from '@/shared/components/ui/color-picker';
 import { ProfessionalPhotoInput } from './professional-photo-input';
 import { ModalBody } from '@/shared/components/ui/modal';
 import { createProfessionalSchema, type CreateProfessionalValues } from '../../schemas/create-professional-schema';
@@ -44,7 +43,6 @@ export function CreateProfessionalForm({ formId, tenantId, onSubmit, pending, er
       ? {
           avatarUrl: initialData.avatarUrl || null,
           avatarPublicId: initialData.avatarPublicId,
-          colorTheme: initialData.colorTheme,
           name: initialData.name,
           email: initialData.email,
           phoneCountryCode: initialData.phoneCountryCode,
@@ -52,7 +50,7 @@ export function CreateProfessionalForm({ formId, tenantId, onSubmit, pending, er
           serviceIds: initialData.serviceIds,
           giveAccess: ['ACTIVE', 'PENDING'].includes(initialData.access.status),
         }
-      : { name: '', email: '', phoneCountryCode: '598', phoneNumber: '', serviceIds: [], giveAccess: false, colorTheme: 'bg-indigo-300' },
+      : { name: '', email: '', phoneCountryCode: '598', phoneNumber: '', serviceIds: [], giveAccess: false },
   });
   const [image, setImage] = useState<File | null>(null);
   const [portalContainer, setPortalContainer] = useState<HTMLFieldSetElement | null>(null);
@@ -70,7 +68,6 @@ export function CreateProfessionalForm({ formId, tenantId, onSubmit, pending, er
         'giveAccess',
         'avatarUrl',
         'avatarPublicId',
-        'colorTheme',
       ] as const;
       for (const field of fields) if (error.fields[field]) setError(field, { message: error.fields[field] });
     }
@@ -192,14 +189,6 @@ export function CreateProfessionalForm({ formId, tenantId, onSubmit, pending, er
               )}
             </>
           )}
-          <FormField label="Color en la agenda" id="professional-color" error={errors.colorTheme?.message}>
-            <div id="professional-color" role="group" aria-label="Color en la agenda">
-              <ColorPicker
-                value={watch('colorTheme') ?? undefined}
-                onChange={(color) => setValue('colorTheme', color, { shouldDirty: true })}
-              />
-            </div>
-          </FormField>
           <FormField label="Asignar servicios (opcional)" id="professional-services" error={errors.serviceIds?.message}>
             {services.isLoading ? (
               <p role="status" className="text-sm text-gray-500">

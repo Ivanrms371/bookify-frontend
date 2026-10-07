@@ -9,6 +9,7 @@ export const useCreateService = () => {
   return useMutation({
     mutationFn: (payload: CreateServicePayload) => servicesApi.create(payload),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['reports'] });
       queryClient.invalidateQueries({ queryKey: ['services'] });
     },
     onError: (error) => {

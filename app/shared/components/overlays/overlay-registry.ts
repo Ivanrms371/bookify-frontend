@@ -1,3 +1,6 @@
+import { PlanLimitModal } from '@/features/billing/components/plan-limit-modal';
+import { TeamActionModal } from '@/features/settings/team/team-action-modal';
+import { SettingsLeaveModal } from '@/features/settings/components/settings-leave-modal';
 import { UpdateProfessionalStatusModal } from '@/features/professionals/components/overlays/update-professional-status-modal';
 import { CancelAppointmentModal } from '../../../features/appointments/components/overlays/cancel-appointment-modal';
 import { RescheduleAppointmentDrawer } from '@/features/appointments/components/overlays/reschedule-appointment-drawer';
@@ -24,6 +27,9 @@ import { CreateCustomerModal } from '@/features/customers/components/overlays/cr
 import { CreateProfessionalModal } from '@/features/professionals/components/overlays/create-professional-modal';
 
 export const overlayRegistry = {
+  'plan-limit-modal': PlanLimitModal,
+  'settings-leave-modal': SettingsLeaveModal,
+  'team-action-modal': TeamActionModal,
   'create-appointment-drawer': CreateAppointmentDrawer,
   'reschedule-appointment-drawer': RescheduleAppointmentDrawer,
   'cancel-appointment-modal': CancelAppointmentModal,

@@ -13,6 +13,7 @@ export const DeleteServiceModal = ({ service }: { service: Service }) => {
   const { mutate, isPending } = useDeleteService();
 
   const handleDelete = () => {
+    if (isPending) return;
     mutate(service.id, {
       onSuccess: () => {
         close();
@@ -21,22 +22,28 @@ export const DeleteServiceModal = ({ service }: { service: Service }) => {
   };
 
   return (
-    <Modal overlayKey={OVERLAY_KEY} size="md">
-      <div className="flex flex-col items-center text-center">
-        <h3 className="text-xl font-semibold  text-gray-900 mb-2">¿Estás seguro de eliminar este servicio?</h3>
-        <Text className="text-gray-500 mb-6">
-          Al eliminar <span className="text-gray-800 font-semibold">{service.name}</span>, este dejará de estar disponible para tus clientes
-          y se removerá de tu lista.
-        </Text>
-        <div className="flex w-full gap-3">
+    <Modal
+      overlayKey={OVERLAY_KEY}
+      size="md"
+      title="¿Estás seguro de eliminar este servicio?"
+      className="text-left"
+      manageFocus
+      closeDisabled={isPending}
+      footer={
+        <>
           <Button type="button" variant="secondary" onClick={close} disabled={isPending}>
             Cancelar
           </Button>
-          <Button type="button" variant="danger" onClick={handleDelete} className="flex-1" loading={isPending} disabled={isPending}>
-            Eliminar
+          <Button type="button" variant="danger" onClick={handleDelete} isSubmitting={isPending}>
+            Eliminar Servicio
           </Button>
-        </div>
-      </div>
+        </>
+      }
+    >
+      <Text className="text-gray-500 text-left">
+        Al eliminar <span className="text-gray-800 font-semibold">{service.name}</span>, este dejará de estar disponible para tus clientes
+        y se removerá de tu lista.
+      </Text>
     </Modal>
   );
 };

@@ -13,6 +13,7 @@ export const ToggleServiceStatusModal = ({ service }: { service: Service }) => {
   const { mutate, isPending } = useToggleServiceStatus();
 
   const handleToggle = () => {
+    if (isPending) return;
     mutate(service.id, {
       onSuccess: () => {
         close();
@@ -23,41 +24,37 @@ export const ToggleServiceStatusModal = ({ service }: { service: Service }) => {
   const isActive = service.isActive;
 
   return (
-    <Modal overlayKey={OVERLAY_KEY} size="md">
-      <div className="flex flex-col items-center text-center">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">¿Estás seguro de {isActive ? 'desactivar' : 'activar'}?</h3>
-
-        <Text className="text-gray-500 mb-6">
-          {isActive ? (
-            <>
-              Al desactivar <span className="text-gray-800 font-semibold">{service.name}</span> dejará de estar disponible para ser agendado
-              por los clientes. Podrás activarlo nuevamente en cualquier momento.
-            </>
-          ) : (
-            <>
-              Al activar <span className="text-gray-800 font-semibold">{service.name}</span> volverá a estar disponible para ser agendado
-              por los clientes.
-            </>
-          )}
-        </Text>
-
-        <div className="flex w-full gap-3">
+    <Modal
+      overlayKey={OVERLAY_KEY}
+      size="md"
+      title={`¿Estás seguro de ${isActive ? 'desactivar' : 'activar'} este servicio?`}
+      className="text-left"
+      manageFocus
+      closeDisabled={isPending}
+      footer={
+        <>
           <Button type="button" variant="secondary" onClick={close} disabled={isPending}>
             Cancelar
           </Button>
-
-          <Button
-            type="button"
-            variant={isActive ? 'danger' : 'primary'}
-            onClick={handleToggle}
-            className="flex-1"
-            loading={isPending}
-            disabled={isPending}
-          >
+          <Button type="button" variant={isActive ? 'danger' : 'primary'} onClick={handleToggle} isSubmitting={isPending}>
             {isActive ? 'Desactivar Servicio' : 'Activar Servicio'}
           </Button>
-        </div>
-      </div>
+        </>
+      }
+    >
+      <Text className="text-gray-500 text-left">
+        {isActive ? (
+          <>
+            Al desactivar <span className="text-gray-800 font-semibold">{service.name}</span> dejará de estar disponible para ser agendado
+            por los clientes. Podrás activarlo nuevamente en cualquier momento.
+          </>
+        ) : (
+          <>
+            Al activar <span className="text-gray-800 font-semibold">{service.name}</span> volverá a estar disponible para ser agendado
+            por los clientes.
+          </>
+        )}
+      </Text>
     </Modal>
   );
 };

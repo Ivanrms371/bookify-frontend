@@ -1,7 +1,7 @@
+import { can } from '@/core/auth/permissions';
 import { FormField } from '@/shared/components/form/form-field';
 import { Input } from '@/shared/components/form/input';
 import { Textarea } from '@/shared/components/form/Textarea';
-import { ColorPicker } from '@/shared/components/ui/color-picker';
 import { FloatingSaveBar } from '@/shared/components/form/floating-save-bar';
 import { Text } from '@/shared/components/typography';
 import { useForm, Controller } from 'react-hook-form';
@@ -60,6 +60,14 @@ export const ProfessionalProfile = () => {
     );
   }
 
+  if (!can(session?.activeTenant, 'professional:update_self')) {
+    return <Card className="p-6 space-y-2">
+      <Text className="text-lg font-semibold">{professional.name}</Text>
+      <Text className="text-gray-600">{professional.profession || 'Perfil profesional'}</Text>
+      <Text className="text-sm text-gray-500">Un administrador puede actualizar tu perfil profesional y tus horarios.</Text>
+    </Card>;
+  }
+
   const onSubmit = async (formData: any) => {
     console.log(formData);
     reset(formData);
@@ -114,28 +122,9 @@ export const ProfessionalProfile = () => {
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-10">
-              <div className="w-full">
-                <FormField id="profession" label="Profesión o Cargo" error={errors.profession?.message as string}>
-                  <Input {...register('profession')} placeholder="Ej. Barbero Senior" fullWidth />
-                </FormField>
-              </div>
-
-              <div className="w-full">
-                <FormField
-                  id="colorTheme"
-                  label="Color de agenda"
-                  description="Identifica tus turnos en la agenda"
-                  error={errors.colorTheme?.message as string}
-                >
-                  <Controller
-                    name="colorTheme"
-                    control={control}
-                    render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
-                  />
-                </FormField>
-              </div>
-            </div>
+            <FormField id="profession" label="Profesión o Cargo" error={errors.profession?.message as string}>
+              <Input {...register('profession')} placeholder="Ej. Barbero Senior" fullWidth />
+            </FormField>
 
             <FormField id="bio" label="Biografía Profesional" error={errors.bio?.message as string}>
               <Textarea {...register('bio')} placeholder="Describe tu experiencia profesional y lo que te destaca..." rows={4} />

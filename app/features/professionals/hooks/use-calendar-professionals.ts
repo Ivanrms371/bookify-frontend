@@ -1,13 +1,15 @@
+import { can } from '@/core/auth/permissions';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { professionalApi } from '../api/professional-api';
 import type { ProfessionalBasic } from '../types/professional.types';
 
 export function useCalendarProfessionals() {
-  const tenantId = useAuthStore((state) => state.session?.activeTenant?.id);
+  const tenant = useAuthStore((state) => state.session?.activeTenant);
+  const tenantId = tenant?.id;
   return useQuery({
     queryKey: ['professionals', tenantId, 'calendar'],
-    enabled: !!tenantId,
+    enabled: !!tenantId && can(tenant, 'appointment:read_others'),
     queryFn: async ({ signal }) => {
       const professionals: ProfessionalBasic[] = [];
       const take = 24;

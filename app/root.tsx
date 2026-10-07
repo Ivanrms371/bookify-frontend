@@ -36,7 +36,7 @@ export default function App() {
         <AuthProvider>
           <Outlet />
           <OverlayRenderer />
-          <Toaster position="top-center" expand visibleToasts={5} richColors theme="light" />
+          <Toaster position="bottom-right" expand visibleToasts={5} theme="light" />
         </AuthProvider>
       </QueryClientProvider>
     </CustomErrorBoundary>

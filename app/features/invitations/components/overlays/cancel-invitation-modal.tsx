@@ -40,7 +40,7 @@ export const CancelInvitationModal = ({ invitation }: Props) => {
           <Button type="button" variant="secondary" onClick={close} className="flex-1" disabled={isPending}>
             Volver
           </Button>
-          <Button type="button" variant="danger" onClick={handleCancel} className="flex-1" loading={isPending}>
+          <Button type="button" variant="danger" onClick={handleCancel} className="flex-1" isSubmitting={isPending}>
             Cancelar
           </Button>
         </div>

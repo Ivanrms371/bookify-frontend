@@ -30,8 +30,8 @@ export const ProfileAvatar = ({ name, preview, onChange, onRemove }: ProfileAvat
         {preview ? (
           <img src={preview} alt="Avatar" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gray-50 flex items-center justify-center">
-            <div className="text-2xl text-gray-800 font-bold group-hover/logo:opacity-0 transition-opacity duration-300">
+          <div className="w-full h-full bg-indigo-50 flex items-center justify-center">
+            <div className="text-2xl text-indigo-700 font-bold group-hover/logo:opacity-0 transition-opacity duration-300">
               {getInitials(name)}
             </div>
           </div>

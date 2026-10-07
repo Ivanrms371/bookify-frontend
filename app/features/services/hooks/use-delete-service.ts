@@ -8,6 +8,7 @@ export const useDeleteService = () => {
   return useMutation({
     mutationFn: (id: string) => servicesApi.delete(id),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['reports'] });
       queryClient.invalidateQueries({ queryKey: ['services'] });
       toast.success('Servicio eliminado correctamente');
     },

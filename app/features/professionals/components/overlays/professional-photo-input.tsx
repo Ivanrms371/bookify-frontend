@@ -35,7 +35,7 @@ export function ProfessionalPhotoInput({ name, file, imageUrl, disabled, onChang
         {preview ? (
           <img src={preview} alt="Foto del profesional" className="size-full object-cover" />
         ) : (
-          <div className="flex size-full items-center justify-center bg-gray-50 text-xl font-bold text-gray-800">
+          <div className="flex size-full items-center justify-center bg-indigo-50 text-xl font-bold text-indigo-700">
             {name.trim() ? name.trim().substring(0, 2).toUpperCase() : <CameraIcon className="size-6" />}
           </div>
         )}

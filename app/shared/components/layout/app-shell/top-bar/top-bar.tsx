@@ -17,6 +17,7 @@ const pageTitles: Record<string, string> = {
   services: 'Servicios',
   professionals: 'Profesionales',
   settings: 'Configuración',
+  reports: 'Reportes',
 };
 
 export const TopBar = ({ onOpenSidebar }: Props) => {
@@ -36,7 +37,7 @@ export const TopBar = ({ onOpenSidebar }: Props) => {
           <div className="flex justify-end items-center">
             <div className="flex items-center gap-4">
               <NotificationToggle />
-              <AvatarButton onClick={() => console.log('AvatarButton')} name="Iván Rodríguez" />
+              <AvatarButton onClick={() => console.log('AvatarButton')} name={session?.name} src={session?.avatarUrl} />
               <Button variant="ghost" type="button" size="icon" onClick={onOpenSidebar} className="xl:hidden">
                 <Bars2Icon className="size-5 text-gray-700" />
               </Button>

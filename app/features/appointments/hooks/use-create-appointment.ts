@@ -8,6 +8,7 @@ export const useCreateAppointment = () => {
   return useMutation({
     mutationFn: (data: CreateAppointmentInput) => appointmentsApi.create(data),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['reports'] });
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
     },
   });

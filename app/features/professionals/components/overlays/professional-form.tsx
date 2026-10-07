@@ -11,7 +11,6 @@ import { useApiFormError } from '@/shared/hooks/use-api-form-error';
 import { PhoneCountryCode } from '@/shared/components/form/phone-country-code';
 import { ModalBody, ModalFooter } from '@/shared/components/ui/modal';
 import { CameraIcon } from '@heroicons/react/24/outline';
-import { ColorPicker } from '@/shared/components/ui/color-picker';
 import { useServices } from '@/features/services';
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { cn } from '@/shared/utils/cn';
@@ -32,7 +31,6 @@ const initialValues: Partial<ProfessionalFormValues> = {
   phoneCountryCode: '598',
   phoneNumber: '',
   bio: '',
-  colorTheme: 'bg-blue-200',
   commissionType: 'PERCENTAGE',
   commissionAmount: 0,
   schedule: {
@@ -121,10 +119,6 @@ export const ProfessionalForm = ({ defaultValues, onSubmit, onCancel, submitLabe
             Se enviará una invitación a <span className="font-bold">ivanrms371@gmail.com</span>.
           </Callout>
         )}
-
-        <FormField label="Color en la agenda" id="colorTheme" error={errors.colorTheme?.message}>
-          <ColorPicker value={watch('colorTheme')} onChange={(val) => setValue('colorTheme', val, { shouldValidate: true })} />
-        </FormField>
 
         <FormField label="Especialidad" description="Será visible para tus clientes" id="title">
           <Input type="text" id="title" placeholder="Ej. Barbero" />

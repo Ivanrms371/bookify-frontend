@@ -1,3 +1,4 @@
+import { can } from '@/core/auth/permissions';
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router';
 import { toast } from 'sonner';
@@ -20,7 +21,7 @@ export const UpdateProfessionalStatusModal = ({ professional }: { professional: 
   const mutation = useUpdateProfessionalStatus(tenantId ?? '');
   const submitting = useRef(false);
   const active = useRef(true);
-  const allowed = tenant && ['OWNER', 'ADMIN'].includes(tenant.role);
+  const allowed = can(tenant, 'professional:update');
   const stale = tenant?.id !== tenantId || pathname !== initialPath;
   const isActive = !professional.isActive;
   const action = isActive ? 'Activar' : 'Desactivar';
@@ -65,7 +66,7 @@ export const UpdateProfessionalStatusModal = ({ professional }: { professional: 
             Cancelar
           </Button>
           <Button type="button" variant={isActive ? 'primary' : 'danger'} onClick={() => void handleSave()} disabled={mutation.isPending || !allowed}>
-            {mutation.isPending ? 'Guardando...' : action}
+            {mutation.isPending ? 'Guardando...' : `${action} Profesional`}
           </Button>
         </>
       }

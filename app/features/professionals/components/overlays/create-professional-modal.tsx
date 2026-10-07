@@ -1,3 +1,4 @@
+import { can } from '@/core/auth/permissions';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { toast } from 'sonner';
@@ -23,6 +24,7 @@ export const ProfessionalModal = ({ professional }: { professional?: Professiona
   const editing = !!professional;
   const overlayKey = editing ? 'update-professional-drawer' : CreateProfessionalModalKey;
   const { close } = useOverlay(overlayKey);
+  const planLimit = useOverlay('plan-limit-modal');
   const tenant = useAuthStore((state) => state.session?.activeTenant);
   const initialTenantId = useRef(tenant?.id).current;
   const { pathname } = useLocation();
@@ -48,7 +50,7 @@ export const ProfessionalModal = ({ professional }: { professional?: Professiona
       active.current = false;
     };
   }, []);
-  const allowed = tenant && ['OWNER', 'ADMIN'].includes(tenant.role);
+  const allowed = can(tenant, editing ? 'professional:update' : 'professional:create');
   const stale = tenant?.id !== initialTenantId || pathname !== initialPath;
   useEffect(() => {
     if (stale || !allowed) close();
@@ -102,7 +104,12 @@ export const ProfessionalModal = ({ professional }: { professional?: Professiona
         toast.success(professionalSaveMessage(values, editing ? details : undefined));
       }
     } catch (error) {
-      setSaveError(error instanceof Error ? error : new Error('No se pudo guardar el profesional.'));
+      if (!editing && error instanceof ApiError && error.code === 'PLAN_LIMIT_REACHED' &&
+        active.current && useAuthStore.getState().session?.activeTenant?.id === initialTenantId &&
+        window.location.pathname === initialPath) {
+        close();
+        planLimit.open({ resource: 'professionals', tenantId: initialTenantId! });
+      } else setSaveError(error instanceof Error ? error : new Error('No se pudo guardar el profesional.'));
       if (uploadedPublicId && !saved) {
         await deleteMedia(uploadedPublicId).catch(() => null);
       }

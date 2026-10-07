@@ -1,3 +1,4 @@
+import { can } from '@/core/auth/permissions';
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router';
 import { toast } from 'sonner';
@@ -22,7 +23,7 @@ export const DeleteProfessionalModal = ({ professional }: { professional: Profes
   const deletion = useDeleteProfessional(tenantId ?? '');
   const submitting = useRef(false);
   const active = useRef(true);
-  const allowed = tenant && ['OWNER', 'ADMIN'].includes(tenant.role);
+  const allowed = can(tenant, 'professional:delete');
   const stale = tenant?.id !== tenantId || pathname !== initialPath;
   const canDelete = allowed && !details.isError && !details.isLoading && details.data?.access.canChange;
 
@@ -66,7 +67,7 @@ export const DeleteProfessionalModal = ({ professional }: { professional: Profes
             Cancelar
           </Button>
           <Button type="button" variant="danger" onClick={() => void handleDelete()} disabled={deletion.isPending || !canDelete}>
-            {deletion.isPending ? 'Eliminando...' : 'Eliminar profesional'}
+            {deletion.isPending ? 'Eliminando...' : 'Eliminar Profesional'}
           </Button>
         </>
       }

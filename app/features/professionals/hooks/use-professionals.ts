@@ -7,6 +7,6 @@ export const useProfessionals = () => {
   return useQuery({
     queryKey: ['professionals', tenantId],
     enabled: !!tenantId,
-    queryFn: () => professionalApi.getAll(),
+    queryFn: ({ signal }) => professionalApi.getAll(undefined, { tenantId, signal }),
   });
 };

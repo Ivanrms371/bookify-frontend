@@ -158,7 +158,7 @@ export function InviteForm({
         <Button variant="secondary" type="button" fullWidth onClick={onCancel}>
           Cancelar
         </Button>
-        <Button variant="primary" type="submit" loading={isSubmitting} fullWidth>
+        <Button variant="primary" type="submit" isSubmitting={isSubmitting} fullWidth>
           {submitLabel}
         </Button>
       </DrawerFooter>
