@@ -8,7 +8,8 @@ import {
 import type { CustomerFormData } from '../schemas/customer-form.schema';
 
 export const customerApi = {
-  getAll: async (params?: GetAllCustomersParams) => await httpClient.get<GetAllCustomersResponse>('/customers', { params }),
+  getAll: (params?: GetAllCustomersParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
+    httpClient.get<GetAllCustomersResponse>('/customers', { params, signal: options.signal, expectedTenantId: options.tenantId }),
 
   getById: (id: string) => httpClient.get<Customer>(`/customers/${id}`),
 

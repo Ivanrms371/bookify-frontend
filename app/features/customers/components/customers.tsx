@@ -1,61 +1,26 @@
 import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
-import { useCustomers } from '../hooks/use-customers';
+import { useAuthStore } from '@/core/auth/use-auth-store';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
+import { useCustomersPage } from '../hooks/use-customers-page';
+import { CUSTOMERS_PAGE_SIZE as PAGE_SIZE } from '../utils/customers-page-model';
 import { CustomersTable } from './table/customers-table';
 import { Button } from '@/shared/components/ui';
 import { TableSkeleton } from '@/shared/components/ui/table';
-import { useDebounce } from '@/shared/hooks/useDebounce';
 import { CustomerList } from './list/customer-list';
-import { CustomersHeader, type BookingActivity, type CustomerSort, type CustomerStatus } from './customers-header';
-
-const PAGE_SIZE = 24;
+import { CustomersHeader } from './customers-header';
 
 export const Customers = () => {
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<CustomerStatus>('all');
-  const [activity, setActivity] = useState<BookingActivity>('all');
-  const [sort, setSort] = useState<CustomerSort>('name');
-  const [page, setPage] = useState(0);
-  // Debounce the page reset with the search so an old query cannot fetch a new page.
-  const criteria = useDebounce(search.trim(), 300);
-  const [previousCriteria, setPreviousCriteria] = useState(criteria);
-  if (criteria !== previousCriteria) {
-    setPreviousCriteria(criteria);
-    setPage(0);
-  }
-  const {
-    data: response,
-    isLoading,
-    isError,
-    refetch,
-  } = useCustomers({
-    query: criteria || undefined,
-    status,
-    bookingActivity: activity,
-    orderBy: sort === 'name' ? 'name' : sort === 'newest' ? 'createdAt' : sort === 'last-visit' ? 'lastVisitAt' : 'totalSpent',
-    order: sort === 'name' ? 'asc' : 'desc',
-    skip: page * PAGE_SIZE,
-    take: PAGE_SIZE,
-  });
-  const customers = response?.data ?? [];
-  const total = response?.meta.total ?? 0;
-  const active = search !== '' || status !== 'all' || activity !== 'all' || sort !== 'name';
-  const searching = criteria !== search.trim();
+  const tenantId = useAuthStore((state) => state.session?.activeTenant?.id);
+  if (!tenantId) return <TableSkeleton label="Cargando clientes..." columns={[{ label: 'Clientes' }]} />;
+  return <CustomersPage key={tenantId} />;
+};
 
-  useEffect(() => {
-    if (response && page > 0 && page * PAGE_SIZE >= total) {
-      setPage(Math.max(0, Math.ceil(total / PAGE_SIZE) - 1));
-    }
-  }, [response, total, page]);
-
-  const clear = () => {
-    setSearch('');
-    setStatus('all');
-    setActivity('all');
-    setSort('name');
-    setPage(0);
-  };
+function CustomersPage() {
+  const desktop = useMediaQuery('(min-width: 768px)');
+  const model = useCustomersPage();
+  const { search, status, activity, sort, page, customers, total, active, loading, setSearch, setPage, clear } = model;
+  const { isError, isFetching, isPlaceholderData, refetch } = model.query;
 
   return (
     <div className="space-y-4">
@@ -65,26 +30,17 @@ export const Customers = () => {
         activity={activity}
         sort={sort}
         onSearchChange={setSearch}
-        onStatusChange={(value) => {
-          setStatus(value);
-          setPage(0);
-        }}
-        onActivityChange={(value) => {
-          setActivity(value);
-          setPage(0);
-        }}
-        onSortChange={(value) => {
-          setSort(value);
-          setPage(0);
-        }}
+        onFiltersChange={model.applyFilters}
       />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500" role="status">
-          {isLoading || searching
+          {loading
             ? 'Buscando clientes...'
-            : isError
-              ? 'Resultados no disponibles'
-              : `${total} ${total === 1 ? 'cliente encontrado' : 'clientes encontrados'}`}
+            : isPlaceholderData
+              ? 'Cargando resultados...'
+              : isError
+                ? 'Resultados no disponibles'
+                : `${total} ${total === 1 ? 'cliente encontrado' : 'clientes encontrados'}`}
         </p>
         {active && (
           <Button variant="secondary" size="sm" onClick={clear}>
@@ -92,7 +48,7 @@ export const Customers = () => {
           </Button>
         )}
       </div>
-      {isLoading || searching ? (
+      {loading ? (
         <TableSkeleton
           label="Cargando clientes..."
           tableClassName="min-w-[900px]"
@@ -121,25 +77,35 @@ export const Customers = () => {
         />
       ) : (
         <>
-          <div className="hidden md:block overflow-x-auto">
-            <CustomersTable customers={customers} />
-          </div>
-          <div className="md:hidden">
-            <CustomerList customers={customers} />
+          {isFetching && (
+            <p className="text-sm text-gray-500" role="status">
+              Actualizando clientes...
+            </p>
+          )}
+          <div aria-busy={isFetching}>
+            {desktop ? (
+              <div className="overflow-x-auto">
+                <CustomersTable customers={customers} />
+              </div>
+            ) : (
+              <CustomerList customers={customers} />
+            )}
           </div>
           {total > PAGE_SIZE && (
             <div className="flex flex-wrap items-center justify-end gap-3">
               <p className="text-sm text-gray-500">
-                {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} de {total} clientes
+                {isPlaceholderData
+                  ? 'Cargando página...'
+                  : `${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, total)} de ${total} clientes`}
               </p>
-              <Button variant="secondary" size="sm" disabled={page === 0} onClick={() => setPage((current) => current - 1)}>
+              <Button variant="secondary" size="sm" disabled={page === 0 || isPlaceholderData} onClick={() => setPage(page - 1)}>
                 Anterior
               </Button>
               <Button
                 variant="secondary"
                 size="sm"
-                disabled={(page + 1) * PAGE_SIZE >= total}
-                onClick={() => setPage((current) => current + 1)}
+                disabled={(page + 1) * PAGE_SIZE >= total || isPlaceholderData}
+                onClick={() => setPage(page + 1)}
               >
                 Siguiente
               </Button>
@@ -149,4 +115,4 @@ export const Customers = () => {
       )}
     </div>
   );
-};
+}

@@ -1,14 +1,12 @@
+import { usePermissions } from '@/core/auth/use-permissions';
 import { ResponsiveFilters } from '@/shared/components/ui/responsive-filters';
 import { BarsArrowUpIcon, CalendarDaysIcon, FunnelIcon, MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { Input } from '@/shared/components/form/input';
 import { Button } from '@/shared/components/ui';
 import { Select } from '@/shared/components/ui/select';
 import { useOverlay } from '@/shared/hooks/use-overlay';
-import type { GetAllCustomersParams } from '../types/customer-types';
-
-export type CustomerSort = 'name' | 'newest' | 'last-visit' | 'spending';
-export type CustomerStatus = NonNullable<GetAllCustomersParams['status']>;
-export type BookingActivity = NonNullable<GetAllCustomersParams['bookingActivity']>;
+import type { BookingActivity, CustomerFilters, CustomerSort, CustomerStatus } from '../utils/customers-page-model';
+export type { BookingActivity, CustomerSort, CustomerStatus } from '../utils/customers-page-model';
 
 interface Props {
   search: string;
@@ -16,13 +14,12 @@ interface Props {
   activity: BookingActivity;
   sort: CustomerSort;
   onSearchChange: (value: string) => void;
-  onStatusChange: (value: CustomerStatus) => void;
-  onActivityChange: (value: BookingActivity) => void;
-  onSortChange: (value: CustomerSort) => void;
+  onFiltersChange: (filters: CustomerFilters) => void;
 }
 
-export function CustomersHeader({ search, status, activity, sort, onSearchChange, onStatusChange, onActivityChange, onSortChange }: Props) {
+export function CustomersHeader({ search, status, activity, sort, onSearchChange, onFiltersChange }: Props) {
   const { open } = useOverlay('create-customer-modal');
+  const { can } = usePermissions();
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div className="w-full md:min-w-64 md:flex-1">
@@ -38,16 +35,23 @@ export function CustomersHeader({ search, status, activity, sort, onSearchChange
       </div>
       <ResponsiveFilters
         active={status !== 'all' || activity !== 'all' || sort !== 'name'}
+        onApply={(values) =>
+          onFiltersChange({
+            status: (values.Estado ?? status) as CustomerStatus,
+            activity: (values['Actividad de reservas'] ?? activity) as BookingActivity,
+            sort: (values['Ordenar por'] ?? sort) as CustomerSort,
+          })
+        }
         action={
-          <Button variant="primary" className="shrink-0" icon={<PlusIcon className="size-5" />} iconPosition="left" onClick={open}>
+          can('customer:create') ? <Button variant="primary" className="shrink-0" icon={<PlusIcon className="size-5" />} iconPosition="left" onClick={open}>
             Nuevo Cliente
-          </Button>
+          </Button> : null
         }
       >
         <Select
           label="Estado"
           value={status}
-          onValueChange={(value) => onStatusChange(value as CustomerStatus)}
+          onValueChange={(value) => onFiltersChange({ status: value as CustomerStatus, activity, sort })}
           icon={<FunnelIcon className="size-4" />}
           className="flex-1 sm:flex-none"
           options={[
@@ -59,7 +63,7 @@ export function CustomersHeader({ search, status, activity, sort, onSearchChange
         <Select
           label="Actividad de reservas"
           value={activity}
-          onValueChange={(value) => onActivityChange(value as BookingActivity)}
+          onValueChange={(value) => onFiltersChange({ status, activity: value as BookingActivity, sort })}
           icon={<CalendarDaysIcon className="size-4" />}
           className="flex-1 sm:flex-none"
           options={[
@@ -71,7 +75,7 @@ export function CustomersHeader({ search, status, activity, sort, onSearchChange
         <Select
           label="Ordenar por"
           value={sort}
-          onValueChange={(value) => onSortChange(value as CustomerSort)}
+          onValueChange={(value) => onFiltersChange({ status, activity, sort: value as CustomerSort })}
           icon={<BarsArrowUpIcon className="size-4" />}
           className="flex-1 sm:flex-none"
           options={[
