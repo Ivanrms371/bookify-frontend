@@ -40,7 +40,14 @@ function ServiceListItem({
     <li className="rounded-lg border border-gray-200 bg-white p-5 space-y-4">
       <div className="flex items-center justify-between gap-3">
         <span className="text-sm font-medium text-gray-800">Servicio {index + 1}</span>
-        <Button type="button" variant="ghost" size="icon-sm" aria-label={`Eliminar servicio ${index + 1}`} onClick={() => onRemove(index)}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          className="bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-700"
+          aria-label={`Eliminar servicio ${index + 1}`}
+          onClick={() => onRemove(index)}
+        >
           <TrashIcon className="size-4" />
         </Button>
       </div>

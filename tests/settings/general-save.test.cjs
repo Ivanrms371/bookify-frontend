@@ -18,6 +18,7 @@ function fixture() {
     save: async (payload) => {
       calls.push('save');
       assert.equal(payload.logoUrl, 'new');
+      return { settings: { currency: 'UYU', timeZone: 'America/Montevideo' } };
     },
     remove: async (id) => {
       calls.push(`delete:${id}`);
@@ -53,6 +54,7 @@ test('image removal persists null references before deletion; cleanup failure do
     calls.push('save');
     assert.equal(payload.logoUrl, null);
     assert.equal(payload.logoPublicId, null);
+    return { settings: { currency: 'UYU', timeZone: 'America/Montevideo' } };
   };
   options.remove = async () => {
     calls.push('cleanup');
@@ -76,4 +78,19 @@ test('a tenant switch after upload aborts the save and never deletes existing as
   };
   await assert.rejects(saveGeneralSettings(options), /changed tenant/);
   assert.deepEqual(calls, ['upload']);
+});
+
+test('general settings omits derived values from the request and returns backend preferences', async () => {
+  const { options } = fixture();
+  options.values.currency = 'USD';
+  options.values.timeZone = 'America/Montevideo';
+  options.values.country = 'PE';
+  options.save = async (payload) => {
+    assert.equal(payload.country, 'PE');
+    assert.equal('currency' in payload, false);
+    assert.equal('timeZone' in payload, false);
+    return { settings: { currency: 'PEN', timeZone: 'America/Lima' } };
+  };
+  const result = await saveGeneralSettings(options);
+  assert.deepEqual(result.settings, { currency: 'PEN', timeZone: 'America/Lima' });
 });

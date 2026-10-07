@@ -2,6 +2,7 @@ import {
   BuildingStorefrontIcon,
   CalendarDaysIcon,
   PaintBrushIcon,
+  MapPinIcon,
   UserGroupIcon,
   WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
@@ -14,8 +15,6 @@ import { BackButton, NextButton, StepNavigation } from '../components/step-navig
 import { useConfirmStep } from '../hooks/use-confirm-step';
 import { useOnboarding } from '../hooks/use-onboarding';
 
-const priceFormat = new Intl.NumberFormat('es-UY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
 export const ConfirmStep = () => {
   const { back, next, savedData, onboardingData, setStep } = useOnboarding();
   const { mutateAsync: confirm, isPending } = useConfirmStep();
@@ -26,6 +25,7 @@ export const ConfirmStep = () => {
       toast.error(error instanceof Error ? error.message : 'No se pudo confirmar');
     }
   };
+  const priceFormat = new Intl.NumberFormat('es', { style: 'currency', currency: savedData?.currency || 'UYU' });
   const professional = savedData?.professional;
   const businessType = TENANT_TYPES_OPTIONS.find((option) => option.value === savedData?.type)?.label;
   const activeDays = savedData?.workingHours.workingHours.filter((day) => day.isActive) ?? [];
@@ -42,6 +42,28 @@ export const ConfirmStep = () => {
       ),
     },
     {
+      id: 'LOCATION',
+      icon: MapPinIcon,
+      label: 'Dirección',
+      description: (
+        <>
+          {savedData?.addressLine1 && (
+            <span className="block">
+              {[savedData.addressLine1, savedData.addressLine2, savedData.city, savedData.province, savedData.country]
+                .filter(Boolean)
+                .join(', ')}
+            </span>
+          )}
+          {savedData?.phoneNumber && <span className="block">{savedData.phoneNumber}</span>}
+          {savedData?.timeZone && (
+            <span className="block">
+              {savedData.currency} · {savedData.timeZone.replaceAll('_', ' ')}
+            </span>
+          )}
+        </>
+      ),
+    },
+    {
       id: 'SERVICES',
       icon: WrenchScrewdriverIcon,
       label: 'Tus servicios',
@@ -49,7 +71,7 @@ export const ConfirmStep = () => {
         <>
           {savedData?.services.map((service) => (
             <span key={service.id} className="block">
-              {service.name} · {service.durationMinutes} min · $ {priceFormat.format(Number(service.price))}
+              {service.name} · {service.durationMinutes} min · {priceFormat.format(Number(service.price))}
             </span>
           ))}
         </>

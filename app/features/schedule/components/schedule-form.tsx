@@ -50,7 +50,7 @@ export const ScheduleForm = ({ id = 'schedule-form', defaultValues, onSubmit, ch
   return (
     <FormProvider {...methods}>
       <form id={id} onSubmit={methods.handleSubmit(submit)} className="relative">
-        <fieldset disabled={readOnly || isSubmitting} className="@container pl-0.5 pr-2 space-y-5 overflow-x-hidden custom-scrollbar">
+        <fieldset disabled={readOnly || isSubmitting} className="@container min-w-0 space-y-3">
           {fields.map((field, index) => (
             <DayScheduleRow key={field.id} dayIndex={index} />
           ))}

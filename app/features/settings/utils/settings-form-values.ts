@@ -6,6 +6,7 @@ export function generalSettingsValues(data: TenantSettingsResponse): TenantGener
     name: data.name ?? '',
     slug: data.slug ?? '',
     timeZone: data.settings?.timeZone ?? 'America/Montevideo',
+    currency: data.settings?.currency ?? 'UYU',
     phoneNumber: data.phoneNumber ?? '',
     addressLine1: data.addressLine1 ?? '',
     addressLine2: data.addressLine2 ?? '',

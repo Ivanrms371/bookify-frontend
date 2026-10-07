@@ -35,7 +35,7 @@ export function NotificationDropdown({ onClose, isVisible }: Props) {
       className={cn(
         'z-50 w-80 overflow-hidden rounded-lg p-0 md:w-96 lg:w-120',
         'border border-gray-200 ',
-        'bg-gray-50 shadow-sm ',
+        'bg-white shadow-sm ',
         'absolute top-14 right-0',
         'transition-all duration-300',
         'hidden -translate-y-6 scale-95 opacity-0 md:block',

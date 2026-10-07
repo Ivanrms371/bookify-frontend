@@ -6,7 +6,7 @@ import type { UpdateGeneralSettingsPayload } from '../types/settings.types';
 export async function saveGeneralSettings(options: GeneralSettingsSaveOptions) {
   const { values, previous, uploads, assertCurrent, upload, save, remove } = options;
   assertCurrent();
-  const { logoFile, coverFile, ...fields } = values;
+  const { logoFile, coverFile, currency: _currency, timeZone: _timeZone, ...fields } = values;
   const payload: UpdateGeneralSettingsPayload = { ...fields };
   const retired: string[] = [];
   for (const [file, type, oldId] of [
@@ -29,7 +29,7 @@ export async function saveGeneralSettings(options: GeneralSettingsSaveOptions) {
     if (oldId && oldId !== asset?.publicId) retired.push(oldId);
   }
   assertCurrent();
-  await save(payload);
+  const response = await save(payload);
   let cleanupFailed = false;
   for (const oldId of retired) {
     try {
@@ -40,5 +40,5 @@ export async function saveGeneralSettings(options: GeneralSettingsSaveOptions) {
     }
   }
   uploads.clear();
-  return { payload, cleanupFailed };
+  return { payload, cleanupFailed, settings: response.settings };
 }

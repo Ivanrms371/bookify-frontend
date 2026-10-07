@@ -1,6 +1,7 @@
+import { useRef } from 'react';
+import { useAuthStore } from '@/core/auth/use-auth-store';
 import { usePermissions } from '@/core/auth/use-permissions';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { Button } from '@/shared/components/ui';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 import type { CustomerBasic } from '../../types/customer-types';
 import { ClipboardDocumentCheckIcon, EyeIcon, NoSymbolIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -12,9 +13,10 @@ interface Props {
 
 export const CustomerActions = ({ customer }: Props) => {
   const { can } = usePermissions();
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const { open: openCreateAppointment } = useOverlay('create-appointment-drawer');
   const { open: openUpdateCustomer } = useOverlay('update-customer-modal');
-  const { open: openViewCustomer } = useOverlay('view-customer-drawer');
+  const { open: openViewCustomer } = useOverlay('view-customer-modal');
   const { open: openBlockCustomer } = useOverlay('block-customer-modal');
   const { open: openUnblockCustomer } = useOverlay('unblock-customer-modal');
   const { open: openDeleteCustomer } = useOverlay('delete-customer-modal');
@@ -22,10 +24,10 @@ export const CustomerActions = ({ customer }: Props) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" type="button" size="icon" className="group-hover:bg-gray-200 hover:bg-gray-200 h-8 w-8 p-0">
+        <button ref={triggerRef} type="button" className="btn btn-ghost group-hover:bg-gray-200 hover:bg-gray-200 h-8 w-8 p-0">
           <span className="sr-only">Abrir menú</span>
           <EllipsisHorizontalIcon className="size-5 text-gray-500" />
-        </Button>
+        </button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
@@ -39,7 +41,10 @@ export const CustomerActions = ({ customer }: Props) => {
           </DropdownMenu.Item>}
           {can('customer:read') && <DropdownMenu.Item
             className="relative flex cursor-pointer gap-2 select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none transition-colors focus:bg-gray-100 focus:text-gray-900 text-gray-800"
-            onClick={() => openViewCustomer({ customer })}
+            onSelect={() => {
+              const session = useAuthStore.getState().session;
+              if (session?.activeTenant) openViewCustomer({ customerId: customer.id, tenantId: session.activeTenant.id, accountId: session.id, returnFocus: triggerRef.current });
+            }}
           >
             <EyeIcon className="size-4.5" />
             Ver

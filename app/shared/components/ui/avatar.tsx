@@ -20,7 +20,7 @@ export const Avatar = ({ src, name, size = 'md', className, color }: AvatarProps
         src={src}
         alt={name ?? 'Profile'}
         className={cn(
-          'rounded-full object-cover',
+          'object-cover rounded-lg',
           size === 'lg' && 'size-11',
           size === 'md' && 'size-10',
           size === 'sm' && 'size-9',
@@ -33,7 +33,7 @@ export const Avatar = ({ src, name, size = 'md', className, color }: AvatarProps
   return (
     <div
       className={cn(
-        'flex justify-center items-center rounded-full font-semibold  bg-emerald-50 border border-emerald-400 text-emerald-700',
+        'flex justify-center items-center rounded-lg font-semibold  bg-gray-100  text-gray-800',
         size === 'lg' && 'size-11 text-sm',
         size === 'md' && 'size-10 text-sm',
         size === 'sm' && 'size-9 text-xs',

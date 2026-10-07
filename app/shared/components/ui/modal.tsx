@@ -45,6 +45,7 @@ type ModalProps = {
   closeDisabled?: boolean;
   manageFocus?: boolean;
   onClose?: () => void;
+  returnFocus?: HTMLElement | null;
 };
 
 export const Modal = ({
@@ -59,6 +60,7 @@ export const Modal = ({
   closeDisabled = false,
   manageFocus = false,
   onClose,
+  returnFocus,
 }: ModalProps) => {
   const { close: closeOverlay, isVisible, shouldRender } = useOverlay(overlayKey);
   const close = onClose ?? closeOverlay;
@@ -67,7 +69,7 @@ export const Modal = ({
 
   useEffect(() => {
     if (!shouldRender || !manageFocus) return;
-    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousFocus = returnFocus ?? document.activeElement as HTMLElement | null;
     const frame = requestAnimationFrame(() => {
       if (isTopModal(dialogRef.current)) dialogRef.current?.focus();
     });
@@ -81,7 +83,7 @@ export const Modal = ({
       document.removeEventListener('focusin', containFocus);
       if (previousFocus?.isConnected) previousFocus.focus();
     };
-  }, [shouldRender, manageFocus]);
+  }, [shouldRender, manageFocus, returnFocus]);
 
   useEffect(() => {
     if (!shouldRender) return;

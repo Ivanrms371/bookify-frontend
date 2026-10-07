@@ -13,6 +13,7 @@ export default [
     layout('routes/onboarding/_layout.tsx', [
       route('onboarding/welcome', 'routes/onboarding/welcome.tsx'),
       route('onboarding/business', 'routes/onboarding/business.tsx'),
+      route('onboarding/address', 'routes/onboarding/address.tsx'),
       route('onboarding/schedule', 'routes/onboarding/schedule.tsx'),
       route('onboarding/services', 'routes/onboarding/services.tsx'),
       route('onboarding/professional', 'routes/onboarding/professional.tsx'),

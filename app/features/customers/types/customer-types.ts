@@ -50,7 +50,15 @@ export interface GetAllCustomersParams {
   take?: number;
 }
 
-export type GetCustomerByIdResponse = Customer;
+// The ID endpoint returns the persisted customer, or null when unavailable.
+export type CustomerDetail = Omit<Customer, 'email' | 'noShowAppointments' | 'totalSpent'> & {
+  email: string | null;
+  noShowCount: number;
+  totalSpent: string;
+  blockedAt: string | null;
+  blockedReason: string | null;
+};
+export type GetCustomerByIdResponse = CustomerDetail | null;
 
 export type CustomerSearchItem = Pick<Customer, 'id' | 'name' | 'phoneNumber' | 'email'>;
 export type GetCustomersSearchResponse = CustomerSearchItem[];

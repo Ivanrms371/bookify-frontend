@@ -34,7 +34,6 @@ export interface TenantSettingsResponse {
 export interface UpdateGeneralSettingsPayload {
   name?: string;
   slug?: string;
-  timeZone?: string;
   phoneNumber?: string | null;
   addressLine1?: string | null;
   addressLine2?: string | null;
@@ -57,3 +56,5 @@ export interface UpdateAppointmentSettingsPayload {
   holidayClosureAutoApply?: boolean;
   allowPassiveTimeBooking?: boolean;
 }
+
+export type UpdateGeneralSettingsResponse = { settings: TenantSettingsResponse['settings'] };

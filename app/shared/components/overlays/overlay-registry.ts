@@ -1,3 +1,4 @@
+import { ViewAppointmentDrawer } from '@/features/appointments/components/overlays/view-appointment-drawer';
 import { PlanLimitModal } from '@/features/billing/components/plan-limit-modal';
 import { TeamActionModal } from '@/features/settings/team/team-action-modal';
 import { SettingsLeaveModal } from '@/features/settings/components/settings-leave-modal';
@@ -13,7 +14,7 @@ import { CreateServiceModal } from '@/features/services/components/overlays/crea
 import { UpdateServiceModal } from '@/features/services/components/overlays/update-service-modal';
 import { ToggleServiceStatusModal } from '@/features/services/components/overlays/toggle-service-status-modal';
 import { DeleteServiceModal } from '@/features/services/components/overlays/delete-service-modal';
-import { ViewCustomerDrawer } from '@/features/customers/components/overlays/view-customer-drawer';
+import { ViewCustomerModal } from '@/features/customers/components/overlays/view-customer-modal';
 import { UpdateProfessionalDrawer } from '@/features/professionals/components/overlays/update-professional-drawer';
 import { DeleteProfessionalModal } from '@/features/professionals/components/overlays/delete-professional-modal';
 import type { ComponentProps } from 'react';
@@ -30,6 +31,7 @@ export const overlayRegistry = {
   'plan-limit-modal': PlanLimitModal,
   'settings-leave-modal': SettingsLeaveModal,
   'team-action-modal': TeamActionModal,
+  'view-appointment-drawer': ViewAppointmentDrawer,
   'create-appointment-drawer': CreateAppointmentDrawer,
   'reschedule-appointment-drawer': RescheduleAppointmentDrawer,
   'cancel-appointment-modal': CancelAppointmentModal,
@@ -43,7 +45,7 @@ export const overlayRegistry = {
   // Customers
   'create-customer-modal': CreateCustomerModal,
   'update-customer-modal': UpdateCustomerModal,
-  'view-customer-drawer': ViewCustomerDrawer,
+  'view-customer-modal': ViewCustomerModal,
   'block-customer-modal': BlockCustomerModal,
   'unblock-customer-modal': UnblockCustomerModal,
   'delete-customer-modal': DeleteCustomerModal,

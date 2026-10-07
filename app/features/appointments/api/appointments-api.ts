@@ -8,7 +8,11 @@ export const appointmentsApi = {
   getAll: (params: GetAllAppointmentsParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
     httpClient.get<GetAllAppointmentsResponse>('/appointments', { params, signal: options.signal, expectedTenantId: options.tenantId }),
 
-  getById: (id: string) => {},
+  getById: (id: string, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
+    httpClient.get<Appointment>(`/appointments/${id}`, { signal: options.signal, expectedTenantId: options.tenantId }),
+
+  changeStatus: (id: string, status: 'CONFIRMED' | 'COMPLETED' | 'NO_SHOW', tenantId?: string) =>
+    httpClient.patch<Appointment>(`/appointments/${id}/status`, { status }, { expectedTenantId: tenantId, skipAuthRetry: true }),
 
   create: (input: CreateAppointmentInput) => httpClient.post('/appointments', input),
 

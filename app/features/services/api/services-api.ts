@@ -6,7 +6,8 @@ export const servicesApi = {
   getAll: (params?: GetAllServicesParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
     httpClient.get<GetAllServicesResponse>(`/services`, { params, signal: options.signal, expectedTenantId: options.tenantId }),
 
-  getById: (id: string) => httpClient.get<Service>(`/services/${id}`),
+  getById: (id: string, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
+    httpClient.get<Service>(`/services/${id}`, { signal: options.signal, expectedTenantId: options.tenantId }),
 
   create: (payload: CreateServicePayload) => httpClient.post(`/services`, payload),
 

@@ -1,6 +1,7 @@
 export const ONBOARDING_STATUS_TO_ROUTE: Record<string, string> = {
   WORKSPACE_TYPE: '/onboarding/business',
   BUSINESS_DETAILS: '/onboarding/business',
+  LOCATION: '/onboarding/address',
   SERVICES: '/onboarding/services',
   SCHEDULE: '/onboarding/schedule',
   TEAM_INVITE: '/onboarding/professional',
@@ -11,6 +12,7 @@ export const ONBOARDING_STATUS_TO_ROUTE: Record<string, string> = {
 };
 export const ONBOARDING_STEPS = [
   { id: 'business', label: 'Tu negocio' },
+  { id: 'address', label: 'Dirección' },
   { id: 'services', label: 'Tus servicios' },
   { id: 'schedule', label: 'Tus horarios' },
   { id: 'professional', label: 'Tu perfil profesional' },

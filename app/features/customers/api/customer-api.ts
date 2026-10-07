@@ -1,6 +1,7 @@
 import { httpClient } from '@/core/http/httpClient';
 import {
   type Customer,
+  type GetCustomerByIdResponse,
   type GetAllCustomersParams,
   type GetAllCustomersResponse,
   type GetCustomersSearchResponse,
@@ -11,7 +12,8 @@ export const customerApi = {
   getAll: (params?: GetAllCustomersParams, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
     httpClient.get<GetAllCustomersResponse>('/customers', { params, signal: options.signal, expectedTenantId: options.tenantId }),
 
-  getById: (id: string) => httpClient.get<Customer>(`/customers/${id}`),
+  getById: (id: string, options: { signal?: AbortSignal; tenantId?: string } = {}) =>
+    httpClient.get<GetCustomerByIdResponse>(`/customers/${id}`, { signal: options.signal, expectedTenantId: options.tenantId }),
 
   search: (query: string) => httpClient.get<GetCustomersSearchResponse>(`/customers/search`, { params: { query } }),
 

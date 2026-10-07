@@ -7,8 +7,8 @@ import { ServiceActions } from './service-actions';
 
 export function ServiceCard({ service }: { service: Service }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-gray-100 bg-white p-3">
-      <ServiceThumbnail imageUrl={service.imageUrl} className="size-16" />
+    <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white p-3">
+      <ServiceThumbnail imageUrl={service.imageUrl} />
       <div className="min-w-0 flex-1 space-y-1">
         <h3 className="break-words font-medium text-gray-900">{service.name}</h3>
         {service.description && <p className="line-clamp-2 text-sm text-gray-500">{service.description}</p>}

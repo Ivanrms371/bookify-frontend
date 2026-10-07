@@ -14,9 +14,10 @@ const requiredPermissions: Partial<Record<OverlayKey, Permission>> = {
   'create-customer-modal': 'customer:create',
   'update-customer-modal': 'customer:update',
   'delete-customer-modal': 'customer:delete',
-  'view-customer-drawer': 'customer:read',
+  'view-customer-modal': 'customer:read',
   'block-customer-modal': 'customer:block',
   'unblock-customer-modal': 'customer:block',
+  'view-appointment-drawer': 'appointment:read',
   'create-appointment-drawer': 'appointment:create',
   'reschedule-appointment-drawer': 'appointment:reschedule',
   'cancel-appointment-modal': 'appointment:cancel',
@@ -32,6 +33,14 @@ const requiredPermissions: Partial<Record<OverlayKey, Permission>> = {
 export function canOpenOverlay<K extends OverlayKey>(tenant: ActiveTenant | null | undefined, key: K, props?: OverlayPropsMap[K]) {
   const required = requiredPermissions[key];
   if (required && !can(tenant, required)) return false;
+  if (key === 'view-customer-modal') {
+    const view = props as OverlayPropsMap['view-customer-modal'] | undefined;
+    return Boolean(view && view.tenantId === tenant?.id);
+  }
+  if (key === 'view-appointment-drawer') {
+    const view = props as OverlayPropsMap['view-appointment-drawer'] | undefined;
+    return Boolean(view && view.tenantId === tenant?.id && canManageAppointment(tenant, 'read', view.appointment.professionalId));
+  }
   if (key === 'cancel-appointment-modal' || key === 'reschedule-appointment-drawer') {
     const appointment = (props as OverlayPropsMap['cancel-appointment-modal'] | undefined)?.appointment;
     return Boolean(appointment && canManageAppointment(tenant,

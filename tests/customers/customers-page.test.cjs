@@ -162,3 +162,22 @@ test('clear resets search, filters, sorting, and page in one action', () => {
   assert.equal(cleared.page, 0);
   assert.equal(cleared.active, false);
 });
+
+test('customer listing requires three trimmed characters and clears shorter searches immediately', () => {
+  const page = pageHarness();
+  for (const value of ['A', 'An', '  An  ', '   ']) {
+    page.render().setSearch(value);
+    assert.equal(page.render().loading, false);
+    assert.equal(page.requested().query, undefined);
+  }
+  page.render().setSearch(' Ana ');
+  assert.equal(page.render().loading, true);
+  page.debounce('Ana');
+  assert.equal(page.render().loading, false);
+  assert.equal(page.requested().query, 'Ana');
+  page.render().setPage(2);
+  page.render().setSearch('An');
+  assert.equal(page.render().page, 0);
+  assert.equal(page.render().loading, false);
+  assert.equal(page.requested().query, undefined);
+});

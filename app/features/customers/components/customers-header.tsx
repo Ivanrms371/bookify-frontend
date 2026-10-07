@@ -26,7 +26,7 @@ export function CustomersHeader({ search, status, activity, sort, onSearchChange
         <Input
           type="search"
           aria-label="Buscar clientes por nombre, email o teléfono"
-          placeholder="Buscar por nombre, email o teléfono..."
+          placeholder="Buscar clientes (mín. 3 caracteres)"
           maxLength={200}
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}

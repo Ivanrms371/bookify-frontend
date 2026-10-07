@@ -83,61 +83,54 @@ export const DayScheduleRow = ({ dayIndex }: DayScheduleRowProps) => {
   };
 
   return (
-    <div className="flex flex-col items-start gap-4 border-b border-gray-100 pb-5 last:border-0 @3xl:flex-row @3xl:gap-4">
-      {/* Día */}
-      <div className="flex w-full shrink-0 items-center justify-between gap-4 @3xl:w-48 @3xl:justify-start @3xl:pt-1">
-        <div className="flex items-center gap-4">
-          <Switch checked={isActive} onCheckedChange={handleToggle} />
-
-          <Text className={cn('font-medium', isActive ? 'text-gray-800' : 'text-gray-400')}>{DAY_LABELS[day]?.full}</Text>
+    <section
+      className={cn(
+        'min-w-0 overflow-hidden rounded-2xl border transition-colors',
+        isActive ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/60',
+      )}
+    >
+      <div className={cn('flex flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-5', isActive && 'border-b border-gray-100')}>
+        <div className="flex items-center gap-3">
+          <Switch checked={isActive} onCheckedChange={handleToggle} aria-label={`Abrir ${DAY_LABELS[day]?.full}`} />
+          <Text className={cn('font-semibold', isActive ? 'text-gray-800' : 'text-gray-500')}>{DAY_LABELS[day]?.full}</Text>
+          <span
+            className={cn(
+              'rounded-full px-2.5 py-1 text-xs font-medium',
+              isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500',
+            )}
+          >
+            {isActive ? 'Abierto' : 'Cerrado'}
+          </span>
         </div>
+        {isActive && (
+          <button
+            type="button"
+            className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            onClick={handleCopyToAll}
+            title="Copiar horarios a todos los días abiertos"
+          >
+            {hasCopied ? <ClipboardDocumentCheckIcon className="size-4 text-emerald-600" /> : <ClipboardDocumentIcon className="size-4" />}
+            <span className={hasCopied ? 'text-emerald-600' : undefined}>{hasCopied ? '¡Copiado a todos!' : 'Copiar a todos'}</span>
+          </button>
+        )}
       </div>
-
-      {isActive ? (
-        <>
-          {/* Horarios */}
-          <div className="flex w-full flex-1 flex-col gap-2">
+      {isActive && (
+        <div className="space-y-3 p-4 sm:p-5">
+          <div className="grid min-w-0 gap-3 @2xl:grid-cols-2">
             {fields.map((field, index) => (
               <TimeIntervalRow key={field.id} dayIndex={dayIndex} intervalIndex={index} onRemove={() => handleRemove(index)} />
             ))}
           </div>
-
-          {/* Acciones */}
-          <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 @3xl:w-48 @3xl:flex-col @3xl:items-start @3xl:justify-start @3xl:gap-3 @3xl:pt-2">
-            <button
-              type="button"
-              className="flex cursor-pointer items-center gap-1.5 text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-400"
-              onClick={handleAdd}
-            >
-              <PlusIcon className="size-4" />
-              Añadir intervalo
-            </button>
-
-            <button
-              type="button"
-              className="flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-500 transition-colors hover:text-gray-800"
-              onClick={handleCopyToAll}
-              title="Copiar horarios a todos los días abiertos"
-            >
-              {hasCopied ? (
-                <>
-                  <ClipboardDocumentCheckIcon className="size-4 text-green-500" />
-                  <span className="text-green-500">¡Copiado a todos!</span>
-                </>
-              ) : (
-                <>
-                  <ClipboardDocumentIcon className="size-4" />
-                  <span>Copiar a todos</span>
-                </>
-              )}
-            </button>
-          </div>
-        </>
-      ) : (
-        <div className="flex h-10 flex-1 items-center @3xl:pt-1">
-          <Text className="text-sm text-gray-400">Cerrado</Text>
+          <button
+            type="button"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-indigo-200 bg-indigo-50/40 px-4 py-3 text-sm font-medium text-indigo-600 transition-colors hover:border-indigo-300 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            onClick={handleAdd}
+          >
+            <PlusIcon className="size-4" />
+            Añadir intervalo
+          </button>
         </div>
       )}
-    </div>
+    </section>
   );
 };

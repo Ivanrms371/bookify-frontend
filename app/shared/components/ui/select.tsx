@@ -5,29 +5,34 @@ import { cn } from '@/shared/utils/cn';
 
 type Props = ComponentProps<typeof SelectPrimitive.Root> & {
   label: string;
-  options: { value: string; label: string; disabled?: boolean }[];
+  options: { value: string; label: string; disabled?: boolean; icon?: ReactNode }[];
   icon?: ReactNode;
   className?: string;
+  placeholder?: string;
+  triggerProps?: ComponentProps<typeof SelectPrimitive.Trigger>;
 };
 
-export function Select({ label, options, icon, className, ...props }: Props) {
+export function Select({ label, options, icon, className, placeholder = label, triggerProps, ...props }: Props) {
   return (
     <SelectPrimitive.Root {...props}>
       <SelectPrimitive.Trigger
+        {...triggerProps}
         aria-label={label}
         className={cn(
           'btn btn-secondary h-10 min-w-0 max-w-full justify-between rounded-xl gap-2 px-3 text-sm font-medium outline-none focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50',
           className,
         )}
       >
-        {icon && (
-          <span className="shrink-0 text-gray-500" aria-hidden="true">
-            {icon}
+        <div className="flex justify-center items-center gap-3">
+          {icon && (
+            <span className="shrink-0 text-gray-500" aria-hidden="true">
+              {icon}
+            </span>
+          )}
+          <span className="truncate">
+            <SelectPrimitive.Value placeholder={placeholder} />
           </span>
-        )}
-        <span className="truncate">
-          <SelectPrimitive.Value placeholder={label} />
-        </span>
+        </div>
         <SelectPrimitive.Icon asChild>
           <ChevronDownIcon className="size-4 shrink-0 text-gray-500" />
         </SelectPrimitive.Icon>
@@ -52,6 +57,11 @@ export function Select({ label, options, icon, className, ...props }: Props) {
                   disabled={option.disabled}
                   className="relative flex cursor-pointer items-center rounded-lg py-2 pl-3 pr-9 text-sm font-medium text-gray-700 outline-none data-[highlighted]:bg-gray-100 data-[state=checked]:text-indigo-500 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                 >
+                  {option.icon && (
+                    <span className="mr-2 shrink-0" aria-hidden="true">
+                      {option.icon}
+                    </span>
+                  )}
                   <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                   <SelectPrimitive.ItemIndicator className="absolute right-3">
                     <CheckIcon className="size-4 text-indigo-500" />

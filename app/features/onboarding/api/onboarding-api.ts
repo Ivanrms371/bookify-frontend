@@ -1,3 +1,4 @@
+import type { LocationValues } from '@/shared/location/types/location.types';
 import { httpClient } from '@/core/http/httpClient';
 import type { ProfessionalStepPayload } from '../schemas/professional-step.schema';
 import type { BusinessStepPayload } from '../schemas/business-step.schema';
@@ -14,6 +15,9 @@ export const onboardingApi = {
   updateProfessional: (dto: ProfessionalStepPayload) => httpClient.patch<OnboardingStatusResponse>('/onboarding/professional', dto),
 
   updateBusiness: (dto: BusinessStepPayload) => httpClient.patch<OnboardingStatusResponse>('/onboarding/business', dto),
+
+  updateLocation: ({ currency: _currency, timeZone: _timeZone, ...location }: LocationValues) =>
+    httpClient.patch<OnboardingStatusResponse>('/onboarding/location', location),
 
   updateSchedule: (dto: SaveWorkingHours) => {
     return httpClient.patch<OnboardingStatusResponse>('/onboarding/schedule', dto);

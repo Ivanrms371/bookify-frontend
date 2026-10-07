@@ -12,7 +12,8 @@ import {
 
 export function useCustomersPage() {
   const [state, dispatch] = useReducer(customersPageReducer, initialCustomersState);
-  const searchQuery = state.search.trim();
+  const trimmedSearch = state.search.trim();
+  const searchQuery = trimmedSearch.length >= 3 ? trimmedSearch : '';
   const debounced = useDebounce(searchQuery, 300);
   // Reconcile before requesting so committed searches always start on page zero.
   const effectiveQuery = searchQuery === '' ? '' : debounced === searchQuery ? debounced : state.query;

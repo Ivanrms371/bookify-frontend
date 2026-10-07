@@ -7,7 +7,8 @@ export const tenantGeneralSettingsSchema = z.object({
     .trim()
     .min(1, 'La URL es requerida')
     .regex(/^[^\s/?#]+$/, 'La URL no puede contener espacios, barras ni parámetros'),
-  timeZone: z.string().min(1, 'La zona horaria es requerida'),
+  timeZone: z.string(),
+  currency: z.string(),
   phoneNumber: z.string().optional(),
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),

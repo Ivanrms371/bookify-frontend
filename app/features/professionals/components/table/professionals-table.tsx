@@ -1,11 +1,11 @@
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@/shared/components/ui/table';
 import { formatPhoneForDisplay } from '@/shared/utils/format-phone';
-import { ProfessionalAvatar } from '../professional-avatar';
 import { Badge } from '@/shared/components/ui/badge';
 import type { ProfessionalBasic } from '../../types/professional.types';
 import type { Role } from '@/shared/types';
 import { ProfessionalActions } from '../list/professional-actions';
+import { Avatar } from '@/shared/components/ui';
 
 export type ProfessionalTableRowType = ProfessionalBasic & {
   role?: Role | null;
@@ -34,7 +34,7 @@ export const ProfessionalsTable = ({ professionals }: Props) => {
           <Tr key={professional.id} className="hover:bg-gray-50 transition-colors">
             <Td>
               <div className="flex items-center gap-3">
-                <ProfessionalAvatar professional={professional} />
+                <Avatar name={professional.name} size="md" />
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-gray-900">{professional.name}</span>
                   {professional.id === ownProfessionalId && <Badge variant="blue">Vos</Badge>}

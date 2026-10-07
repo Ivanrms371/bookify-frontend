@@ -7,9 +7,10 @@ export const useCreateAppointment = () => {
 
   return useMutation({
     mutationFn: (data: CreateAppointmentInput) => appointmentsApi.create(data),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['reports'] });
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+    onSuccess: async () => {
+      await Promise.all(['appointments', 'availability', 'dashboard-overview', 'reports', 'customers'].map(
+        (key) => queryClient.invalidateQueries({ queryKey: [key] }),
+      ));
     },
   });
 };

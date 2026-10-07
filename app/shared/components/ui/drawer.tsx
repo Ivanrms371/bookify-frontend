@@ -1,5 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { cn } from '@/shared/utils/cn';
@@ -36,6 +36,8 @@ type DrawerProps = {
   className?: string;
   closeOnBackdrop?: boolean;
   isDismissible?: boolean;
+  containFocus?: boolean;
+  returnFocus?: HTMLElement | null;
 };
 
 export const Drawer = ({
@@ -48,8 +50,54 @@ export const Drawer = ({
   className,
   closeOnBackdrop = true,
   isDismissible = true,
+  containFocus = false,
+  returnFocus,
 }: DrawerProps) => {
   const { close, isVisible, shouldRender } = useOverlay(overlayKey);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const dismissibleRef = useRef(isDismissible);
+  dismissibleRef.current = isDismissible;
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!containFocus || !isVisible) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const previousFocus = returnFocus ?? document.activeElement;
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>(
+      'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]',
+    )).filter((element) => element.getClientRects().length > 0);
+    const focusFirst = () => (focusable()[0] ?? dialog).focus();
+    focusFirst();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (dismissibleRef.current) close();
+      }
+      if (event.key === 'Tab') {
+        const elements = focusable();
+        const first = elements[0];
+        const last = elements[elements.length - 1];
+        if (!first) { event.preventDefault(); dialog.focus(); }
+        else if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+          event.preventDefault(); last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog)) {
+          event.preventDefault(); first.focus();
+        }
+      }
+    };
+    const onFocus = (event: FocusEvent) => {
+      if (!dialog.contains(event.target as Node)) focusFirst();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    document.addEventListener('focusin', onFocus);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown, true);
+      document.removeEventListener('focusin', onFocus);
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
+    };
+  }, [containFocus, isVisible, returnFocus, close]);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -77,7 +125,11 @@ export const Drawer = ({
       />
 
       <div
+        ref={dialogRef}
         role="dialog"
+        aria-modal={containFocus || undefined}
+        aria-labelledby={title ? titleId : undefined}
+        tabIndex={containFocus ? -1 : undefined}
         className={cn(
           'relative z-10 flex h-full w-full flex-col overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out py-3 px-4 sm:py-6 sm:px-8',
           drawerSizeClasses[size],
@@ -86,7 +138,7 @@ export const Drawer = ({
         )}
       >
         <DrawerHeader onClose={isDismissible ? close : undefined}>
-          <DrawerTitle className={titleClassName}>{title}</DrawerTitle>
+          <DrawerTitle id={titleId} className={titleClassName}>{title}</DrawerTitle>
         </DrawerHeader>
         <div className="min-h-0 flex-1">{children}</div>
       </div>
@@ -113,18 +165,18 @@ export const DrawerHeader = ({ children, onClose }: DrawerHeaderProps) => {
   );
 };
 
-export const DrawerTitle = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+export const DrawerTitle = ({ children, className, id }: { children: React.ReactNode; className?: string; id?: string }) => {
   return (
     <div className="w-full">
-      <Heading className={cn('text-xl font-bold', className)}>{children}</Heading>
+      <Heading id={id} className={cn('text-xl font-bold', className)}>{children}</Heading>
     </div>
   );
 };
 
-export const DrawerBody = ({ children }: { children: React.ReactNode }) => {
-  return <div className="overflow-y-auto space-y-5 flex-1">{children}</div>;
+export const DrawerBody = ({ children, className, spaced = true }: { children: React.ReactNode; className?: string; spaced?: boolean }) => {
+  return <div className={cn("min-h-0 overflow-y-auto flex-1", spaced && "space-y-5", className)}>{children}</div>;
 };
 
-export const DrawerFooter = ({ children }: { children: React.ReactNode }) => {
-  return <div className="pt-6 flex justify-end gap-2">{children}</div>;
+export const DrawerFooter = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+  return <div className={cn("shrink-0 pt-6 flex justify-end gap-2", className)}>{children}</div>;
 };
