@@ -1,4 +1,4 @@
-import { addDays, format, parseISO } from 'date-fns';
+import { addDays, format, parseISO, isValid } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import type { AgendaAction, AgendaState } from '../types/agenda.types';
 import type { GetAllAppointmentsParams } from '../types/appointments-types';
@@ -48,3 +48,13 @@ export function canKeepAppointmentResults(
 }
 
 export const lastAgendaPage = (total: number) => Math.max(0, Math.ceil(total / AGENDA_PAGE_SIZE) - 1);
+
+
+export function notificationAgendaSelection(params: URLSearchParams) {
+  const rawDate = params.get('notificationDate');
+  const parsed = rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? parseISO(rawDate) : undefined;
+  const date = parsed && isValid(parsed) && format(parsed, 'yyyy-MM-dd') === rawDate ? rawDate! : undefined;
+  const rawProfessional = params.get('notificationProfessionalId');
+  const professionalId = rawProfessional && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawProfessional) ? rawProfessional : undefined;
+  return { date, professionalId };
+}

@@ -4,7 +4,7 @@ import { useDashboard } from '../hooks/useDashboard';
 import { Card } from '@/shared/components/ui';
 import { Heading, Text } from '@/shared/components/typography';
 import { formatUYU, formatCompactUYU } from '@/shared/utils/currency';
-import { formatDateFull, formatDateShort } from '@/shared/utils/date';
+import { formatChartDate, formatChartTooltipDate } from '../utils/chart-date';
 import { ChartBarIcon } from 'lucide-react';
 export const RevenueChart = () => {
   const { data, isLoading, isError } = useDashboard();
@@ -39,9 +39,9 @@ export const RevenueChart = () => {
           yKey="revenue"
           color="#6366f1"
           height="100%"
-          formatXAxis={formatDateShort}
+          formatXAxis={formatChartDate}
           formatYAxis={formatUYU}
-          formatXAxisTooltip={formatDateFull}
+          formatXAxisTooltip={formatChartTooltipDate}
         />
       </div>
     </Card>

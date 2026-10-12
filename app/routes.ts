@@ -33,6 +33,7 @@ export default [
         route('reports', 'routes/app/reports.tsx'),
         route('settings', 'routes/app/settings.tsx'),
         route('profile', 'routes/app/profile.tsx'),
+        route('notifications', 'routes/app/notifications.tsx'),
       ]),
 
       route('billing', 'routes/app/billing-layout.tsx', [

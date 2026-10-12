@@ -2,7 +2,7 @@ import { can } from '@/core/auth/permissions';
 import { TeamSettings } from '../team/team-settings';
 import { useAuthStore } from '@/core/auth/use-auth-store';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useBlocker } from 'react-router';
+import { useBlocker, useSearchParams } from 'react-router';
 import { useOverlay } from '@/shared/hooks/use-overlay';
 import { SettingsDraftContext } from '../hooks/use-settings-draft';
 import type { SettingsDraftStatus } from '../types/settings-draft.types';
@@ -41,6 +41,7 @@ export const TenantSettingsSection = () => {
 };
 
 function SettingsTabs() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentTab, setCurrentTab] = useState<TabId>('general');
   const [visited, setVisited] = useState<TabId[]>(['general']);
   const [drafts, setDrafts] = useState<Record<string, SettingsDraftStatus>>({});
@@ -108,6 +109,16 @@ function SettingsTabs() {
 
   const session = useAuthStore((state) => state.session);
   const canViewTeam = can(session?.activeTenant, 'team:read');
+  useEffect(() => {
+    if (searchParams.get('notificationTab') !== 'team') return;
+    if (canViewTeam) {
+      setCurrentTab('team');
+      setVisited((previous) => previous.includes('team') ? previous : [...previous, 'team']);
+    }
+    const next = new URLSearchParams(searchParams);
+    next.delete('notificationTab');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams, canViewTeam]);
   const selectedTab = currentTab === 'team' && !canViewTeam ? 'general' : currentTab;
 
   return (

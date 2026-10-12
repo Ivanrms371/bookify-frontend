@@ -36,7 +36,7 @@ export function canAccessArea(tenant: ActiveTenant | null | undefined, area: str
     case 'professionals': return can(tenant, 'professional:read');
     case 'settings': return can(tenant, 'tenant:read');
     case 'billing': return can(tenant, 'billing:read');
-    case 'profile': return Boolean(tenant);
+    case 'profile': case 'notifications': return Boolean(tenant);
     default: return false;
   }
 }

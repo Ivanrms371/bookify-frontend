@@ -17,6 +17,7 @@ const pageTitles: Record<string, string> = {
   professionals: 'Profesionales',
   settings: 'Configuración',
   reports: 'Reportes',
+  notifications: 'Notificaciones',
 };
 
 export const TopBar = ({ onOpenSidebar }: Props) => {

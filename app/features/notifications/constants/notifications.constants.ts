@@ -1,0 +1,2 @@
+export const NOTIFICATIONS_PAGE_SIZE = 24;
+export const NOTIFICATIONS_PREVIEW_SIZE = 5;

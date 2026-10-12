@@ -10,7 +10,6 @@ import { ProfessionalsCard } from './list/professionals-card';
 import { ProfessionalsTable } from './table/professionals-table';
 import { Button } from '@/shared/components/ui';
 import { TableSkeleton } from '@/shared/components/ui/table';
-
 import { PROFESSIONALS_PAGE_SIZE as PAGE_SIZE } from '../utils/professionals-page-model';
 import { useProfessionalsPage } from '../hooks/use-professionals-page';
 import { useProfessionalServiceOptions } from '../hooks/use-professional-service-options';

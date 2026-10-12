@@ -1,5 +1,9 @@
 import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { useAuthStore } from '@/core/auth/use-auth-store';
+import { useOverlay } from '@/shared/hooks/use-overlay';
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router';
+import { appointmentsApi } from '../api/appointments-api';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useAgenda } from '../hooks/use-agenda';
 import { AGENDA_PAGE_SIZE as PAGE_SIZE } from '../utils/agenda-model';
@@ -13,10 +17,44 @@ import { ScheduleHeader } from './schedule-header';
 
 export const Appointments = () => {
   const tenant = useAuthStore((state) => state.session?.activeTenant);
+  useNotificationAppointmentDeepLink();
   if (!tenant) return <TableSkeleton label="Cargando agenda..." columns={[{ label: 'Citas' }]} />;
   const timeZone = tenant.timeZone ?? 'America/Montevideo';
   return <Agenda key={`${tenant.id}-${timeZone}`} timeZone={timeZone} />;
 };
+
+function useNotificationAppointmentDeepLink() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const appointmentId = searchParams.get('notificationAppointmentId');
+  const session = useAuthStore((state) => state.session);
+  const tenantId = session?.activeTenant?.id;
+  const accountId = session?.id;
+  const { open } = useOverlay('view-appointment-drawer');
+
+  useEffect(() => {
+    if (!appointmentId || !tenantId || !accountId) return;
+    const controller = new AbortController();
+    appointmentsApi.getById(appointmentId, { signal: controller.signal, tenantId }).then((appointment) => {
+      const current = useAuthStore.getState().session;
+      if (controller.signal.aborted || current?.id !== accountId || current.activeTenant?.id !== tenantId) return;
+      open({ appointment, tenantId, accountId });
+      setSearchParams((params) => {
+        const next = new URLSearchParams(params);
+        next.delete('notificationAppointmentId');
+        return next;
+      }, { replace: true });
+    }).catch(() => {
+      if (!controller.signal.aborted) {
+        setSearchParams((params) => {
+          const next = new URLSearchParams(params);
+          next.delete('notificationAppointmentId');
+          return next;
+        }, { replace: true });
+      }
+    });
+    return () => controller.abort();
+  }, [appointmentId, tenantId, accountId, open, setSearchParams]);
+}
 
 function Agenda({ timeZone }: { timeZone: string }) {
   const agenda = useAgenda(timeZone);
